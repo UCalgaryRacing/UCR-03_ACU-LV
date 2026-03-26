@@ -2,7 +2,7 @@
  * acu_lv_app_state_manager.h
  *
  *  Created on: Mar 23, 2026
- *      Author: clayd
+ *      Author: f-dunnwolbaum
  */
 
 #ifndef APPLICATION_ACU_LV_APP_STATE_MANAGER_H_

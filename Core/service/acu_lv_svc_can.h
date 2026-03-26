@@ -2,7 +2,7 @@
  * acu_lv_svc_can.h
  *
  *  Created on: Mar 23, 2026
- *      Author: clayd
+ *      Author: f-dunnwolbaum
  */
 
 #ifndef SERVICE_ACU_LV_SVC_CAN_H_
