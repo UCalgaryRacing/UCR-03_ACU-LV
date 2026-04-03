@@ -17,7 +17,7 @@
 
 
 /*============================================================================*/
-/* BMS1                                                                       */
+/* BMS1 ISO SPI                                                               */
 /*============================================================================*/
 
 extern SPI_HandleTypeDef hspi5;
@@ -34,7 +34,7 @@ extern SPI_HandleTypeDef hspi5;
 
 
 /*============================================================================*/
-/* BMS1                                                                       */
+/* BMS2 ISO SPI                                                               */
 /*============================================================================*/
 
 extern SPI_HandleTypeDef hspi2;
@@ -93,17 +93,17 @@ extern ADC_HandleTypeDef hadc3;
 #define SDC_RESERVE_BUFFER_LENGTH
 
 /*============================================================================*/
-/* Current Shunt                                                */
+/* Current Shunt (AMC33X6XX)                                                  */
 /*============================================================================*/
 
 extern DFSDM_Filter_HandleTypeDef hdfsdm1_filter2;
-#define CURRENT_SHUNT_DATA (&hdfsdm1_filter2)
+#define CURRENT_SHUNT_FILTER_HANDLE (&hdfsdm1_filter2)
 
 #define SHUNT_STATUS_PORT GPIOG
 #define SHUNT_STATUS_PIN GPIO_PIN_0
 
 /*============================================================================*/
-/* TS Voltage Measurement                                                     */
+/* TS Voltage Measurement  (AMC33X6XX)                                        */
 /*============================================================================*/
 
 extern DFSDM_Filter_HandleTypeDef hdfsdm1_filter0;
@@ -113,7 +113,7 @@ extern DFSDM_Filter_HandleTypeDef hdfsdm1_filter0;
 #define TS_STATUS_PIN GPIO_PIN_1
 
 /*============================================================================*/
-/* Pack Voltage Measurement                                                   */
+/* Pack Voltage Measurement (AMC33X6XX)                                       */
 /*============================================================================*/
 
 extern DFSDM_Filter_HandleTypeDef hdfsdm1_filter1;

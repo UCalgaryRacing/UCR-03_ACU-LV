@@ -11,13 +11,29 @@
 #ifndef DRIVERS_AMC33X6XX_H_
 #define DRIVERS_AMC33X6XX_H_
 
-// the amc3306 has 16-bits of resolution
-// has a different voltage mapping than normal adc, look at section 7.3.4 in datasheet
-#define AMC33X6XX_ADC_RESOLUTION (1<<16)
+#include "acu_lv_config.h"
+#include "acu_lv_config_pinout.h"
 
-#define ACM3306M05_ADC_MAX_VOLTAGE 0.05f
-#define AMC3336_ADC_MAX_VOLTAGE 1.0f
+#define AMC33X6XX_ADC_RESOLUTION (1<<24)
 
+
+static inline void start_DFSDM_filter_conversion(DFSDM_Filter_HandleTypeDef * filter, int32_t * buffer, uint8_t length)
+{
+    HAL_DFSDM_FilterRegularStart_DMA(filter,buffer,length);
+}
+
+static inline void stop_DFSDM_filter_conversion(DFSDM_Filter_HandleTypeDef * filter)
+{
+    HAL_DFSDM_FilterRegularStop_DMA(filter);
+}
+
+static inline void shift_input_data(int32_t * raw_data, int32_t *shifted_data)
+{
+    for(uint8_t i = 0; i < CURRENT_SHUNT_DATA_LENGTH; i++)
+    {
+        shifted_data[i] = raw_data[i] >> 8;
+    }
+}
 
 
 #endif // DRIVERS_AMC33X6XX_H_

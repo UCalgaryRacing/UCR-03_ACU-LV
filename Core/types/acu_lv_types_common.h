@@ -13,6 +13,7 @@
 
 #include <stdint.h>
 #include <stdbool.h>
+#include "acu_lv_config.h"
 
 /*============================================================================*/
 /* BMS System States                                                          */
@@ -28,5 +29,19 @@ typedef enum
 } bms_state_t;
 
 
+typedef enum
+{
+    ACU_LV_MEASUREMENT_TEMP = 0U,
+    ACU_LV_MEASUREMENT_CURRENT,
+    ACU_LV_MEASUREMENT_VOLTAGE
+} acu_lv_measurement_type_t;
+
+typedef struct
+{   
+    acu_lv_measurement_type_t measurement_type; 
+    float valid_min; // minimum valid value for a given sensor, if below then trigger a fault
+    float valid_max; //max valid value, if above then trigger fault
+    float scaling_factor; // scaling factor if voltage divider is used
+} acu_lv_measurement_setting_t;
 
 #endif /* TYPES_ACU_LV_TYPES_COMMON_H_ */

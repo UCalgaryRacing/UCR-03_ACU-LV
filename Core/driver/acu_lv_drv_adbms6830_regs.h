@@ -22,18 +22,7 @@
 
 #include <stdint.h>
 #include <stdbool.h>
-
-/*============================================================================*/
-/* Common constants                                                           */
-/*============================================================================*/
-
-/**
- * Number of bytes per ADBMS6830 register group payload (e.g. CFGA, CFGB, cell groups).
- *
- * Note: Some SPI frames append PEC bytes, but the raw register payload itself
- * is 6 bytes for these groups.
- */
-#define ADBMS_REG_GROUP_SIZE        6U
+#include "acu_lv_config.h"
 
 /*============================================================================*/
 /* Command codes (SPI)                                                        */
@@ -360,19 +349,19 @@ typedef enum
 /* Helpers (operate on raw `uint8_t cfga[ADBMS_REG_GROUP_SIZE]`)              */
 /*----------------------------------------------------------------------------*/
 
-static inline void adbms_cfga_set_cth(uint8_t cfga[ADBMS_REG_GROUP_SIZE],
+static inline void adbms_cfga_set_cth(uint8_t * cfga,
                                       adbms_cfga_cth_t cth)
 {
     cfga[0] = (uint8_t)((cfga[0] & (uint8_t)~CFGA_CTH_MASK) |
                         (((uint8_t)cth << CFGA_CTH_POS) & CFGA_CTH_MASK));
 }
 
-static inline adbms_cfga_cth_t adbms_cfga_get_cth(const uint8_t cfga[ADBMS_REG_GROUP_SIZE])
+static inline adbms_cfga_cth_t adbms_cfga_get_cth(const uint8_t * cfga)
 {
     return (adbms_cfga_cth_t)((cfga[0] & CFGA_CTH_MASK) >> CFGA_CTH_POS);
 }
 
-static inline void adbms_cfga_set_refon(uint8_t cfga[ADBMS_REG_GROUP_SIZE], bool enable)
+static inline void adbms_cfga_set_refon(uint8_t *cfga, bool enable)
 {
     if (enable)
     {
@@ -384,22 +373,22 @@ static inline void adbms_cfga_set_refon(uint8_t cfga[ADBMS_REG_GROUP_SIZE], bool
     }
 }
 
-static inline bool adbms_cfga_get_refon(const uint8_t cfga[ADBMS_REG_GROUP_SIZE])
+static inline bool adbms_cfga_get_refon(const uint8_t *cfga)
 {
     return (cfga[0] & CFGA_REFON_MASK) != 0U;
 }
 
-static inline void adbms_cfga_set_flagd(uint8_t cfga[ADBMS_REG_GROUP_SIZE], uint8_t flagd)
+static inline void adbms_cfga_set_flagd(uint8_t *cfga, uint8_t flagd)
 {
     cfga[1] = flagd;
 }
 
-static inline uint8_t adbms_cfga_get_flagd(const uint8_t cfga[ADBMS_REG_GROUP_SIZE])
+static inline uint8_t adbms_cfga_get_flagd(const uint8_t *cfga)
 {
     return cfga[1];
 }
 
-static inline void adbms_cfga_set_soakon(uint8_t cfga[ADBMS_REG_GROUP_SIZE], bool enable)
+static inline void adbms_cfga_set_soakon(uint8_t *cfga, bool enable)
 {
     if (enable)
     {
@@ -411,7 +400,7 @@ static inline void adbms_cfga_set_soakon(uint8_t cfga[ADBMS_REG_GROUP_SIZE], boo
     }
 }
 
-static inline void adbms_cfga_set_owrng(uint8_t cfga[ADBMS_REG_GROUP_SIZE], bool enable)
+static inline void adbms_cfga_set_owrng(uint8_t *cfga, bool enable)
 {
     if (enable)
     {
@@ -423,7 +412,7 @@ static inline void adbms_cfga_set_owrng(uint8_t cfga[ADBMS_REG_GROUP_SIZE], bool
     }
 }
 
-static inline void adbms_cfga_set_owa_mode(uint8_t cfga[ADBMS_REG_GROUP_SIZE],
+static inline void adbms_cfga_set_owa_mode(uint8_t *cfga,
                                            adbms_cfga_owa_t mode)
 {
     uint8_t owa = (uint8_t)mode & (uint8_t)(CFGA_OWA_MASK >> CFGA_OWA_POS);
@@ -431,12 +420,12 @@ static inline void adbms_cfga_set_owa_mode(uint8_t cfga[ADBMS_REG_GROUP_SIZE],
                         ((uint8_t)(owa << CFGA_OWA_POS) & CFGA_OWA_MASK));
 }
 
-static inline adbms_cfga_owa_t adbms_cfga_get_owa_mode(const uint8_t cfga[ADBMS_REG_GROUP_SIZE])
+static inline adbms_cfga_owa_t adbms_cfga_get_owa_mode(const uint8_t *cfga)
 {
     return (adbms_cfga_owa_t)((cfga[2] & CFGA_OWA_MASK) >> CFGA_OWA_POS);
 }
 
-static inline void adbms_cfga_set_gpo(uint8_t cfga[ADBMS_REG_GROUP_SIZE], uint16_t gpo)
+static inline void adbms_cfga_set_gpo(uint8_t *cfga, uint16_t gpo)
 {
     gpo &= CFGA_GPO_MASK;
 
@@ -449,7 +438,7 @@ static inline void adbms_cfga_set_gpo(uint8_t cfga[ADBMS_REG_GROUP_SIZE], uint16
     cfga[4] |= (uint8_t)((gpo >> 8) & 0x03U);  /* bits [9:8] -> GPO[10:9] */
 }
 
-static inline uint16_t adbms_cfga_get_gpo(const uint8_t cfga[ADBMS_REG_GROUP_SIZE])
+static inline uint16_t adbms_cfga_get_gpo(const uint8_t *cfga)
 {
     uint16_t low  = cfga[3];
     uint16_t high = (uint16_t)(cfga[4] & 0x03U);
@@ -466,7 +455,7 @@ static inline uint16_t adbms_cfga_get_gpo(const uint8_t cfga[ADBMS_REG_GROUP_SIZ
  * Example:
  *   adbms_cfga_set_gpo_pin(cfga, ADBMS_GPO_PIN_3, false);  // Enable pull-down on GPIO3
  */
-static inline void adbms_cfga_set_gpo_pin(uint8_t cfga[ADBMS_REG_GROUP_SIZE],
+static inline void adbms_cfga_set_gpo_pin(uint8_t *cfga,
                                           adbms_gpo_pin_t pin,
                                           bool pulldown_off)
 {
@@ -497,7 +486,7 @@ static inline void adbms_cfga_set_gpo_pin(uint8_t cfga[ADBMS_REG_GROUP_SIZE],
  * @param pin   GPO pin to query (ADBMS_GPO_PIN_1 to ADBMS_GPO_PIN_10).
  * @return true if pull-down is OFF (high-Z), false if pull-down is ON.
  */
-static inline bool adbms_cfga_get_gpo_pin(const uint8_t cfga[ADBMS_REG_GROUP_SIZE],
+static inline bool adbms_cfga_get_gpo_pin(const uint8_t *cfga,
                                           adbms_gpo_pin_t pin)
 {
     if (pin < ADBMS_GPO_PIN_1 || pin > ADBMS_GPO_PIN_10)
@@ -510,28 +499,28 @@ static inline bool adbms_cfga_get_gpo_pin(const uint8_t cfga[ADBMS_REG_GROUP_SIZ
     return (gpo & mask) != 0U;
 }
 
-static inline adbms_cfga_fc_t adbms_cfga_get_fc(const uint8_t cfga[ADBMS_REG_GROUP_SIZE])
+static inline adbms_cfga_fc_t adbms_cfga_get_fc(const uint8_t *cfga)
 {
     return (adbms_cfga_fc_t)((cfga[5] & CFGA_FC_MASK) >> CFGA_FC_POS);
 }
 
-static inline void adbms_cfga_set_fc(uint8_t cfga[ADBMS_REG_GROUP_SIZE], adbms_cfga_fc_t fc)
+static inline void adbms_cfga_set_fc(uint8_t *cfga, adbms_cfga_fc_t fc)
 {
     cfga[5] = (uint8_t)((cfga[5] & (uint8_t)~CFGA_FC_MASK) |
                         (((uint8_t)fc << CFGA_FC_POS) & CFGA_FC_MASK));
 }
 
-static inline bool adbms_cfga_get_snap_st(const uint8_t cfga[ADBMS_REG_GROUP_SIZE])
+static inline bool adbms_cfga_get_snap_st(const uint8_t *cfga)
 {
     return (cfga[5] & CFGA_SNAP_ST_MASK) != 0U;
 }
 
-static inline bool adbms_cfga_get_mute_st(const uint8_t cfga[ADBMS_REG_GROUP_SIZE])
+static inline bool adbms_cfga_get_mute_st(const uint8_t *cfga)
 {
     return (cfga[5] & CFGA_MUTE_ST_MASK) != 0U;
 }
 
-static inline bool adbms_cfga_get_comm_bk(const uint8_t cfga[ADBMS_REG_GROUP_SIZE])
+static inline bool adbms_cfga_get_comm_bk(const uint8_t *cfga)
 {
     return (cfga[5] & CFGA_COMM_BK_MASK) != 0U;
 }
@@ -548,7 +537,7 @@ static inline bool adbms_cfga_get_comm_bk(const uint8_t cfga[ADBMS_REG_GROUP_SIZ
  *   - FC = disabled
  *   - COMM_BK = 0
  */
-static inline void adbms_cfga_set_defaults(uint8_t cfga[ADBMS_REG_GROUP_SIZE])
+static inline void adbms_cfga_set_defaults(uint8_t *cfga)
 {
     /* Start from all zeros */
     for (uint8_t i = 0U; i < ADBMS_REG_GROUP_SIZE; i++)

@@ -24,9 +24,9 @@
 
 #include <stdint.h>
 #include <stdbool.h>
-#include "adbms6830_regs.h"
-#include "adbms6830_types.h"
-#include "adbms6830_config.h"
+#include "acu_lv_drv_adbms6830_regs.h"
+#include "acu_lv_config.h"
+
 
 /*============================================================================*/
 /* Driver Initialization                                                      */
