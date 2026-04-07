@@ -1,2 +1,2 @@
-../Core/application/tasks/slow_task.c:14:6:slow_task_init	8	static
-../Core/application/tasks/slow_task.c:18:6:slow_task_loop	8	static
+../Core/application/tasks/slow_task.c:15:6:slow_task_init	8	static
+../Core/application/tasks/slow_task.c:20:6:slow_task_loop	8	static

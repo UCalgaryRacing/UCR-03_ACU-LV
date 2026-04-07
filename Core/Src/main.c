@@ -20,9 +20,13 @@
 #include "main.h"
 #include "cmsis_os.h"
 
+
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "fast_task.h"
+#include "medium_task.h"
+#include "slow_task.h"
+#include "task_manager.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -1001,10 +1005,11 @@ static void MX_GPIO_Init(void)
 void startTaskManager(void *argument)
 {
   /* USER CODE BEGIN 5 */
+  task_manager_init();
   /* Infinite loop */
   for(;;)
   {
-    osDelay(1);
+    task_manager_loop();
   }
   /* USER CODE END 5 */
 }
@@ -1019,10 +1024,11 @@ void startTaskManager(void *argument)
 void StartFastTask(void *argument)
 {
   /* USER CODE BEGIN StartFastTask */
+  fast_task_init();
   /* Infinite loop */
   for(;;)
   {
-    osDelay(1);
+    fast_task_loop();
   }
   /* USER CODE END StartFastTask */
 }
@@ -1037,10 +1043,11 @@ void StartFastTask(void *argument)
 void StartMediumTask(void *argument)
 {
   /* USER CODE BEGIN StartMediumTask */
+  medium_task_init();
   /* Infinite loop */
   for(;;)
   {
-    osDelay(1);
+    medium_task_loop();
   }
   /* USER CODE END StartMediumTask */
 }
@@ -1055,10 +1062,11 @@ void StartMediumTask(void *argument)
 void StartSlowTask(void *argument)
 {
   /* USER CODE BEGIN StartSlowTask */
+  slow_task_init();
   /* Infinite loop */
   for(;;)
   {
-    osDelay(1);
+    slow_task_loop();
   }
   /* USER CODE END StartSlowTask */
 }
