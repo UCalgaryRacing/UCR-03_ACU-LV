@@ -50,6 +50,9 @@ DFSDM_Filter_HandleTypeDef hdfsdm1_filter2;
 DFSDM_Channel_HandleTypeDef hdfsdm1_channel2;
 DFSDM_Channel_HandleTypeDef hdfsdm1_channel4;
 DFSDM_Channel_HandleTypeDef hdfsdm1_channel6;
+DMA_HandleTypeDef hdma_dfsdm1_flt0;
+DMA_HandleTypeDef hdma_dfsdm1_flt1;
+DMA_HandleTypeDef hdma_dfsdm1_flt2;
 
 FDCAN_HandleTypeDef hfdcan2;
 
@@ -60,12 +63,12 @@ TIM_HandleTypeDef htim2;
 
 UART_HandleTypeDef huart4;
 
-/* Definitions for defaultTask */
-osThreadId_t defaultTaskHandle;
-const osThreadAttr_t defaultTask_attributes = {
-  .name = "defaultTask",
-  .stack_size = 128 * 4,
-  .priority = (osPriority_t) osPriorityNormal,
+/* Definitions for TaskManager */
+osThreadId_t TaskManagerHandle;
+const osThreadAttr_t TaskManager_attributes = {
+  .name = "TaskManager",
+  .stack_size = 512 * 4,
+  .priority = (osPriority_t) osPriorityRealtime7,
 };
 /* Definitions for FastTask */
 osThreadId_t FastTaskHandle;
@@ -97,6 +100,7 @@ void SystemClock_Config(void);
 void PeriphCommonClock_Config(void);
 static void MPU_Config(void);
 static void MX_GPIO_Init(void);
+static void MX_DMA_Init(void);
 static void MX_ADC2_Init(void);
 static void MX_ADC3_Init(void);
 static void MX_DFSDM1_Init(void);
@@ -105,7 +109,7 @@ static void MX_SPI2_Init(void);
 static void MX_SPI5_Init(void);
 static void MX_TIM2_Init(void);
 static void MX_UART4_Init(void);
-void StartDefaultTask(void *argument);
+void startTaskManager(void *argument);
 void StartFastTask(void *argument);
 void StartMediumTask(void *argument);
 void StartSlowTask(void *argument);
@@ -154,6 +158,7 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
+  MX_DMA_Init();
   MX_ADC2_Init();
   MX_ADC3_Init();
   MX_DFSDM1_Init();
@@ -186,8 +191,8 @@ int main(void)
   /* USER CODE END RTOS_QUEUES */
 
   /* Create the thread(s) */
-  /* creation of defaultTask */
-  defaultTaskHandle = osThreadNew(StartDefaultTask, NULL, &defaultTask_attributes);
+  /* creation of TaskManager */
+  TaskManagerHandle = osThreadNew(startTaskManager, NULL, &TaskManager_attributes);
 
   /* creation of FastTask */
   FastTaskHandle = osThreadNew(StartFastTask, NULL, &FastTask_attributes);
@@ -480,7 +485,7 @@ static void MX_DFSDM1_Init(void)
   hdfsdm1_filter0.Instance = DFSDM1_Filter0;
   hdfsdm1_filter0.Init.RegularParam.Trigger = DFSDM_FILTER_SW_TRIGGER;
   hdfsdm1_filter0.Init.RegularParam.FastMode = DISABLE;
-  hdfsdm1_filter0.Init.RegularParam.DmaMode = DISABLE;
+  hdfsdm1_filter0.Init.RegularParam.DmaMode = ENABLE;
   hdfsdm1_filter0.Init.FilterParam.SincOrder = DFSDM_FILTER_FASTSINC_ORDER;
   hdfsdm1_filter0.Init.FilterParam.Oversampling = 1024;
   hdfsdm1_filter0.Init.FilterParam.IntOversampling = 1;
@@ -491,7 +496,7 @@ static void MX_DFSDM1_Init(void)
   hdfsdm1_filter1.Instance = DFSDM1_Filter1;
   hdfsdm1_filter1.Init.RegularParam.Trigger = DFSDM_FILTER_SW_TRIGGER;
   hdfsdm1_filter1.Init.RegularParam.FastMode = DISABLE;
-  hdfsdm1_filter1.Init.RegularParam.DmaMode = DISABLE;
+  hdfsdm1_filter1.Init.RegularParam.DmaMode = ENABLE;
   hdfsdm1_filter1.Init.FilterParam.SincOrder = DFSDM_FILTER_FASTSINC_ORDER;
   hdfsdm1_filter1.Init.FilterParam.Oversampling = 1024;
   hdfsdm1_filter1.Init.FilterParam.IntOversampling = 1;
@@ -502,9 +507,9 @@ static void MX_DFSDM1_Init(void)
   hdfsdm1_filter2.Instance = DFSDM1_Filter2;
   hdfsdm1_filter2.Init.RegularParam.Trigger = DFSDM_FILTER_SW_TRIGGER;
   hdfsdm1_filter2.Init.RegularParam.FastMode = DISABLE;
-  hdfsdm1_filter2.Init.RegularParam.DmaMode = DISABLE;
+  hdfsdm1_filter2.Init.RegularParam.DmaMode = ENABLE;
   hdfsdm1_filter2.Init.FilterParam.SincOrder = DFSDM_FILTER_FASTSINC_ORDER;
-  hdfsdm1_filter2.Init.FilterParam.Oversampling = 1;
+  hdfsdm1_filter2.Init.FilterParam.Oversampling = 1024;
   hdfsdm1_filter2.Init.FilterParam.IntOversampling = 1;
   if (HAL_DFSDM_FilterInit(&hdfsdm1_filter2) != HAL_OK)
   {
@@ -513,7 +518,7 @@ static void MX_DFSDM1_Init(void)
   hdfsdm1_channel2.Instance = DFSDM1_Channel2;
   hdfsdm1_channel2.Init.OutputClock.Activation = ENABLE;
   hdfsdm1_channel2.Init.OutputClock.Selection = DFSDM_CHANNEL_OUTPUT_CLOCK_SYSTEM;
-  hdfsdm1_channel2.Init.OutputClock.Divider = 6;
+  hdfsdm1_channel2.Init.OutputClock.Divider = 15;
   hdfsdm1_channel2.Init.Input.Multiplexer = DFSDM_CHANNEL_EXTERNAL_INPUTS;
   hdfsdm1_channel2.Init.Input.DataPacking = DFSDM_CHANNEL_STANDARD_MODE;
   hdfsdm1_channel2.Init.Input.Pins = DFSDM_CHANNEL_SAME_CHANNEL_PINS;
@@ -530,7 +535,7 @@ static void MX_DFSDM1_Init(void)
   hdfsdm1_channel4.Instance = DFSDM1_Channel4;
   hdfsdm1_channel4.Init.OutputClock.Activation = ENABLE;
   hdfsdm1_channel4.Init.OutputClock.Selection = DFSDM_CHANNEL_OUTPUT_CLOCK_SYSTEM;
-  hdfsdm1_channel4.Init.OutputClock.Divider = 6;
+  hdfsdm1_channel4.Init.OutputClock.Divider = 15;
   hdfsdm1_channel4.Init.Input.Multiplexer = DFSDM_CHANNEL_EXTERNAL_INPUTS;
   hdfsdm1_channel4.Init.Input.DataPacking = DFSDM_CHANNEL_STANDARD_MODE;
   hdfsdm1_channel4.Init.Input.Pins = DFSDM_CHANNEL_SAME_CHANNEL_PINS;
@@ -547,7 +552,7 @@ static void MX_DFSDM1_Init(void)
   hdfsdm1_channel6.Instance = DFSDM1_Channel6;
   hdfsdm1_channel6.Init.OutputClock.Activation = ENABLE;
   hdfsdm1_channel6.Init.OutputClock.Selection = DFSDM_CHANNEL_OUTPUT_CLOCK_SYSTEM;
-  hdfsdm1_channel6.Init.OutputClock.Divider = 6;
+  hdfsdm1_channel6.Init.OutputClock.Divider = 15;
   hdfsdm1_channel6.Init.Input.Multiplexer = DFSDM_CHANNEL_EXTERNAL_INPUTS;
   hdfsdm1_channel6.Init.Input.DataPacking = DFSDM_CHANNEL_STANDARD_MODE;
   hdfsdm1_channel6.Init.Input.Pins = DFSDM_CHANNEL_SAME_CHANNEL_PINS;
@@ -825,6 +830,28 @@ static void MX_UART4_Init(void)
 }
 
 /**
+  * Enable DMA controller clock
+  */
+static void MX_DMA_Init(void)
+{
+
+  /* DMA controller clock enable */
+  __HAL_RCC_DMA1_CLK_ENABLE();
+
+  /* DMA interrupt init */
+  /* DMA1_Stream0_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA1_Stream0_IRQn, 5, 0);
+  HAL_NVIC_EnableIRQ(DMA1_Stream0_IRQn);
+  /* DMA1_Stream1_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA1_Stream1_IRQn, 5, 0);
+  HAL_NVIC_EnableIRQ(DMA1_Stream1_IRQn);
+  /* DMA1_Stream2_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA1_Stream2_IRQn, 5, 0);
+  HAL_NVIC_EnableIRQ(DMA1_Stream2_IRQn);
+
+}
+
+/**
   * @brief GPIO Initialization Function
   * @param None
   * @retval None
@@ -964,14 +991,14 @@ static void MX_GPIO_Init(void)
 
 /* USER CODE END 4 */
 
-/* USER CODE BEGIN Header_StartDefaultTask */
+/* USER CODE BEGIN Header_startTaskManager */
 /**
-  * @brief  Function implementing the defaultTask thread.
+  * @brief  Function implementing the TaskManager thread.
   * @param  argument: Not used
   * @retval None
   */
-/* USER CODE END Header_StartDefaultTask */
-void StartDefaultTask(void *argument)
+/* USER CODE END Header_startTaskManager */
+void startTaskManager(void *argument)
 {
   /* USER CODE BEGIN 5 */
   /* Infinite loop */

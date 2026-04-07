@@ -13,7 +13,6 @@
 
 #include <stdint.h>
 #include <stdbool.h>
-#include "acu_lv_config.h"
 
 /*============================================================================*/
 /* BMS System States                                                          */
@@ -21,19 +20,26 @@
 
 typedef enum
 {
-    BMS_IDLE = 0U,
-    BMS_STARTUP,
-    BMS_PRECHARGE,
-    BMS_TS_ACTIVE,
-    BMS_FAULT
-} bms_state_t;
+    ACU_LV_IDLE = 0U,
+    ACU_LVSTARTUP,
+    ACU_LVPRECHARGE,
+    ACU_LVTS_ACTIVE,
+    ACU_LV_FAULT
+} acu_lv_state_t;
+
+typedef enum
+{
+    ACU_LV_OK = 0U,
+    ACU_LV_ERROR
+} acu_lv_status_t;
 
 
 typedef enum
 {
     ACU_LV_MEASUREMENT_TEMP = 0U,
-    ACU_LV_MEASUREMENT_CURRENT,
-    ACU_LV_MEASUREMENT_VOLTAGE
+    ACU_LV_MEASUREMENT_PACK_CURRENT,
+    ACU_LV_MEASUREMENT_TS_VOLTAGE,
+    ACU_LV_MEASUREMENT_ACCU_VOLTAGE
 } acu_lv_measurement_type_t;
 
 typedef struct

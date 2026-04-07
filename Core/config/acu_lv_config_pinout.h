@@ -107,20 +107,20 @@ extern DFSDM_Filter_HandleTypeDef hdfsdm1_filter2;
 /*============================================================================*/
 
 extern DFSDM_Filter_HandleTypeDef hdfsdm1_filter0;
-#define TS_VOLTAGE_DATA    (&hdfsdm1_filter0)
+#define TS_VOLTAGE_FILTER    (&hdfsdm1_filter0)
 
-#define TS_STATUS_PORT GPIOG
-#define TS_STATUS_PIN GPIO_PIN_1
+#define TS_VOLTAGE_STATUS_PORT GPIOG
+#define TS_VOLTAGE_STATUS_PIN GPIO_PIN_1
 
 /*============================================================================*/
 /* Pack Voltage Measurement (AMC33X6XX)                                       */
 /*============================================================================*/
 
 extern DFSDM_Filter_HandleTypeDef hdfsdm1_filter1;
-#define ACCU_VOLTAGE_DATA  (&hdfsdm1_filter1)
+#define ACCU_VOLTAGE_FILTER  (&hdfsdm1_filter1)
 
-#define ACCU_STATUS_PORT GPIOF
-#define ACCU_STATUS_PIN GPIO_PIN_14
+#define ACCU_VOLTAGE_STATUS_PORT GPIOF
+#define ACCU_VOLTAGE_STATUS_PIN GPIO_PIN_14
 
 /*============================================================================*/
 /* AIR                                                                        */

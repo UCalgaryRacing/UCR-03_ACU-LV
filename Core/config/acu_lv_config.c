@@ -5,15 +5,68 @@
 
 #include "acu_lv_config.h"
 #include "acu_lv_config_pinout.h"
+#include "stm32h7xx_hal.h"
 
-float shunt_data;
+/*============================================================================*/
+/* Shunt, TS and ACCU Measurement Configuration */
+/*============================================================================*/
 
-acu_lv_pack_current_t current= {
+float g_shunt_data_float;
+int32_t g_shunt_data_raw;
+
+acu_lv_pack_measurement_t pack_current= {
     .hw = {
         .status_port = SHUNT_STATUS_PORT,
         .status_pin = SHUNT_STATUS_PIN,
         .dma_started = false,
         .filter_handle = CURRENT_SHUNT_FILTER_HANDLE
     },
-    .data = &shunt_data
+    .settings = {
+        .measurement_type = ACU_LV_MEASUREMENT_PACK_CURRENT,
+        .scaling_factor = ACU_LV_SHUNT_SCALING_FACTOR,
+        .valid_max = 10,
+        .valid_min = 0
+    },
+    .data = &g_shunt_data_float,
+    .raw_data = &g_shunt_data_raw
+};
+
+float g_accu_voltage_float;
+int32_t g_accu_voltage_raw;
+
+acu_lv_pack_measurement_t accu_voltage = {
+    .hw = {
+        .status_port = ACCU_VOLTAGE_STATUS_PORT,
+        .status_pin = ACCU_VOLTAGE_STATUS_PIN,
+        .dma_started = false,
+        .filter_handle = ACCU_VOLTAGE_FILTER
+    },
+    .settings = {
+        .measurement_type = ACU_LV_MEASUREMENT_ACCU_VOLTAGE,
+        .scaling_factor = ACU_LV_ACCU_SCALING_FACTOR,
+        .valid_max = ACCU_VOLTAGE_MAX_V,
+        .valid_min = ACCU_VOLTAGE_MIN_V
+    },
+    .data = &g_accu_voltage_float,
+    .raw_data = &g_accu_voltage_raw
+};
+
+float g_ts_data_float;
+int32_t g_ts_data_raw;
+
+acu_lv_pack_measurement_t ts_voltage = {
+    .hw = {
+        .status_port = TS_VOLTAGE_STATUS_PORT,
+        .status_pin = TS_VOLTAGE_STATUS_PIN,
+        .dma_started = false,
+        .filter_handle = TS_VOLTAGE_FILTER
+    },
+    .settings = {
+        .measurement_type = ACU_LV_MEASUREMENT_TS_VOLTAGE,
+        .scaling_factor = ACU_LV_TS_SCALING_FACTOR,
+        .valid_min = 0,
+        .valid_max = ACCU_VOLTAGE_MAX_V //should this be 90% of acu?
+    },
+    .data = &g_ts_data_float,
+    .raw_data = &g_ts_data_raw
 };

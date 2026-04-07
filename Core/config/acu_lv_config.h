@@ -16,9 +16,6 @@
 #include "acu_lv_types_common.h"
 #include "stm32h7xx_hal.h"
 
- 
-
-
 /*============================================================================*/
 /* ADC Common Settings                                                        */
 /*============================================================================*/
@@ -35,8 +32,10 @@
 /* Accumulator Voltage Configuration                                          */
 /*============================================================================*/
 
-// Voltage divider ratio (Vpack / Vadc) - determined by resistor values on HV board
-#define ACCU_VOLTAGE_DIVIDER_RATIO          551.0f
+// Scaling factor for tractive and accumulator
+// determined by using a known voltage and averaging the raw values
+#define ACU_LV_ACCU_SCALING_FACTOR 0.0003274401616938253f
+#define ACU_LV_TS_SCALING_FACTOR 0.00032845893948625697f
 
 // Precharge completion threshold (TS voltage must be >= this fraction of pack)
 #define ACCU_PRECHARGE_THRESHOLD            0.90f
@@ -49,9 +48,9 @@
 /* Current Shunt Configuration                                          */
 /*============================================================================*/
 
-// shunt scaling factor, done by measuring the raw value and then printing it with the virtual com port 
-#define CURRENT_SHUNT_DATA_LENGTH 16
-#define CURRENT_SHUNT_SCALING_FACTOR 6484.1997f
+// shunt scaling factor
+// TODO: shunt scaling needs to be redone
+#define ACU_LV_SHUNT_SCALING_FACTOR 6484.1997f
 
 // Threshold for considering current as "idle" (A)
 #define CURRENT_IDLE_THRESHOLD_A            2.0f
@@ -245,9 +244,9 @@ typedef struct
 {
     acm33x6xx_hw_t hw;
     acu_lv_measurement_setting_t settings;
-    float * data;
-    int32_t * raw_data;
-} acu_lv_pack_current_t;
+    float *const data;
+    int32_t *const raw_data;
+} acu_lv_pack_measurement_t;
 
 /*============================================================================*/
 /* Cell Structure                                                             */

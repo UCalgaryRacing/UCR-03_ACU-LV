@@ -1,6 +1,5 @@
 Core/config/acu_lv_config.o: ../Core/config/acu_lv_config.c \
  ../Core/config/acu_lv_config.h ../Core/types/acu_lv_types_common.h \
- C:/Users/clayd/OneDrive/Documents/UCR_03/UCR_03_ACU_LV/Core/config/acu_lv_config.h \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h \
  ../Core/Inc/stm32h7xx_hal_conf.h \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h \
@@ -43,7 +42,6 @@ Core/config/acu_lv_config.o: ../Core/config/acu_lv_config.c \
  ../Core/config/acu_lv_config_pinout.h
 ../Core/config/acu_lv_config.h:
 ../Core/types/acu_lv_types_common.h:
-C:/Users/clayd/OneDrive/Documents/UCR_03/UCR_03_ACU_LV/Core/config/acu_lv_config.h:
 ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:
 ../Core/Inc/stm32h7xx_hal_conf.h:
 ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:
