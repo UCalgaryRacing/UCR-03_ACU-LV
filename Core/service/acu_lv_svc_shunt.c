@@ -15,7 +15,7 @@ acu_lv_status_t acu_lv_svc_update_shunt()
 {
     if(pack_current.hw.dma_started == true)
     {
-        *pack_current.data = ((float)*pack_current.raw_data)* pack_current.settings.scaling_factor;
+        *pack_current.data = ((float)(*pack_current.raw_data >> 8)) / pack_current.settings.scaling_factor;
     }
     else
     {
@@ -33,6 +33,10 @@ acu_lv_status_t acu_lv_svc_start_shunt_filter()
 {
     acu_lv_status_t status;
     status = acu_lv_start_DFSDM_filter(pack_current.hw.filter_handle, pack_current.raw_data);
+    if(status == ACU_LV_OK)
+    {
+    	pack_current.hw.dma_started = true;
+    }
     return status;
 }
 
@@ -40,5 +44,9 @@ acu_lv_status_t acu_lv_svc_stop_shunt_filter()
 {
     acu_lv_status_t status;
     status = acu_lv_stop_DFSDM_filter(pack_current.hw.filter_handle);
+    if(status == ACU_LV_OK)
+    {
+    	pack_current.hw.dma_started = true;
+    }
     return status;
 }

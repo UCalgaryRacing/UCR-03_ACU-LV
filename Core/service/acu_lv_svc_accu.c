@@ -15,7 +15,7 @@ acu_lv_status_t acu_lv_svc_update_accu_voltage()
 {
     if(accu_voltage.hw.dma_started == true)
     {
-        *accu_voltage.data = ((float)*accu_voltage.raw_data)* accu_voltage.settings.scaling_factor;
+        *accu_voltage.data = ((float)(*accu_voltage.raw_data >> 8))* accu_voltage.settings.scaling_factor;
     }
     else
     {
@@ -33,6 +33,10 @@ acu_lv_status_t acu_lv_svc_start_accu_filter()
 {
     acu_lv_status_t status;
     status = acu_lv_start_DFSDM_filter(accu_voltage.hw.filter_handle, accu_voltage.raw_data);
+    if(status == ACU_LV_OK)
+    {
+    	accu_voltage.hw.dma_started = true;
+    }
     return status;
 }
 
@@ -40,5 +44,10 @@ acu_lv_status_t acu_lv_svc_stop_accu_filter()
 {
     acu_lv_status_t status;
     status = acu_lv_stop_DFSDM_filter(accu_voltage.hw.filter_handle);
+
+    if(status == ACU_LV_OK)
+    {
+    	accu_voltage.hw.dma_started = false;
+    }
     return status;
 }

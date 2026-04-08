@@ -5,12 +5,15 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
+../Core/driver/acu_lv_drv_debug_led.c \
 ../Core/driver/acu_lv_drv_dfsdm.c 
 
 OBJS += \
+./Core/driver/acu_lv_drv_debug_led.o \
 ./Core/driver/acu_lv_drv_dfsdm.o 
 
 C_DEPS += \
+./Core/driver/acu_lv_drv_debug_led.d \
 ./Core/driver/acu_lv_drv_dfsdm.d 
 
 
@@ -21,7 +24,7 @@ Core/driver/%.o Core/driver/%.su Core/driver/%.cyclo: ../Core/driver/%.c Core/dr
 clean: clean-Core-2f-driver
 
 clean-Core-2f-driver:
-	-$(RM) ./Core/driver/acu_lv_drv_dfsdm.cyclo ./Core/driver/acu_lv_drv_dfsdm.d ./Core/driver/acu_lv_drv_dfsdm.o ./Core/driver/acu_lv_drv_dfsdm.su
+	-$(RM) ./Core/driver/acu_lv_drv_debug_led.cyclo ./Core/driver/acu_lv_drv_debug_led.d ./Core/driver/acu_lv_drv_debug_led.o ./Core/driver/acu_lv_drv_debug_led.su ./Core/driver/acu_lv_drv_dfsdm.cyclo ./Core/driver/acu_lv_drv_dfsdm.d ./Core/driver/acu_lv_drv_dfsdm.o ./Core/driver/acu_lv_drv_dfsdm.su
 
 .PHONY: clean-Core-2f-driver
 

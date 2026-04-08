@@ -70,3 +70,25 @@ acu_lv_pack_measurement_t ts_voltage = {
     .data = &g_ts_data_float,
     .raw_data = &g_ts_data_raw
 };
+
+/*============================================================================*/
+/* Debug LEDs*/
+/*============================================================================*/
+
+debug_led_t blue_led = {
+    .port = LED_1_PORT,
+    .pin = LED_1_PIN,
+    .state = GPIO_PIN_RESET
+};
+
+debug_led_t green_led = {
+    .port = LED_2_PORT,
+    .pin = LED_2_PIN,
+    .state = GPIO_PIN_RESET
+};
+
+debug_led_t red_led = {
+    .port = LED_3_PORT,
+    .pin = LED_3_PIN,
+    .state = GPIO_PIN_RESET
+};

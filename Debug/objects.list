@@ -12,6 +12,7 @@
 "./Core/application/tasks/slow_task.o"
 "./Core/application/tasks/task_manager.o"
 "./Core/config/acu_lv_config.o"
+"./Core/driver/acu_lv_drv_debug_led.o"
 "./Core/driver/acu_lv_drv_dfsdm.o"
 "./Core/service/acu_lv_svc_accu.o"
 "./Core/service/acu_lv_svc_shunt.o"

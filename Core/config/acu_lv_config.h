@@ -280,6 +280,17 @@ typedef struct
 } acu_lv_segment_t;
 
 
+/*============================================================================*/
+/* Debug LEDs                                                            */
+/*============================================================================*/
+
+typedef struct
+{
+    GPIO_TypeDef * port;
+    uint16_t pin;
+    GPIO_PinState state;
+} debug_led_t;
+
 
 
 #endif /* CONFIG_CONFIG_H_ */

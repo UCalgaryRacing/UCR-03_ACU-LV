@@ -20,7 +20,6 @@
 #include "main.h"
 #include "cmsis_os.h"
 
-
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "fast_task.h"
@@ -522,7 +521,7 @@ static void MX_DFSDM1_Init(void)
   hdfsdm1_channel2.Instance = DFSDM1_Channel2;
   hdfsdm1_channel2.Init.OutputClock.Activation = ENABLE;
   hdfsdm1_channel2.Init.OutputClock.Selection = DFSDM_CHANNEL_OUTPUT_CLOCK_SYSTEM;
-  hdfsdm1_channel2.Init.OutputClock.Divider = 15;
+  hdfsdm1_channel2.Init.OutputClock.Divider = 30;
   hdfsdm1_channel2.Init.Input.Multiplexer = DFSDM_CHANNEL_EXTERNAL_INPUTS;
   hdfsdm1_channel2.Init.Input.DataPacking = DFSDM_CHANNEL_STANDARD_MODE;
   hdfsdm1_channel2.Init.Input.Pins = DFSDM_CHANNEL_SAME_CHANNEL_PINS;
@@ -539,7 +538,7 @@ static void MX_DFSDM1_Init(void)
   hdfsdm1_channel4.Instance = DFSDM1_Channel4;
   hdfsdm1_channel4.Init.OutputClock.Activation = ENABLE;
   hdfsdm1_channel4.Init.OutputClock.Selection = DFSDM_CHANNEL_OUTPUT_CLOCK_SYSTEM;
-  hdfsdm1_channel4.Init.OutputClock.Divider = 15;
+  hdfsdm1_channel4.Init.OutputClock.Divider = 30;
   hdfsdm1_channel4.Init.Input.Multiplexer = DFSDM_CHANNEL_EXTERNAL_INPUTS;
   hdfsdm1_channel4.Init.Input.DataPacking = DFSDM_CHANNEL_STANDARD_MODE;
   hdfsdm1_channel4.Init.Input.Pins = DFSDM_CHANNEL_SAME_CHANNEL_PINS;
@@ -556,7 +555,7 @@ static void MX_DFSDM1_Init(void)
   hdfsdm1_channel6.Instance = DFSDM1_Channel6;
   hdfsdm1_channel6.Init.OutputClock.Activation = ENABLE;
   hdfsdm1_channel6.Init.OutputClock.Selection = DFSDM_CHANNEL_OUTPUT_CLOCK_SYSTEM;
-  hdfsdm1_channel6.Init.OutputClock.Divider = 15;
+  hdfsdm1_channel6.Init.OutputClock.Divider = 30;
   hdfsdm1_channel6.Init.Input.Multiplexer = DFSDM_CHANNEL_EXTERNAL_INPUTS;
   hdfsdm1_channel6.Init.Input.DataPacking = DFSDM_CHANNEL_STANDARD_MODE;
   hdfsdm1_channel6.Init.Input.Pins = DFSDM_CHANNEL_SAME_CHANNEL_PINS;
