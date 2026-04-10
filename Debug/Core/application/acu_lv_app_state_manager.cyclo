@@ -1,0 +1,9 @@
+../Core/application/acu_lv_app_state_manager.c:15:6:acu_lv_app_state_machine_init	1
+../Core/application/acu_lv_app_state_manager.c:21:6:acu_lv_app_state_machine_step	9
+../Core/application/acu_lv_app_state_manager.c:74:27:handle_startup_state	2
+../Core/application/acu_lv_app_state_manager.c:88:27:handle_idle_state	1
+../Core/application/acu_lv_app_state_manager.c:104:27:handle_precharge_state	1
+../Core/application/acu_lv_app_state_manager.c:117:27:handle_active_state	1
+../Core/application/acu_lv_app_state_manager.c:130:27:handle_fault_state	1
+../Core/application/acu_lv_app_state_manager.c:139:27:handle_charging_state	1
+../Core/application/acu_lv_app_state_manager.c:151:27:handle_balencing_state	1

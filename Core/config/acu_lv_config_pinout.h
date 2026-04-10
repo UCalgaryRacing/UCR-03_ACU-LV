@@ -58,9 +58,14 @@ extern SPI_HandleTypeDef hspi2;
 // or change it to be one array per ADC and use the defines for index
 // that way would have to have define to map the name to the ADC array
 
+#define STM_ADC_SCALING_FACTOR 0.1240079365079365f
+
 // Adcs handles SDC monitering and power for AIR coils
 extern ADC_HandleTypeDef hadc2;
 extern ADC_HandleTypeDef hadc3;
+
+#define ACU_LV_ADC_2_HANDLE (&hadc2)
+#define ACU_LV_ADC_3_HANDLE (&hadc3)
 
 //rank 1 on adc3, adc3 input 3
 #define SDC_MID_1_ADC_HANDLE (&hadc3)
@@ -89,8 +94,8 @@ extern ADC_HandleTypeDef hadc3;
 
 // rank 2 on adc2, adc2 input 3
 #define SDC_RESERVE_ADC_HANDLE (&hadc2)
-#define SDC_RESERVE_BUFFER_INDEX 
-#define SDC_RESERVE_BUFFER_LENGTH
+#define SDC_RESERVE_BUFFER_INDEX 1U
+#define SDC_RESERVE_BUFFER_LENGTH 2U
 
 /*============================================================================*/
 /* Current Shunt (AMC33X6XX)                                                  */

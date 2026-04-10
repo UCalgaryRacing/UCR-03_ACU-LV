@@ -5,16 +5,25 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
+../Core/driver/acu_lv_drv_air.c \
+../Core/driver/acu_lv_drv_analog.c \
 ../Core/driver/acu_lv_drv_debug_led.c \
-../Core/driver/acu_lv_drv_dfsdm.c 
+../Core/driver/acu_lv_drv_dfsdm.c \
+../Core/driver/acu_lv_drv_imd.c 
 
 OBJS += \
+./Core/driver/acu_lv_drv_air.o \
+./Core/driver/acu_lv_drv_analog.o \
 ./Core/driver/acu_lv_drv_debug_led.o \
-./Core/driver/acu_lv_drv_dfsdm.o 
+./Core/driver/acu_lv_drv_dfsdm.o \
+./Core/driver/acu_lv_drv_imd.o 
 
 C_DEPS += \
+./Core/driver/acu_lv_drv_air.d \
+./Core/driver/acu_lv_drv_analog.d \
 ./Core/driver/acu_lv_drv_debug_led.d \
-./Core/driver/acu_lv_drv_dfsdm.d 
+./Core/driver/acu_lv_drv_dfsdm.d \
+./Core/driver/acu_lv_drv_imd.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes
@@ -24,7 +33,7 @@ Core/driver/%.o Core/driver/%.su Core/driver/%.cyclo: ../Core/driver/%.c Core/dr
 clean: clean-Core-2f-driver
 
 clean-Core-2f-driver:
-	-$(RM) ./Core/driver/acu_lv_drv_debug_led.cyclo ./Core/driver/acu_lv_drv_debug_led.d ./Core/driver/acu_lv_drv_debug_led.o ./Core/driver/acu_lv_drv_debug_led.su ./Core/driver/acu_lv_drv_dfsdm.cyclo ./Core/driver/acu_lv_drv_dfsdm.d ./Core/driver/acu_lv_drv_dfsdm.o ./Core/driver/acu_lv_drv_dfsdm.su
+	-$(RM) ./Core/driver/acu_lv_drv_air.cyclo ./Core/driver/acu_lv_drv_air.d ./Core/driver/acu_lv_drv_air.o ./Core/driver/acu_lv_drv_air.su ./Core/driver/acu_lv_drv_analog.cyclo ./Core/driver/acu_lv_drv_analog.d ./Core/driver/acu_lv_drv_analog.o ./Core/driver/acu_lv_drv_analog.su ./Core/driver/acu_lv_drv_debug_led.cyclo ./Core/driver/acu_lv_drv_debug_led.d ./Core/driver/acu_lv_drv_debug_led.o ./Core/driver/acu_lv_drv_debug_led.su ./Core/driver/acu_lv_drv_dfsdm.cyclo ./Core/driver/acu_lv_drv_dfsdm.d ./Core/driver/acu_lv_drv_dfsdm.o ./Core/driver/acu_lv_drv_dfsdm.su ./Core/driver/acu_lv_drv_imd.cyclo ./Core/driver/acu_lv_drv_imd.d ./Core/driver/acu_lv_drv_imd.o ./Core/driver/acu_lv_drv_imd.su
 
 .PHONY: clean-Core-2f-driver
 

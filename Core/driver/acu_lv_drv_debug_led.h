@@ -22,7 +22,7 @@ static inline void acu_lv_drv_turn_off_led(debug_led_t * led)
     HAL_GPIO_WritePin(led->port,led->pin,led->state);
 }
 
-static inline void acu_lv_toggle_led(debug_led_t * led)
+static inline void acu_lv_drv_toggle_led(debug_led_t * led)
 {
     (led->state == GPIO_PIN_RESET) ? (led->state = GPIO_PIN_SET) : (led->state = GPIO_PIN_RESET);
     HAL_GPIO_WritePin(led->port,led->pin,led->state);

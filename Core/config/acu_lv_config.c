@@ -72,6 +72,74 @@ acu_lv_pack_measurement_t ts_voltage = {
 };
 
 /*============================================================================*/
+/* ADC Configuration*/
+/*============================================================================*/
+
+uint16_t g_adc_2_dma_buffer[ACU_LV_ADC_2_MAX_NUMBER_CHANNELS];
+uint16_t g_adc_3_dma_buffer[ACU_LV_ADC_3_MAX_NUMBER_CHANNELS];
+
+analog_adc_context_t adc_2_context = {
+    .adc_handle = ACU_LV_ADC_2_HANDLE,
+    .adc_channels = ACU_LV_ADC_2_MAX_NUMBER_CHANNELS,
+    .adc_max = ACU_LV_ADC_2_MAX_COUNTS,
+    .adc_vref = ACU_LV_ADC_VREF,
+    .calibrated = false,
+    .dma_started = false
+};
+
+analog_hw_t adc_2_hw = {
+    .adc_context = &adc_2_context,
+    .adc_buffer = g_adc_2_dma_buffer
+};
+
+analog_adc_context_t adc_3_context = {
+    .adc_handle = ACU_LV_ADC_3_HANDLE,
+    .adc_channels = ACU_LV_ADC_3_MAX_NUMBER_CHANNELS,
+    .adc_max = ACU_LV_ADC_3_MAX_COUNTS,
+    .adc_vref = ACU_LV_ADC_VREF,
+    .calibrated = false,
+    .dma_started = false
+};
+
+analog_hw_t adc_3_hw = {
+    .adc_context = &adc_3_context,
+    .adc_buffer = g_adc_3_dma_buffer
+};
+
+/*============================================================================*/
+/* AIR Configuration*/
+/*============================================================================*/
+
+
+acu_lv_air_t air = {
+    .analog_hw = &adc_2_context,
+    .air_hw = {
+        .air_neg_port = AIR_NEG_EN_PORT,
+        .air_neg_pin = AIR_NEG_EN_PIN,
+        .neg_state = GPIO_PIN_RESET,
+        .air_pos_port = AIR_POS_EN_PORT,
+        .air_pos_pin = AIR_POS_EN_PIN,
+        .pos_state = GPIO_PIN_RESET
+    },
+    .adc_buffer_index = SDC_RESERVE_BUFFER_INDEX,
+    .sdc_reserve = 0.0f
+};
+
+/*============================================================================*/
+/* IMD*/
+/*============================================================================*/
+
+acu_lv_imd_t imd = {
+    .hw = {
+        .imd_m_port = IMD_M_PORT,
+        .imd_m_pin = IMD_M_PIN,
+        .imd_ok_port = IMD_OK_PORT,
+        .imd_ok_pin = IMD_OK_PIN,
+    },
+    .state = ACU_LV_IMD_FAULT
+};
+
+/*============================================================================*/
 /* Debug LEDs*/
 /*============================================================================*/
 

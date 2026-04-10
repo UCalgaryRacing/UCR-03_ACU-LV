@@ -20,15 +20,6 @@
 
 typedef enum
 {
-    ACU_LV_IDLE = 0U,
-    ACU_LVSTARTUP,
-    ACU_LVPRECHARGE,
-    ACU_LVTS_ACTIVE,
-    ACU_LV_FAULT
-} acu_lv_state_t;
-
-typedef enum
-{
     ACU_LV_OK = 0U,
     ACU_LV_ERROR
 } acu_lv_status_t;

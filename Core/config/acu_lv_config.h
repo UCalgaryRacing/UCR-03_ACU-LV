@@ -20,13 +20,18 @@
 /* ADC Common Settings                                                        */
 /*============================================================================*/
 
-// ADC resolution (12-bit = 4096 counts)
-#define ADC_RESOLUTION              4096U
+// ADC resolution, use 12-bits for LV due to charge bucket sizing
+#define ACU_LV_ADC_2_RESOLUTION_BITS 12U
+#define ACU_LV_ADC_2_MAX_COUNTS ((1U << ACU_LV_ADC_2_RESOLUTION_BITS) -1)
+#define ACU_LV_ADC_2_MAX_NUMBER_CHANNELS 2U
 
-#define ADC_SCALING_FACTOR 0.18458f
+#define ACU_LV_ADC_2_RESOLUTION_BITS 12U
+#define ACU_LV_ADC_3_MAX_COUNTS ((1U << ACU_LV_ADC_2_RESOLUTION_BITS) -1)
+#define ACU_LV_ADC_3_MAX_NUMBER_CHANNELS 4U
 
-// ADC reference voltage in volts
-#define ADC_VREF                    3.3f
+#define ACU_LV_ADC_SCALING_FACTOR 0.18458f
+
+#define ACU_LV_ADC_VREF                    2.5f
 
 /*============================================================================*/
 /* Accumulator Voltage Configuration                                          */
@@ -251,7 +256,7 @@ typedef struct
 /*============================================================================*/
 /* Cell Structure                                                             */
 /*============================================================================*/
-
+// add stuff to use this
 typedef struct
 {
     adbms6830_hw_t hw;
@@ -278,6 +283,73 @@ typedef struct
     acu_lv_cell_voltage_t *cell_voltages[NUMBER_ADBMS_CELLS_PER_SEG];
     acu_lv_cell_temp_t *cell_temps[NUMBER_THERMS_PER_SEG];
 } acu_lv_segment_t;
+
+/*============================================================================*/
+/* ADC Structure                                                              */
+/*============================================================================*/
+
+typedef struct {
+    ADC_HandleTypeDef *adc_handle;
+    float adc_vref;
+    uint16_t adc_max;  
+    bool calibrated;
+    bool dma_started;
+    uint8_t adc_channels;
+} analog_adc_context_t;
+
+typedef struct
+{
+    analog_adc_context_t *adc_context;
+    uint16_t * adc_buffer;
+} analog_hw_t;
+
+/*============================================================================*/
+/* AIRs                                                            */
+/*============================================================================*/
+
+typedef struct
+{
+    GPIO_TypeDef * air_pos_port;
+    uint16_t air_pos_pin;
+    GPIO_PinState pos_state;
+
+    GPIO_TypeDef * air_neg_port;
+    uint16_t air_neg_pin;
+    GPIO_PinState neg_state;
+} acu_lv_air_hw_t;
+
+typedef struct 
+{
+    acu_lv_air_hw_t air_hw;
+    analog_hw_t analog_hw;
+    float sdc_reserve;
+    uint8_t adc_buffer_index;
+} acu_lv_air_t;
+
+/*============================================================================*/
+/* IMD                                                            */
+/*============================================================================*/
+
+typedef enum
+{
+    ACU_LV_IMD_FAULT = 0U,
+    ACU_LV_IMD_OK
+} acu_lv_imd_state_t;
+
+// add timer for measuring m pulse width
+typedef struct
+{
+    GPIO_TypeDef * imd_ok_port;
+    uint16_t imd_ok_pin;
+    GPIO_TypeDef * imd_m_port;
+    uint16_t imd_m_pin;
+} acu_lv_imd_hw_t;
+
+typedef struct
+{
+    acu_lv_imd_hw_t hw;
+    acu_lv_imd_state_t state;
+} acu_lv_imd_t;
 
 
 /*============================================================================*/

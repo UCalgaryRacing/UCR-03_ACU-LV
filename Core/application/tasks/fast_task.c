@@ -35,6 +35,7 @@ void fast_task_loop()
 {
     next_wake += period;
     osDelayUntil(next_wake);
+    acu_lv_drv_toggle_led(&blue_led);
 
     // update the values for tractive and accumulator voltage
     acu_lv_svc_update_ts_voltage();

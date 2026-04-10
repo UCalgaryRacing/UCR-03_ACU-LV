@@ -24,6 +24,7 @@ C_DEPS :=
 SUBDIRS := \
 Core/Src \
 Core/Startup \
+Core/application \
 Core/application/tasks \
 Core/config \
 Core/driver \
