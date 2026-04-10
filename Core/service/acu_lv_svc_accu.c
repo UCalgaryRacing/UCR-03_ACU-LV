@@ -24,7 +24,7 @@ acu_lv_status_t acu_lv_svc_update_accu_voltage()
     return ACU_LV_OK;
 }
 
-float acu_lv_svc_get_acu_voltage()
+float acu_lv_svc_get_accu_voltage()
 {
     return *accu_voltage.data;
 }

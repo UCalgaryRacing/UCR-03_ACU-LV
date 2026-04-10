@@ -1,7 +1,5 @@
-Core/application/acu_lv_app_state_manager.o: \
- ../Core/application/acu_lv_app_state_manager.c \
- ../Core/application/acu_lv_app_state_manager.h \
- ../Core/service/acu_lv_svc_imd.h ../Core/driver/acu_lv_drv_imd.h \
+Core/driver/acu_lv_drv_sdc.o: ../Core/driver/acu_lv_drv_sdc.c \
+ ../Core/driver/acu_lv_drv_sdc.h \
  C:/Users/clayd/OneDrive/Documents/UCR_03/UCR_03_ACU_LV/Core/config/acu_lv_config.h \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h \
  ../Core/Inc/stm32h7xx_hal_conf.h \
@@ -41,13 +39,8 @@ Core/application/acu_lv_app_state_manager.o: \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_tim.h \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_tim_ex.h \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart.h \
- ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart_ex.h \
- ../Core/service/acu_lv_svc_air.h ../Core/service/acu_lv_svc_precharge.h \
- ../Core/service/acu_lv_svc_sdc.h ../Core/driver/acu_lv_drv_air.h \
- ../Core/driver/acu_lv_drv_sdc.h
-../Core/application/acu_lv_app_state_manager.h:
-../Core/service/acu_lv_svc_imd.h:
-../Core/driver/acu_lv_drv_imd.h:
+ ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart_ex.h
+../Core/driver/acu_lv_drv_sdc.h:
 C:/Users/clayd/OneDrive/Documents/UCR_03/UCR_03_ACU_LV/Core/config/acu_lv_config.h:
 ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:
 ../Core/Inc/stm32h7xx_hal_conf.h:
@@ -88,8 +81,3 @@ C:/Users/clayd/OneDrive/Documents/UCR_03/UCR_03_ACU_LV/Core/config/acu_lv_config
 ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_tim_ex.h:
 ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart.h:
 ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart_ex.h:
-../Core/service/acu_lv_svc_air.h:
-../Core/service/acu_lv_svc_precharge.h:
-../Core/service/acu_lv_svc_sdc.h:
-../Core/driver/acu_lv_drv_air.h:
-../Core/driver/acu_lv_drv_sdc.h:

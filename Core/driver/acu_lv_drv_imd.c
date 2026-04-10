@@ -31,17 +31,3 @@ acu_lv_imd_state_t acu_lv_drv_get_imd_state()
 }
 
 
-acu_lv_status_t acu_lv_drv_reset_imd_latch()
-{   
-    // check that imd is ok before resetting relay
-    if(imd.state == ACU_LV_IMD_OK)
-    {
-        HAL_GPIO_WritePin(imd.hw.latch_reset_port,imd.hw.imd_m_pin,GPIO_PIN_SET);
-        osDelay(20);
-        HAL_GPIO_WritePin(imd.hw.latch_reset_port,imd.hw.imd_m_pin,GPIO_PIN_RESET);
-
-        return ACU_LV_OK;
-    }
-
-    return ACU_LV_ERROR;
-}

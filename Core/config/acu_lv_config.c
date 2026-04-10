@@ -112,7 +112,7 @@ analog_hw_t adc_3_hw = {
 
 
 acu_lv_air_t air = {
-    .analog_hw = &adc_2_context,
+    .analog_hw = {&adc_2_context},
     .air_hw = {
         .air_neg_port = AIR_NEG_EN_PORT,
         .air_neg_pin = AIR_NEG_EN_PIN,
@@ -135,11 +135,30 @@ acu_lv_imd_t imd = {
         .imd_m_port = IMD_M_PORT,
         .imd_m_pin = IMD_M_PIN,
         .imd_ok_port = IMD_OK_PORT,
-        .imd_ok_pin = IMD_OK_PIN,
-        .latch_reset_port = IMD_LATCH_RESET_PORT,
-        .latch_reset_pin = IMD_LATCH_RESET_PIN
+        .imd_ok_pin = IMD_OK_PIN
     },
     .state = ACU_LV_IMD_FAULT
+};
+
+/*============================================================================*/
+/* SDC*/
+/*============================================================================*/
+
+acu_lv_sdc_t sdc = {
+    .hw = {
+        .imd_latch_reset_port = IMD_LATCH_RESET_PORT,
+        .imd_latch_reset_pin = IMD_LATCH_RESET_PIN,
+        .imd_latch_state = GPIO_PIN_RESET,
+
+        .ams_latch_reset_port = AMS_LATCH_RESET_PORT,
+        .ams_latch_reset_pin = AMS_LATCH_RESET_PIN,
+        .ams_latch_state = GPIO_PIN_RESET,
+
+        .ams_ok_port = AMS_OK_PORT,
+        .ams_ok_pin = AMS_OK_PIN,
+        .ams_ok_state = GPIO_PIN_RESET
+    },
+    .shutdown_closed = false
 };
 
 /*============================================================================*/

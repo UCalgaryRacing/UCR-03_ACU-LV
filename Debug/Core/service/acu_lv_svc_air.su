@@ -1,1 +1,2 @@
 ../Core/service/acu_lv_svc_air.c:13:7:acu_lv_svc_get_sdc_reserve	4	static
+../Core/service/acu_lv_svc_air.c:18:6:acu_lv_svc_sdc_reserve_good	8	static

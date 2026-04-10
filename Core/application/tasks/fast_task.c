@@ -18,6 +18,7 @@
 #include "acu_lv_drv_imd.h"
 #include "acu_lv_drv_analog.h"
 #include "acu_lv_drv_air.h"
+#include "acu_lv_drv_sdc.h"
 
 const static uint32_t period = 10;
 static uint32_t next_wake;
@@ -46,6 +47,9 @@ void fast_task_init()
 
     // initialize airs, should make svc layer do it eventually
     acu_lv_drv_air_init();
+
+    // initialize sdc
+    acu_lv_drv_sdc_init();
 
     acu_lv_drv_turn_on_led(&blue_led);
 }

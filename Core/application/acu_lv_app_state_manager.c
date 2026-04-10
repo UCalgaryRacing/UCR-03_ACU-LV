@@ -6,9 +6,15 @@
  */
 
 #include "acu_lv_app_state_manager.h"
-#include "acu_lv_drv_imd.h"
-#include "acu_lv_svc_air.h"
 
+#include "acu_lv_svc_imd.h"
+#include "acu_lv_svc_air.h"
+#include "acu_lv_svc_precharge.h"
+#include "acu_lv_svc_sdc.h"
+
+#include "acu_lv_drv_air.h"
+#include "acu_lv_drv_imd.h"
+#include "acu_lv_drv_sdc.h"
 
 
 static acu_lv_app_state_t g_current_state = ACU_LV_APP_STATE_STARTUP;
@@ -77,10 +83,9 @@ static acu_lv_app_state_t handle_startup_state()
 {
 
     // start cell temp and voltage measurement
-    // check imd
-    if(acu_lv_drv_get_imd_state() != ACU_LV_IMD_OK)
+    // check imd, potentially change to happen in idle to allow imd time to boot or add delay
+    if(acu_lv_svc_imd_ok())
     {
-        
         return ACU_LV_APP_STATE_FAULT;
     }
     // tssi enabled
@@ -96,18 +101,20 @@ static acu_lv_app_state_t handle_idle_state()
 
     // check cell voltage and temps out of range
 
-    // check imd
-    if(acu_lv_drv_get_imd_state() != ACU_LV_IMD_OK)
-    {   
-        return ACU_LV_APP_STATE_FAULT;
-    }
-    
-    // measure sdc reserve, must reach 9V
-    if(acu_lv_svc_get_sdc_reserve() <= 9.0f)
+    // check state transition, start with transition case
+    // then move through to check for errors based on safety/priority
+    if(acu_lv_svc_sdc_reserve_good() && acu_lv_svc_imd_ok())
     {
         return ACU_LV_APP_STATE_IDLE;
     }
-    
+    else if(!acu_lv_svc_imd_ok())
+    {   
+        return ACU_LV_APP_STATE_FAULT;
+    }
+    else if(!acu_lv_svc_sdc_reserve_good())
+    {
+        return ACU_LV_APP_STATE_IDLE;
+    }
 
     // tssi enabled
 
@@ -119,6 +126,10 @@ static acu_lv_app_state_t handle_idle_state()
 static acu_lv_app_state_t handle_precharge_state()
 {
     // monitor accu and ts voltage
+    if(acu_lv_svc_check_precharge_done())
+    {
+        return ACU_LV_APP_STATE_ACTIVE;
+    }
     // monitor pack current
     // monitor cell voltage and temp
     // monitor sdc
@@ -127,6 +138,7 @@ static acu_lv_app_state_t handle_precharge_state()
 
     //transition to active when ts and accu reach 90%
     //transition to fault if watchdog timeout
+    return ACU_LV_APP_STATE_FAULT;
 }
 
 static acu_lv_app_state_t handle_active_state()
@@ -140,6 +152,7 @@ static acu_lv_app_state_t handle_active_state()
 
     //transition to charge if charging message recieved
     //fault transition if imd fault, cell voltage or temp out of range
+    return ACU_LV_APP_STATE_FAULT;
 }
 
 static acu_lv_app_state_t handle_fault_state()
@@ -149,6 +162,7 @@ static acu_lv_app_state_t handle_fault_state()
     // monitor imd
     // disable logging
     // tssi enabled/ flash red
+    return ACU_LV_APP_STATE_FAULT;
 }
 
 static acu_lv_app_state_t handle_charging_state()
@@ -161,6 +175,7 @@ static acu_lv_app_state_t handle_charging_state()
 
     //transition to fault if voltage or temp out of range, charger comm lost,charger fault
     // transition to balance if balance command rx or any cell reaches max voltage
+    return ACU_LV_APP_STATE_FAULT;
 }
 
 static acu_lv_app_state_t handle_balencing_state()
@@ -173,6 +188,7 @@ static acu_lv_app_state_t handle_balencing_state()
 
     //transition to fault if imd fault, voltage or temp out of range, charger fault
     //transition to charge once cells are within 10mV
+    return ACU_LV_APP_STATE_FAULT;
 }
 
 static void state_entry(acu_lv_app_state_t state)
@@ -211,10 +227,14 @@ static void state_exit(acu_lv_app_state_t state)
         // send tssi good signal
         break;
     case ACU_LV_APP_STATE_IDLE:
-        // close sdc and air(-)when leaving idle
+        // close shutdown
+        acu_lv_svc_close_sdc();        
+        //close negative air when leaving idle
+        acu_lv_drv_close_air_neg();
         break;
     case ACU_LV_APP_STATE_PRECHARGE:
-        // close airs on precharge exit
+        //close positive air when leaving precharge
+        acu_lv_drv_close_air_pos();
         break;
     case ACU_LV_APP_STATE_ACTIVE:
         /* code */

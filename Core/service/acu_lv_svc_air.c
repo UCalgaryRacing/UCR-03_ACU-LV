@@ -14,3 +14,15 @@ float acu_lv_svc_get_sdc_reserve()
 {
     return air.sdc_reserve;
 }
+
+bool acu_lv_svc_sdc_reserve_good()
+{
+    if(acu_lv_svc_get_sdc_reserve() >= 9.0f)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}

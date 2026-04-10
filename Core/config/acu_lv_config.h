@@ -373,8 +373,6 @@ typedef struct
     uint16_t imd_ok_pin;
     GPIO_TypeDef * imd_m_port;
     uint16_t imd_m_pin;
-    GPIO_TypeDef * latch_reset_port;
-    uint16_t latch_reset_pin;
 } acu_lv_imd_hw_t;
 
 typedef struct
@@ -382,6 +380,28 @@ typedef struct
     acu_lv_imd_hw_t hw;
     acu_lv_imd_state_t state;
 } acu_lv_imd_t;
+
+typedef struct
+{
+    GPIO_TypeDef * imd_latch_reset_port;
+    uint16_t imd_latch_reset_pin;
+    GPIO_PinState imd_latch_state;
+
+    GPIO_TypeDef * ams_latch_reset_port;
+    uint16_t ams_latch_reset_pin;
+    GPIO_PinState ams_latch_state;
+
+    GPIO_TypeDef * ams_ok_port;
+    uint16_t ams_ok_pin;
+    GPIO_PinState ams_ok_state;
+} acu_lv_sdc_hw_t;
+
+typedef struct 
+{
+    acu_lv_sdc_hw_t hw;
+    bool shutdown_closed;
+} acu_lv_sdc_t;
+
 
 
 /*============================================================================*/

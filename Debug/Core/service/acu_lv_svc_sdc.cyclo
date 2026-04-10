@@ -1,0 +1,2 @@
+../Core/service/acu_lv_svc_sdc.c:13:6:acu_lv_svc_open_sdc	1
+../Core/service/acu_lv_svc_sdc.c:20:6:acu_lv_svc_close_sdc	1
