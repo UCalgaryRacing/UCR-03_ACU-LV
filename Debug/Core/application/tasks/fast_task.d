@@ -1,6 +1,6 @@
 Core/application/tasks/fast_task.o: ../Core/application/tasks/fast_task.c \
  ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h \
- C:/Users/clayd/OneDrive/Documents/UCR_03/UCR_03_ACU_LV/Core/config/acu_lv_config.h \
+ ../Core/config/acu_lv/acu_lv_config.h \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h \
  ../Core/Inc/stm32h7xx_hal_conf.h \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h \
@@ -40,13 +40,17 @@ Core/application/tasks/fast_task.o: ../Core/application/tasks/fast_task.c \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_tim_ex.h \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart.h \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart_ex.h \
- ../Core/application/tasks/fast_task.h ../Core/service/acu_lv_svc_accu.h \
- ../Core/service/acu_lv_svc_ts.h ../Core/service/acu_lv_svc_shunt.h \
- ../Core/driver/acu_lv_drv_debug_led.h ../Core/driver/acu_lv_drv_imd.h \
- ../Core/driver/acu_lv_drv_analog.h ../Core/driver/acu_lv_drv_air.h \
- ../Core/driver/acu_lv_drv_sdc.h
+ ../Core/application/tasks/fast_task.h \
+ ../Core/service/acu_lv/acu_lv_svc_accu.h \
+ ../Core/service/acu_lv/acu_lv_svc_ts.h \
+ ../Core/service/acu_lv/acu_lv_svc_shunt.h \
+ ../Core/driver/acu_lv/acu_lv_drv_debug_led.h \
+ ../Core/driver/acu_lv/acu_lv_drv_imd.h \
+ ../Core/driver/acu_lv/acu_lv_drv_analog.h \
+ ../Core/driver/acu_lv/acu_lv_drv_air.h \
+ ../Core/driver/acu_lv/acu_lv_drv_sdc.h
 ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h:
-C:/Users/clayd/OneDrive/Documents/UCR_03/UCR_03_ACU_LV/Core/config/acu_lv_config.h:
+../Core/config/acu_lv/acu_lv_config.h:
 ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:
 ../Core/Inc/stm32h7xx_hal_conf.h:
 ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:
@@ -87,11 +91,11 @@ C:/Users/clayd/OneDrive/Documents/UCR_03/UCR_03_ACU_LV/Core/config/acu_lv_config
 ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart.h:
 ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart_ex.h:
 ../Core/application/tasks/fast_task.h:
-../Core/service/acu_lv_svc_accu.h:
-../Core/service/acu_lv_svc_ts.h:
-../Core/service/acu_lv_svc_shunt.h:
-../Core/driver/acu_lv_drv_debug_led.h:
-../Core/driver/acu_lv_drv_imd.h:
-../Core/driver/acu_lv_drv_analog.h:
-../Core/driver/acu_lv_drv_air.h:
-../Core/driver/acu_lv_drv_sdc.h:
+../Core/service/acu_lv/acu_lv_svc_accu.h:
+../Core/service/acu_lv/acu_lv_svc_ts.h:
+../Core/service/acu_lv/acu_lv_svc_shunt.h:
+../Core/driver/acu_lv/acu_lv_drv_debug_led.h:
+../Core/driver/acu_lv/acu_lv_drv_imd.h:
+../Core/driver/acu_lv/acu_lv_drv_analog.h:
+../Core/driver/acu_lv/acu_lv_drv_air.h:
+../Core/driver/acu_lv/acu_lv_drv_sdc.h:

@@ -96,6 +96,13 @@ const osThreadAttr_t SlowTask_attributes = {
   .stack_size = 512 * 4,
   .priority = (osPriority_t) osPriorityRealtime,
 };
+/* Definitions for CanTask */
+osThreadId_t CanTaskHandle;
+const osThreadAttr_t CanTask_attributes = {
+  .name = "CanTask",
+  .stack_size = 512 * 4,
+  .priority = (osPriority_t) osPriorityRealtime,
+};
 /* USER CODE BEGIN PV */
 
 /* USER CODE END PV */
@@ -119,6 +126,7 @@ void startTaskManager(void *argument);
 void StartFastTask(void *argument);
 void StartMediumTask(void *argument);
 void StartSlowTask(void *argument);
+void StartCanTask(void *argument);
 
 /* USER CODE BEGIN PFP */
 
@@ -209,6 +217,9 @@ int main(void)
 
   /* creation of SlowTask */
   SlowTaskHandle = osThreadNew(StartSlowTask, NULL, &SlowTask_attributes);
+
+  /* creation of CanTask */
+  CanTaskHandle = osThreadNew(StartCanTask, NULL, &CanTask_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -1091,6 +1102,24 @@ void StartSlowTask(void *argument)
     slow_task_loop();
   }
   /* USER CODE END StartSlowTask */
+}
+
+/* USER CODE BEGIN Header_StartCanTask */
+/**
+* @brief Function implementing the CanTask thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_StartCanTask */
+void StartCanTask(void *argument)
+{
+  /* USER CODE BEGIN StartCanTask */
+  /* Infinite loop */
+  for(;;)
+  {
+    osDelay(1);
+  }
+  /* USER CODE END StartCanTask */
 }
 
  /* MPU Configuration */

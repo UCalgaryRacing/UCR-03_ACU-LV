@@ -19,18 +19,6 @@ typedef enum
     ACU_LV_APP_STATE_BALANCING
 } acu_lv_app_state_t;
 
-// private function prototype
-static acu_lv_app_state_t handle_startup_state();
-static acu_lv_app_state_t handle_idle_state();
-static acu_lv_app_state_t handle_precharge_state();
-static acu_lv_app_state_t handle_active_state();
-static acu_lv_app_state_t handle_fault_state();
-static acu_lv_app_state_t handle_charging_state();
-static acu_lv_app_state_t handle_balencing_state();
-
-static void state_entry(acu_lv_app_state_t state);
-static void state_exit(acu_lv_app_state_t state);
-
 // public function prototype
 void acu_lv_app_state_machine_init();
 void acu_lv_app_state_machine_step();

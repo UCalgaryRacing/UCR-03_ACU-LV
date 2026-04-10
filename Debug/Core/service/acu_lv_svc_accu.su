@@ -1,4 +1,0 @@
-../Core/service/acu_lv_svc_accu.c:14:17:acu_lv_svc_update_accu_voltage	4	static
-../Core/service/acu_lv_svc_accu.c:27:7:acu_lv_svc_get_accu_voltage	4	static
-../Core/service/acu_lv_svc_accu.c:32:17:acu_lv_svc_start_accu_filter	16	static
-../Core/service/acu_lv_svc_accu.c:43:17:acu_lv_svc_stop_accu_filter	16	static

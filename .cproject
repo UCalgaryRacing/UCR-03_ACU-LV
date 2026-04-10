@@ -60,16 +60,17 @@
 									<listOptionValue builtIn="false" value="../Drivers/CMSIS/Device/ST/STM32H7xx/Include"/>
 									<listOptionValue builtIn="false" value="../Drivers/CMSIS/Include"/>
 									<listOptionValue builtIn="false" value="../Core/application"/>
-									<listOptionValue builtIn="false" value="&quot;C:\Users\clayd\OneDrive\Documents\UCR_03\UCR_03_ACU_LV\Core\config&quot;"/>
 									<listOptionValue builtIn="false" value="../Core/data"/>
-									<listOptionValue builtIn="false" value="../Core/service"/>
-									<listOptionValue builtIn="false" value="../Core/types"/>
 									<listOptionValue builtIn="false" value="../Middlewares/Third_Party/FreeRTOS/Source/include"/>
 									<listOptionValue builtIn="false" value="../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2"/>
 									<listOptionValue builtIn="false" value="../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F"/>
-									<listOptionValue builtIn="false" value="../Core/driver"/>
-									<listOptionValue builtIn="false" value="../Core/config"/>
 									<listOptionValue builtIn="false" value="../Core/application/tasks"/>
+									<listOptionValue builtIn="false" value="../Core/config/acu_lv"/>
+									<listOptionValue builtIn="false" value="../Core/config/can"/>
+									<listOptionValue builtIn="false" value="../Core/service/acu_lv"/>
+									<listOptionValue builtIn="false" value="../Core/driver/acu_lv"/>
+									<listOptionValue builtIn="false" value="../Core/service/can"/>
+									<listOptionValue builtIn="false" value="../Core/driver/can"/>
 								</option>
 								<inputType id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.input.c.1950292894" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.input.c"/>
 							</tool>

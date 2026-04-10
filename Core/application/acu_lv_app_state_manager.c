@@ -16,6 +16,17 @@
 #include "acu_lv_drv_imd.h"
 #include "acu_lv_drv_sdc.h"
 
+/* Private Prototypes*/
+static acu_lv_app_state_t handle_startup_state();
+static acu_lv_app_state_t handle_idle_state();
+static acu_lv_app_state_t handle_precharge_state();
+static acu_lv_app_state_t handle_active_state();
+static acu_lv_app_state_t handle_fault_state();
+static acu_lv_app_state_t handle_charging_state();
+static acu_lv_app_state_t handle_balencing_state();
+
+static void state_entry(acu_lv_app_state_t state);
+static void state_exit(acu_lv_app_state_t state);
 
 static acu_lv_app_state_t g_current_state = ACU_LV_APP_STATE_STARTUP;
 static acu_lv_app_state_t g_previous_state = ACU_LV_APP_STATE_STARTUP;
@@ -84,7 +95,7 @@ static acu_lv_app_state_t handle_startup_state()
 
     // start cell temp and voltage measurement
     // check imd, potentially change to happen in idle to allow imd time to boot or add delay
-    if(acu_lv_svc_imd_ok())
+    if(!acu_lv_svc_imd_ok())
     {
         return ACU_LV_APP_STATE_FAULT;
     }
