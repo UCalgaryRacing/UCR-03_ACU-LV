@@ -11,26 +11,18 @@
 #include "acu_lv_drv_imd.h"
 #include "acu_lv_drv_analog.h"
 #include "acu_lv_config.h"
+#include "acu_lv_drv_air.h"
 
 const static uint32_t period = 50;
 static uint32_t next_wake;
 
 extern debug_led_t green_led;
-extern analog_hw_t adc_2_hw, adc_3_hw;
 
 void medium_task_init()
 {
     next_wake = osKernelGetTickCount();
 
     acu_lv_drv_turn_on_led(&green_led);
-
-    // calibrate both the ADCs
-    acu_lv_drv_adc_init(adc_2_hw.adc_context);
-    acu_lv_drv_adc_init(adc_3_hw.adc_context);
-
-    //start the DMA for ADCs
-    acu_lv_drv_adc_start_dma(&adc_2_hw);
-    acu_lv_drv_adc_start_dma(&adc_3_hw);
 }
 void medium_task_loop()
 {
@@ -38,8 +30,11 @@ void medium_task_loop()
     osDelayUntil(next_wake);
     acu_lv_drv_toggle_led(&green_led);
 
+    // check imd state
     acu_lv_drv_update_imd_state();
 
+    // update sdc reserve
+    acu_lv_drv_update_sdc_reserve();
 
 //    acu_lv_drv_turn_off_led(&green_led);
 }

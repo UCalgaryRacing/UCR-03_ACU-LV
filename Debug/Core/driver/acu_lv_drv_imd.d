@@ -1,7 +1,6 @@
 Core/driver/acu_lv_drv_imd.o: ../Core/driver/acu_lv_drv_imd.c \
  ../Core/driver/acu_lv_drv_imd.h \
  C:/Users/clayd/OneDrive/Documents/UCR_03/UCR_03_ACU_LV/Core/config/acu_lv_config.h \
- ../Core/types/acu_lv_types_common.h \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h \
  ../Core/Inc/stm32h7xx_hal_conf.h \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h \
@@ -40,10 +39,10 @@ Core/driver/acu_lv_drv_imd.o: ../Core/driver/acu_lv_drv_imd.c \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_tim.h \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_tim_ex.h \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart.h \
- ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart_ex.h
+ ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart_ex.h \
+ ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h
 ../Core/driver/acu_lv_drv_imd.h:
 C:/Users/clayd/OneDrive/Documents/UCR_03/UCR_03_ACU_LV/Core/config/acu_lv_config.h:
-../Core/types/acu_lv_types_common.h:
 ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:
 ../Core/Inc/stm32h7xx_hal_conf.h:
 ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:
@@ -83,3 +82,4 @@ C:/Users/clayd/OneDrive/Documents/UCR_03/UCR_03_ACU_LV/Core/config/acu_lv_config
 ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_tim_ex.h:
 ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart.h:
 ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart_ex.h:
+../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h:

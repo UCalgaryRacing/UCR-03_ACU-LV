@@ -13,7 +13,6 @@
 
 #include <stdint.h>
 #include <stdbool.h>
-#include "acu_lv_types_common.h"
 #include "stm32h7xx_hal.h"
 
 /*============================================================================*/
@@ -234,6 +233,36 @@ typedef struct
 } adbms6830_hw_t;
 
 /*============================================================================*/
+/* System States                                                          */
+/*============================================================================*/
+
+typedef enum
+{
+    ACU_LV_OK = 0U,
+    ACU_LV_ERROR
+} acu_lv_status_t;
+
+/*============================================================================*/
+/* Pack Measurement Structure                                                 */
+/*============================================================================*/
+
+typedef enum
+{
+    ACU_LV_MEASUREMENT_TEMP = 0U,
+    ACU_LV_MEASUREMENT_PACK_CURRENT,
+    ACU_LV_MEASUREMENT_TS_VOLTAGE,
+    ACU_LV_MEASUREMENT_ACCU_VOLTAGE
+} acu_lv_measurement_type_t;
+
+typedef struct
+{   
+    acu_lv_measurement_type_t measurement_type; 
+    float valid_min; // minimum valid value for a given sensor, if below then trigger a fault
+    float valid_max; //max valid value, if above then trigger fault
+    float scaling_factor; // scaling factor if voltage divider is used
+} acu_lv_measurement_setting_t;
+
+/*============================================================================*/
 /* ACM33X6XX Settings and Configuration                                       */
 /*============================================================================*/
 
@@ -256,7 +285,7 @@ typedef struct
 /*============================================================================*/
 /* Cell Structure                                                             */
 /*============================================================================*/
-// add stuff to use this
+// add stuff to use this, TODO after hybrid
 typedef struct
 {
     adbms6830_hw_t hw;
@@ -323,7 +352,8 @@ typedef struct
     acu_lv_air_hw_t air_hw;
     analog_hw_t analog_hw;
     float sdc_reserve;
-    uint8_t adc_buffer_index;
+    const uint8_t adc_buffer_index;
+    bool air_closed;
 } acu_lv_air_t;
 
 /*============================================================================*/
@@ -343,6 +373,8 @@ typedef struct
     uint16_t imd_ok_pin;
     GPIO_TypeDef * imd_m_port;
     uint16_t imd_m_pin;
+    GPIO_TypeDef * latch_reset_port;
+    uint16_t latch_reset_pin;
 } acu_lv_imd_hw_t;
 
 typedef struct

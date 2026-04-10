@@ -3,7 +3,6 @@ Core/application/acu_lv_app_state_manager.o: \
  ../Core/application/acu_lv_app_state_manager.h \
  ../Core/driver/acu_lv_drv_imd.h \
  C:/Users/clayd/OneDrive/Documents/UCR_03/UCR_03_ACU_LV/Core/config/acu_lv_config.h \
- ../Core/types/acu_lv_types_common.h \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h \
  ../Core/Inc/stm32h7xx_hal_conf.h \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h \
@@ -42,11 +41,11 @@ Core/application/acu_lv_app_state_manager.o: \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_tim.h \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_tim_ex.h \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart.h \
- ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart_ex.h
+ ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart_ex.h \
+ ../Core/service/acu_lv_svc_air.h
 ../Core/application/acu_lv_app_state_manager.h:
 ../Core/driver/acu_lv_drv_imd.h:
 C:/Users/clayd/OneDrive/Documents/UCR_03/UCR_03_ACU_LV/Core/config/acu_lv_config.h:
-../Core/types/acu_lv_types_common.h:
 ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:
 ../Core/Inc/stm32h7xx_hal_conf.h:
 ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:
@@ -86,3 +85,4 @@ C:/Users/clayd/OneDrive/Documents/UCR_03/UCR_03_ACU_LV/Core/config/acu_lv_config
 ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_tim_ex.h:
 ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart.h:
 ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart_ex.h:
+../Core/service/acu_lv_svc_air.h:

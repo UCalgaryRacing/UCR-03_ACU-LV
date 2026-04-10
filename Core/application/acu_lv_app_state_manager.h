@@ -28,8 +28,8 @@ static acu_lv_app_state_t handle_fault_state();
 static acu_lv_app_state_t handle_charging_state();
 static acu_lv_app_state_t handle_balencing_state();
 
-static void state_entry();
-static void state_exit();
+static void state_entry(acu_lv_app_state_t state);
+static void state_exit(acu_lv_app_state_t state);
 
 // public function prototype
 void acu_lv_app_state_machine_init();

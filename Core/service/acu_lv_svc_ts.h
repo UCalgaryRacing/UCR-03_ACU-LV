@@ -8,7 +8,7 @@
 #ifndef SERVICE_ACU_LV_SVC_TS_H_
 #define SERVICE_ACU_LV_SVC_TS_H_
 
-#include "acu_lv_types_common.h"
+#include "acu_lv_config.h"
 
 acu_lv_status_t acu_lv_svc_update_ts_voltage();
 float acu_lv_svc_get_ts_voltage();

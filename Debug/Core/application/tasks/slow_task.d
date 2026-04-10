@@ -1,7 +1,6 @@
 Core/application/tasks/slow_task.o: ../Core/application/tasks/slow_task.c \
  ../Core/application/tasks/slow_task.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h \
- ../Core/service/acu_lv_svc_shunt.h ../Core/types/acu_lv_types_common.h \
  ../Core/driver/acu_lv_drv_debug_led.h \
  C:/Users/clayd/OneDrive/Documents/UCR_03/UCR_03_ACU_LV/Core/config/acu_lv_config.h \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h \
@@ -45,8 +44,6 @@ Core/application/tasks/slow_task.o: ../Core/application/tasks/slow_task.c \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart_ex.h
 ../Core/application/tasks/slow_task.h:
 ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h:
-../Core/service/acu_lv_svc_shunt.h:
-../Core/types/acu_lv_types_common.h:
 ../Core/driver/acu_lv_drv_debug_led.h:
 C:/Users/clayd/OneDrive/Documents/UCR_03/UCR_03_ACU_LV/Core/config/acu_lv_config.h:
 ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:

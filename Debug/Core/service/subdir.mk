@@ -6,16 +6,19 @@
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
 ../Core/service/acu_lv_svc_accu.c \
+../Core/service/acu_lv_svc_air.c \
 ../Core/service/acu_lv_svc_shunt.c \
 ../Core/service/acu_lv_svc_ts.c 
 
 OBJS += \
 ./Core/service/acu_lv_svc_accu.o \
+./Core/service/acu_lv_svc_air.o \
 ./Core/service/acu_lv_svc_shunt.o \
 ./Core/service/acu_lv_svc_ts.o 
 
 C_DEPS += \
 ./Core/service/acu_lv_svc_accu.d \
+./Core/service/acu_lv_svc_air.d \
 ./Core/service/acu_lv_svc_shunt.d \
 ./Core/service/acu_lv_svc_ts.d 
 
@@ -27,7 +30,7 @@ Core/service/%.o Core/service/%.su Core/service/%.cyclo: ../Core/service/%.c Cor
 clean: clean-Core-2f-service
 
 clean-Core-2f-service:
-	-$(RM) ./Core/service/acu_lv_svc_accu.cyclo ./Core/service/acu_lv_svc_accu.d ./Core/service/acu_lv_svc_accu.o ./Core/service/acu_lv_svc_accu.su ./Core/service/acu_lv_svc_shunt.cyclo ./Core/service/acu_lv_svc_shunt.d ./Core/service/acu_lv_svc_shunt.o ./Core/service/acu_lv_svc_shunt.su ./Core/service/acu_lv_svc_ts.cyclo ./Core/service/acu_lv_svc_ts.d ./Core/service/acu_lv_svc_ts.o ./Core/service/acu_lv_svc_ts.su
+	-$(RM) ./Core/service/acu_lv_svc_accu.cyclo ./Core/service/acu_lv_svc_accu.d ./Core/service/acu_lv_svc_accu.o ./Core/service/acu_lv_svc_accu.su ./Core/service/acu_lv_svc_air.cyclo ./Core/service/acu_lv_svc_air.d ./Core/service/acu_lv_svc_air.o ./Core/service/acu_lv_svc_air.su ./Core/service/acu_lv_svc_shunt.cyclo ./Core/service/acu_lv_svc_shunt.d ./Core/service/acu_lv_svc_shunt.o ./Core/service/acu_lv_svc_shunt.su ./Core/service/acu_lv_svc_ts.cyclo ./Core/service/acu_lv_svc_ts.d ./Core/service/acu_lv_svc_ts.o ./Core/service/acu_lv_svc_ts.su
 
 .PHONY: clean-Core-2f-service
 

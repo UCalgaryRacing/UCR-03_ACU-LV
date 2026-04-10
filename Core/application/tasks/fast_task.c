@@ -6,16 +6,24 @@
  */
 
 #include <stdint.h>
+#include "cmsis_os2.h"
+#include "acu_lv_config.h"
+
 #include "fast_task.h"
 #include "acu_lv_svc_accu.h"
 #include "acu_lv_svc_ts.h"
-#include "cmsis_os2.h"
+#include "acu_lv_svc_shunt.h"
+
 #include "acu_lv_drv_debug_led.h"
+#include "acu_lv_drv_imd.h"
+#include "acu_lv_drv_analog.h"
+#include "acu_lv_drv_air.h"
 
 const static uint32_t period = 10;
 static uint32_t next_wake;
 
 extern debug_led_t blue_led;
+extern analog_hw_t adc_2_hw, adc_3_hw;
 
 // initialization functions for the fast task
 void fast_task_init()
@@ -26,7 +34,19 @@ void fast_task_init()
     // start the conversion for measuring accumulator and tractive voltage
     acu_lv_svc_start_ts_filter();
     acu_lv_svc_start_accu_filter();
+    acu_lv_svc_start_shunt_filter();
     
+    // calibrate both the ADCs
+    acu_lv_drv_adc_init(adc_2_hw.adc_context);
+    acu_lv_drv_adc_init(adc_3_hw.adc_context);
+
+    //start the DMA for ADCs
+    acu_lv_drv_adc_start_dma(&adc_2_hw);
+    acu_lv_drv_adc_start_dma(&adc_3_hw);
+
+    // initialize airs, should make svc layer do it eventually
+    acu_lv_drv_air_init();
+
     acu_lv_drv_turn_on_led(&blue_led);
 }
 
@@ -35,11 +55,12 @@ void fast_task_loop()
 {
     next_wake += period;
     osDelayUntil(next_wake);
-    acu_lv_drv_toggle_led(&blue_led);
+    
 
     // update the values for tractive and accumulator voltage
     acu_lv_svc_update_ts_voltage();
     acu_lv_svc_update_accu_voltage();
-
-//    acu_lv_drv_turn_off_led(&blue_led);
+    acu_lv_svc_update_shunt();
+    
+    acu_lv_drv_toggle_led(&blue_led);
 }

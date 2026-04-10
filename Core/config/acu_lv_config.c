@@ -122,7 +122,8 @@ acu_lv_air_t air = {
         .pos_state = GPIO_PIN_RESET
     },
     .adc_buffer_index = SDC_RESERVE_BUFFER_INDEX,
-    .sdc_reserve = 0.0f
+    .sdc_reserve = 0.0f,
+    .air_closed = false
 };
 
 /*============================================================================*/
@@ -135,6 +136,8 @@ acu_lv_imd_t imd = {
         .imd_m_pin = IMD_M_PIN,
         .imd_ok_port = IMD_OK_PORT,
         .imd_ok_pin = IMD_OK_PIN,
+        .latch_reset_port = IMD_LATCH_RESET_PORT,
+        .latch_reset_pin = IMD_LATCH_RESET_PIN
     },
     .state = ACU_LV_IMD_FAULT
 };

@@ -19,6 +19,7 @@
 "./Core/driver/acu_lv_drv_dfsdm.o"
 "./Core/driver/acu_lv_drv_imd.o"
 "./Core/service/acu_lv_svc_accu.o"
+"./Core/service/acu_lv_svc_air.o"
 "./Core/service/acu_lv_svc_shunt.o"
 "./Core/service/acu_lv_svc_ts.o"
 "./Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal.o"

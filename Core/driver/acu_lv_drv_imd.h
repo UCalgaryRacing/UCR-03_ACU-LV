@@ -12,5 +12,6 @@
 
 void acu_lv_drv_update_imd_state();
 acu_lv_imd_state_t acu_lv_drv_get_imd_state();
+acu_lv_status_t acu_lv_drv_reset_imd_latch();
 
 #endif /* DRIVER_ACU_LV_DRV_IMD_H_ */

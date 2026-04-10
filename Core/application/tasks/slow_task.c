@@ -7,7 +7,6 @@
 
 #include "slow_task.h"
 #include "cmsis_os2.h"
-#include "acu_lv_svc_shunt.h"
 #include "acu_lv_drv_debug_led.h"
 
 const static uint32_t period = 100;
@@ -20,16 +19,12 @@ void slow_task_init()
     next_wake = osKernelGetTickCount();
 
     acu_lv_drv_turn_on_led(&red_led);
-
-    acu_lv_svc_start_shunt_filter();
 }
 void slow_task_loop()
 {
     next_wake += period;
     osDelayUntil(next_wake);
 
-    acu_lv_svc_update_shunt();
-
-//    acu_lv_drv_turn_off_led(&red_led);
+   acu_lv_drv_toggle_led(&red_led);
 }
 
