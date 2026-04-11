@@ -1,13 +1,23 @@
-/*
- * can_drv.h
- *
- *  Created on: Apr 10, 2026
- *      Author: clayd
- */
+#ifndef COM_DRV_CAN_H
+#define COM_DRV_CAN_H
 
-#ifndef DRIVER_CAN_CAN_DRV_H_
-#define DRIVER_CAN_CAN_DRV_H_
+#include <stdint.h>
+#include <stdbool.h>
+#include "stm32h7xx_hal.h"
+#include "can_config.h"
+#include "can_config_pinout.h"
+#include "com_typ_common.h"
+
+
+/*============================================================================*/
+/* Public API                                                                 */
+/*============================================================================*/
 
 
 
-#endif /* DRIVER_CAN_CAN_DRV_H_ */
+status_t can_drv_init(void);
+status_t can_drv_start(const can_hw_t *hw);
+status_t can_drv_transmit(can_msg_t *message);
+
+
+#endif

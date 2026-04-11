@@ -31,10 +31,10 @@ void medium_task_loop()
     acu_lv_drv_toggle_led(&green_led);
 
     // check imd state
-    acu_lv_drv_update_imd_state();
+    // acu_lv_drv_update_imd_state();
 
-    // update sdc reserve
-    acu_lv_drv_update_sdc_reserve();
+    // // update sdc reserve
+    // acu_lv_drv_update_sdc_reserve();
 
 //    acu_lv_drv_turn_off_led(&green_led);
 }

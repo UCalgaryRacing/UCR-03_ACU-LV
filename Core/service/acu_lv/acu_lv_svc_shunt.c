@@ -15,7 +15,7 @@ acu_lv_status_t acu_lv_svc_update_shunt()
 {
     if(pack_current.hw.dma_started == true)
     {
-        *pack_current.data = ((float)(*pack_current.raw_data >> 8)) / pack_current.settings.scaling_factor;
+        *pack_current.data = ((float)(*pack_current.raw_data >> 8)) * pack_current.settings.scaling_factor;
     }
     else
     {

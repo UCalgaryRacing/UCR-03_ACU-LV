@@ -7,6 +7,8 @@
 
 #include "acu_lv_app_state_manager.h"
 
+#include "cmsis_os2.h"
+
 #include "acu_lv_svc_imd.h"
 #include "acu_lv_svc_air.h"
 #include "acu_lv_svc_precharge.h"
@@ -95,7 +97,7 @@ static acu_lv_app_state_t handle_startup_state()
 
     // start cell temp and voltage measurement
     // check imd, potentially change to happen in idle to allow imd time to boot or add delay
-    if(!acu_lv_svc_imd_ok())
+    if(acu_lv_svc_imd_ok())
     {
         return ACU_LV_APP_STATE_FAULT;
     }
@@ -114,19 +116,22 @@ static acu_lv_app_state_t handle_idle_state()
 
     // check state transition, start with transition case
     // then move through to check for errors based on safety/priority
-    if(acu_lv_svc_sdc_reserve_good() && acu_lv_svc_imd_ok())
-    {
-        return ACU_LV_APP_STATE_IDLE;
-    }
-    else if(!acu_lv_svc_imd_ok())
-    {   
-        return ACU_LV_APP_STATE_FAULT;
-    }
-    else if(!acu_lv_svc_sdc_reserve_good())
-    {
-        return ACU_LV_APP_STATE_IDLE;
-    }
 
+	//add imd stuff back
+    // if(acu_lv_svc_sdc_reserve_good())
+    // {
+    //     return ACU_LV_APP_STATE_IDLE;
+    // }
+    
+//    else if(!acu_lv_svc_imd_ok())
+//    {
+//        return ACU_LV_APP_STATE_FAULT;
+//    }
+    // else if(!acu_lv_svc_sdc_reserve_good())
+    // {
+    //     return ACU_LV_APP_STATE_IDLE;
+    // }
+    osDelay(2000);
     // tssi enabled
 
     // transition to precharge once sdc reserve is 9V
@@ -149,7 +154,7 @@ static acu_lv_app_state_t handle_precharge_state()
 
     //transition to active when ts and accu reach 90%
     //transition to fault if watchdog timeout
-    return ACU_LV_APP_STATE_FAULT;
+    return ACU_LV_APP_STATE_PRECHARGE;
 }
 
 static acu_lv_app_state_t handle_active_state()
@@ -163,7 +168,7 @@ static acu_lv_app_state_t handle_active_state()
 
     //transition to charge if charging message recieved
     //fault transition if imd fault, cell voltage or temp out of range
-    return ACU_LV_APP_STATE_FAULT;
+    return ACU_LV_APP_STATE_ACTIVE;
 }
 
 static acu_lv_app_state_t handle_fault_state()

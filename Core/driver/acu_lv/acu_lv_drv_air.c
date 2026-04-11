@@ -8,6 +8,8 @@
 #include "acu_lv_drv_air.h"
 
 extern acu_lv_air_t air;
+extern uint16_t g_adc_2_dma_buffer[ACU_LV_ADC_2_MAX_NUMBER_CHANNELS];
+extern uint16_t g_adc_3_dma_buffer[ACU_LV_ADC_3_MAX_NUMBER_CHANNELS];
 
 void acu_lv_drv_air_init()
 {

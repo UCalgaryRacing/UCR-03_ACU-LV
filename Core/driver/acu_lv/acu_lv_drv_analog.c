@@ -25,9 +25,9 @@ acu_lv_status_t acu_lv_drv_adc_init(analog_adc_context_t *adc_context)
     return ACU_LV_OK;
 }
 
-acu_lv_status_t acu_lv_drv_adc_start_dma(analog_hw_t * hw)
+acu_lv_status_t acu_lv_drv_adc_start_dma(analog_hw_t * hw, uint32_t * adc_buffer)
 {
-    if(HAL_ADC_Start_DMA(hw->adc_context->adc_handle,(uint32_t*)hw->adc_buffer,hw->adc_context->adc_channels) != HAL_OK)
+    if(HAL_ADC_Start_DMA(hw->adc_context->adc_handle,adc_buffer,hw->adc_context->adc_channels) != HAL_OK)
     {
         return ACU_LV_ERROR;
     }

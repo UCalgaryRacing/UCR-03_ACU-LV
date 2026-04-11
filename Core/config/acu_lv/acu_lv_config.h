@@ -53,8 +53,7 @@
 /*============================================================================*/
 
 // shunt scaling factor
-// TODO: shunt scaling needs to be redone
-#define ACU_LV_SHUNT_SCALING_FACTOR 6484.1997f
+#define ACU_LV_SHUNT_SCALING_FACTOR 0.00015422103651609282f
 
 // Threshold for considering current as "idle" (A)
 #define CURRENT_IDLE_THRESHOLD_A            2.0f

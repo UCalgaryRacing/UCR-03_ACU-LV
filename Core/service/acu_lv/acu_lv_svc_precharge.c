@@ -10,13 +10,21 @@
 #include "acu_lv_svc_ts.h"
 
 bool acu_lv_svc_check_precharge_done()
-{
-    if((acu_lv_svc_get_accu_voltage() * 0.9f) >= acu_lv_svc_get_ts_voltage())
+{   
+    if(acu_lv_svc_get_accu_voltage() > 1.0f)
     {
-        return true;
+        if((acu_lv_svc_get_accu_voltage() * 0.9f) <= acu_lv_svc_get_ts_voltage())
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
     else
     {
         return false;
     }
+    
 }

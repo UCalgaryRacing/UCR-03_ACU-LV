@@ -1,6 +1,7 @@
 Core/application/acu_lv_app_state_manager.o: \
  ../Core/application/acu_lv_app_state_manager.c \
  ../Core/application/acu_lv_app_state_manager.h \
+ ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h \
  ../Core/service/acu_lv/acu_lv_svc_imd.h \
  ../Core/driver/acu_lv/acu_lv_drv_imd.h \
  ../Core/config/acu_lv/acu_lv_config.h \
@@ -49,6 +50,7 @@ Core/application/acu_lv_app_state_manager.o: \
  ../Core/driver/acu_lv/acu_lv_drv_air.h \
  ../Core/driver/acu_lv/acu_lv_drv_sdc.h
 ../Core/application/acu_lv_app_state_manager.h:
+../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h:
 ../Core/service/acu_lv/acu_lv_svc_imd.h:
 ../Core/driver/acu_lv/acu_lv_drv_imd.h:
 ../Core/config/acu_lv/acu_lv_config.h:
