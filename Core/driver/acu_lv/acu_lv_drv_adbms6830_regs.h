@@ -23,6 +23,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include "acu_lv_config.h"
+#include "acu_lv_drv_adbms6830_types.h"
 
 /*============================================================================*/
 /* Command codes (SPI)                                                        */

@@ -171,7 +171,7 @@ int adbms6830_read_cell_voltages_raw(uint16_t raw_adc[ADBMS_NUM_SLAVES][ADBMS_CE
  */
 static inline float adbms6830_adc_to_volts(uint16_t raw_adc)
 {
-    return (float)raw_adc * ADBMS_CELL_ADC_LSB_V;
+    return (float)raw_adc * ADBMS_CELL_ADC_LSB_V + 1.5f;
 }
 
 /*============================================================================*/

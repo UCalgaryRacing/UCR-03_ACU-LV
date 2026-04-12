@@ -1,0 +1,16 @@
+../Core/driver/acu_lv/acu_lv_drv_adbms6830_regs.h:353:20:adbms_cfga_set_cth	1
+../Core/driver/acu_lv/acu_lv_drv_adbms6830_regs.h:365:20:adbms_cfga_set_refon	2
+../Core/driver/acu_lv/acu_lv_drv_adbms6830_regs.h:392:20:adbms_cfga_set_soakon	2
+../Core/driver/acu_lv/acu_lv_drv_adbms6830_regs.h:404:20:adbms_cfga_set_owrng	2
+../Core/driver/acu_lv/acu_lv_drv_adbms6830_regs.h:416:20:adbms_cfga_set_owa_mode	1
+../Core/driver/acu_lv/acu_lv_drv_adbms6830_regs.h:429:20:adbms_cfga_set_gpo	1
+../Core/driver/acu_lv/acu_lv_drv_adbms6830_regs.h:508:20:adbms_cfga_set_fc	1
+../Core/driver/acu_lv/acu_lv_drv_adbms6830.h:172:21:adbms6830_adc_to_volts	1
+../Core/service/acu_lv/acu_lv_svc_adbms6830.c:18:5:voltage_acquisition_sample	7
+../Core/service/acu_lv/acu_lv_svc_adbms6830.c:134:5:bms_manager_init	4
+../Core/service/acu_lv/acu_lv_svc_adbms6830.c:181:6:bms_manager_is_ready	1
+../Core/service/acu_lv/acu_lv_svc_adbms6830.c:186:5:bms_manager_verify_communication	6
+../Core/service/acu_lv/acu_lv_svc_adbms6830.c:227:5:bms_manager_reconfigure	2
+../Core/service/acu_lv/acu_lv_svc_adbms6830.c:245:6:bms_manager_shadow_lock	2
+../Core/service/acu_lv/acu_lv_svc_adbms6830.c:253:6:bms_manager_shadow_unlock	2
+../Core/service/acu_lv/acu_lv_svc_adbms6830.c:261:21:bms_manager_get_shadow	1

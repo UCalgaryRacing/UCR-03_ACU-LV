@@ -13,12 +13,14 @@
 #include "acu_lv_svc_accu.h"
 #include "acu_lv_svc_ts.h"
 #include "acu_lv_svc_shunt.h"
+#include "acu_lv_svc_adbms6830.h"
 
 #include "acu_lv_drv_debug_led.h"
 #include "acu_lv_drv_imd.h"
 #include "acu_lv_drv_analog.h"
 #include "acu_lv_drv_air.h"
 #include "acu_lv_drv_sdc.h"
+#include "acu_lv_drv_adbms6830.h"
 
 #include "stm32h7xx_hal.h"
 
@@ -37,7 +39,7 @@ extern analog_adc_context_t adc_2_context;
 extern ADC_HandleTypeDef hadc2;
 
 uint32_t g_test_buffer;
-
+int g_result;
 // initialization functions for the fast task
 void fast_task_init()
 {   
@@ -65,6 +67,8 @@ void fast_task_init()
     // initialize sdc
     acu_lv_drv_sdc_init();
 
+    bms_manager_init();
+    
     acu_lv_drv_turn_on_led(&blue_led);
 }
 
@@ -90,5 +94,6 @@ void fast_task_loop()
     	adc_dma = 0;
     }
 
+    g_result=  voltage_acquisition_sample();
     acu_lv_drv_toggle_led(&blue_led);
 }
