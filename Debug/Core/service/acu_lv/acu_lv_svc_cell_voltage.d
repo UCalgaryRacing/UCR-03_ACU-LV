@@ -1,5 +1,9 @@
-Core/service/acu_lv/acu_lv_svc_accu.o: \
- ../Core/service/acu_lv/acu_lv_svc_accu.c \
+Core/service/acu_lv/acu_lv_svc_cell_voltage.o: \
+ ../Core/service/acu_lv/acu_lv_svc_cell_voltage.c \
+ ../Core/service/acu_lv/acu_lv_svc_cell_voltage.h \
+ ../Core/common/com_typ_common.h \
+ ../Core/driver/acu_lv/acu_lv_drv_adbms6830.h \
+ ../Core/driver/acu_lv/acu_lv_drv_adbms6830_regs.h \
  ../Core/config/acu_lv/acu_lv_config.h \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h \
  ../Core/Inc/stm32h7xx_hal_conf.h \
@@ -40,8 +44,11 @@ Core/service/acu_lv/acu_lv_svc_accu.o: \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_tim_ex.h \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart.h \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart_ex.h \
- ../Core/service/acu_lv/acu_lv_svc_accu.h ../Core/common/com_typ_common.h \
- ../Core/driver/acu_lv/acu_lv_drv_dfsdm.h
+ ../Core/driver/acu_lv/acu_lv_drv_adbms6830_types.h
+../Core/service/acu_lv/acu_lv_svc_cell_voltage.h:
+../Core/common/com_typ_common.h:
+../Core/driver/acu_lv/acu_lv_drv_adbms6830.h:
+../Core/driver/acu_lv/acu_lv_drv_adbms6830_regs.h:
 ../Core/config/acu_lv/acu_lv_config.h:
 ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:
 ../Core/Inc/stm32h7xx_hal_conf.h:
@@ -82,6 +89,4 @@ Core/service/acu_lv/acu_lv_svc_accu.o: \
 ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_tim_ex.h:
 ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart.h:
 ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart_ex.h:
-../Core/service/acu_lv/acu_lv_svc_accu.h:
-../Core/common/com_typ_common.h:
-../Core/driver/acu_lv/acu_lv_drv_dfsdm.h:
+../Core/driver/acu_lv/acu_lv_drv_adbms6830_types.h:

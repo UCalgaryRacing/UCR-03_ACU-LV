@@ -41,7 +41,7 @@ Core/application/tasks/fast_task.o: ../Core/application/tasks/fast_task.c \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart.h \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart_ex.h \
  ../Core/application/tasks/fast_task.h \
- ../Core/service/acu_lv/acu_lv_svc_accu.h \
+ ../Core/service/acu_lv/acu_lv_svc_accu.h ../Core/common/com_typ_common.h \
  ../Core/service/acu_lv/acu_lv_svc_ts.h \
  ../Core/service/acu_lv/acu_lv_svc_shunt.h \
  ../Core/service/acu_lv/acu_lv_svc_adbms6830.h \
@@ -96,6 +96,7 @@ Core/application/tasks/fast_task.o: ../Core/application/tasks/fast_task.c \
 ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart_ex.h:
 ../Core/application/tasks/fast_task.h:
 ../Core/service/acu_lv/acu_lv_svc_accu.h:
+../Core/common/com_typ_common.h:
 ../Core/service/acu_lv/acu_lv_svc_ts.h:
 ../Core/service/acu_lv/acu_lv_svc_shunt.h:
 ../Core/service/acu_lv/acu_lv_svc_adbms6830.h:

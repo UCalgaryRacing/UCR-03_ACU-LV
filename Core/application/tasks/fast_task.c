@@ -89,15 +89,9 @@ void fast_task_loop()
     acu_lv_drv_update_sdc_reserve();
     
 
-    
+    // update voltages array
+    // TODO: change to use proper structure after hybrid
     int valid =  voltage_acquisition_sample();
-    if(valid == 0)
-    {
-        g_bms_valid = true;
-    }
-    else
-    {
-        g_bms_valid = false;
-    }
+
     acu_lv_drv_toggle_led(&blue_led);
 }

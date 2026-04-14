@@ -41,7 +41,7 @@ Core/service/acu_lv/acu_lv_svc_shunt.o: \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_tim_ex.h \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart.h \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart_ex.h \
- ../Core/driver/acu_lv/acu_lv_drv_dfsdm.h
+ ../Core/common/com_typ_common.h ../Core/driver/acu_lv/acu_lv_drv_dfsdm.h
 ../Core/service/acu_lv/acu_lv_svc_shunt.h:
 ../Core/config/acu_lv/acu_lv_config.h:
 ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:
@@ -83,4 +83,5 @@ Core/service/acu_lv/acu_lv_svc_shunt.o: \
 ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_tim_ex.h:
 ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart.h:
 ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart_ex.h:
+../Core/common/com_typ_common.h:
 ../Core/driver/acu_lv/acu_lv_drv_dfsdm.h:

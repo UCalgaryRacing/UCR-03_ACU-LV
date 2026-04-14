@@ -26,6 +26,7 @@
 "./Core/service/acu_lv/acu_lv_svc_accu.o"
 "./Core/service/acu_lv/acu_lv_svc_adbms6830.o"
 "./Core/service/acu_lv/acu_lv_svc_air.o"
+"./Core/service/acu_lv/acu_lv_svc_cell_voltage.o"
 "./Core/service/acu_lv/acu_lv_svc_imd.o"
 "./Core/service/acu_lv/acu_lv_svc_precharge.o"
 "./Core/service/acu_lv/acu_lv_svc_sdc.o"

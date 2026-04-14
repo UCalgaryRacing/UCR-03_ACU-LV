@@ -8,6 +8,7 @@ C_SRCS += \
 ../Core/service/acu_lv/acu_lv_svc_accu.c \
 ../Core/service/acu_lv/acu_lv_svc_adbms6830.c \
 ../Core/service/acu_lv/acu_lv_svc_air.c \
+../Core/service/acu_lv/acu_lv_svc_cell_voltage.c \
 ../Core/service/acu_lv/acu_lv_svc_imd.c \
 ../Core/service/acu_lv/acu_lv_svc_precharge.c \
 ../Core/service/acu_lv/acu_lv_svc_sdc.c \
@@ -18,6 +19,7 @@ OBJS += \
 ./Core/service/acu_lv/acu_lv_svc_accu.o \
 ./Core/service/acu_lv/acu_lv_svc_adbms6830.o \
 ./Core/service/acu_lv/acu_lv_svc_air.o \
+./Core/service/acu_lv/acu_lv_svc_cell_voltage.o \
 ./Core/service/acu_lv/acu_lv_svc_imd.o \
 ./Core/service/acu_lv/acu_lv_svc_precharge.o \
 ./Core/service/acu_lv/acu_lv_svc_sdc.o \
@@ -28,6 +30,7 @@ C_DEPS += \
 ./Core/service/acu_lv/acu_lv_svc_accu.d \
 ./Core/service/acu_lv/acu_lv_svc_adbms6830.d \
 ./Core/service/acu_lv/acu_lv_svc_air.d \
+./Core/service/acu_lv/acu_lv_svc_cell_voltage.d \
 ./Core/service/acu_lv/acu_lv_svc_imd.d \
 ./Core/service/acu_lv/acu_lv_svc_precharge.d \
 ./Core/service/acu_lv/acu_lv_svc_sdc.d \
@@ -42,7 +45,7 @@ Core/service/acu_lv/%.o Core/service/acu_lv/%.su Core/service/acu_lv/%.cyclo: ..
 clean: clean-Core-2f-service-2f-acu_lv
 
 clean-Core-2f-service-2f-acu_lv:
-	-$(RM) ./Core/service/acu_lv/acu_lv_svc_accu.cyclo ./Core/service/acu_lv/acu_lv_svc_accu.d ./Core/service/acu_lv/acu_lv_svc_accu.o ./Core/service/acu_lv/acu_lv_svc_accu.su ./Core/service/acu_lv/acu_lv_svc_adbms6830.cyclo ./Core/service/acu_lv/acu_lv_svc_adbms6830.d ./Core/service/acu_lv/acu_lv_svc_adbms6830.o ./Core/service/acu_lv/acu_lv_svc_adbms6830.su ./Core/service/acu_lv/acu_lv_svc_air.cyclo ./Core/service/acu_lv/acu_lv_svc_air.d ./Core/service/acu_lv/acu_lv_svc_air.o ./Core/service/acu_lv/acu_lv_svc_air.su ./Core/service/acu_lv/acu_lv_svc_imd.cyclo ./Core/service/acu_lv/acu_lv_svc_imd.d ./Core/service/acu_lv/acu_lv_svc_imd.o ./Core/service/acu_lv/acu_lv_svc_imd.su ./Core/service/acu_lv/acu_lv_svc_precharge.cyclo ./Core/service/acu_lv/acu_lv_svc_precharge.d ./Core/service/acu_lv/acu_lv_svc_precharge.o ./Core/service/acu_lv/acu_lv_svc_precharge.su ./Core/service/acu_lv/acu_lv_svc_sdc.cyclo ./Core/service/acu_lv/acu_lv_svc_sdc.d ./Core/service/acu_lv/acu_lv_svc_sdc.o ./Core/service/acu_lv/acu_lv_svc_sdc.su ./Core/service/acu_lv/acu_lv_svc_shunt.cyclo ./Core/service/acu_lv/acu_lv_svc_shunt.d ./Core/service/acu_lv/acu_lv_svc_shunt.o ./Core/service/acu_lv/acu_lv_svc_shunt.su ./Core/service/acu_lv/acu_lv_svc_ts.cyclo ./Core/service/acu_lv/acu_lv_svc_ts.d ./Core/service/acu_lv/acu_lv_svc_ts.o ./Core/service/acu_lv/acu_lv_svc_ts.su
+	-$(RM) ./Core/service/acu_lv/acu_lv_svc_accu.cyclo ./Core/service/acu_lv/acu_lv_svc_accu.d ./Core/service/acu_lv/acu_lv_svc_accu.o ./Core/service/acu_lv/acu_lv_svc_accu.su ./Core/service/acu_lv/acu_lv_svc_adbms6830.cyclo ./Core/service/acu_lv/acu_lv_svc_adbms6830.d ./Core/service/acu_lv/acu_lv_svc_adbms6830.o ./Core/service/acu_lv/acu_lv_svc_adbms6830.su ./Core/service/acu_lv/acu_lv_svc_air.cyclo ./Core/service/acu_lv/acu_lv_svc_air.d ./Core/service/acu_lv/acu_lv_svc_air.o ./Core/service/acu_lv/acu_lv_svc_air.su ./Core/service/acu_lv/acu_lv_svc_cell_voltage.cyclo ./Core/service/acu_lv/acu_lv_svc_cell_voltage.d ./Core/service/acu_lv/acu_lv_svc_cell_voltage.o ./Core/service/acu_lv/acu_lv_svc_cell_voltage.su ./Core/service/acu_lv/acu_lv_svc_imd.cyclo ./Core/service/acu_lv/acu_lv_svc_imd.d ./Core/service/acu_lv/acu_lv_svc_imd.o ./Core/service/acu_lv/acu_lv_svc_imd.su ./Core/service/acu_lv/acu_lv_svc_precharge.cyclo ./Core/service/acu_lv/acu_lv_svc_precharge.d ./Core/service/acu_lv/acu_lv_svc_precharge.o ./Core/service/acu_lv/acu_lv_svc_precharge.su ./Core/service/acu_lv/acu_lv_svc_sdc.cyclo ./Core/service/acu_lv/acu_lv_svc_sdc.d ./Core/service/acu_lv/acu_lv_svc_sdc.o ./Core/service/acu_lv/acu_lv_svc_sdc.su ./Core/service/acu_lv/acu_lv_svc_shunt.cyclo ./Core/service/acu_lv/acu_lv_svc_shunt.d ./Core/service/acu_lv/acu_lv_svc_shunt.o ./Core/service/acu_lv/acu_lv_svc_shunt.su ./Core/service/acu_lv/acu_lv_svc_ts.cyclo ./Core/service/acu_lv/acu_lv_svc_ts.d ./Core/service/acu_lv/acu_lv_svc_ts.o ./Core/service/acu_lv/acu_lv_svc_ts.su
 
 .PHONY: clean-Core-2f-service-2f-acu_lv
 

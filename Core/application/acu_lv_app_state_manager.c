@@ -13,6 +13,10 @@
 #include "acu_lv_svc_air.h"
 #include "acu_lv_svc_precharge.h"
 #include "acu_lv_svc_sdc.h"
+#include "acu_lv_svc_cell_voltage.h"
+#include "acu_lv_svc_ts.h"
+#include "acu_lv_svc_accu.h"
+#include "acu_lv_svc_shunt.h"
 
 #include "acu_lv_drv_air.h"
 #include "acu_lv_drv_imd.h"
@@ -33,7 +37,6 @@ static void state_exit(acu_lv_app_state_t state);
 static acu_lv_app_state_t g_current_state = ACU_LV_APP_STATE_STARTUP;
 static acu_lv_app_state_t g_previous_state = ACU_LV_APP_STATE_STARTUP;
 
-extern bool g_bms_valid;
 
 void acu_lv_app_state_machine_init()
 {
@@ -99,15 +102,11 @@ static acu_lv_app_state_t handle_startup_state()
     //delay before checking IMD because it takes forever, might need to change to allow for it to check before getting
     osDelay(2000);
 
-    // check imd
-    if(!acu_lv_svc_imd_ok())
+    // check imd and that cell voltages are in range
+    // add temperature checking here
+    if((!acu_lv_svc_imd_ok()) || (acu_lv_svc_check_cell_voltage() != OK))
     {
         return ACU_LV_APP_STATE_FAULT;
-    }
-    //add any other conditions for state transition here
-    else if(g_bms_valid)
-    {
-        return ACU_LV_APP_STATE_IDLE;
     }
 
     return ACU_LV_APP_STATE_STARTUP;
@@ -115,22 +114,19 @@ static acu_lv_app_state_t handle_startup_state()
 
 static acu_lv_app_state_t handle_idle_state()
 {
-//TODO: change once Ryland populates the dividers
-
     // start measuring ts and accu voltage, add logic to fast task
     // write the getter function for accu and ts voltage
 
     // check cell voltage and temps out of range
 
-    // check state transition, start with transition case
+    // check state transition, start with error case
     // then move through to check for errors based on safety/priority
-    
-    if(!acu_lv_svc_imd_ok())
+    if((!acu_lv_svc_imd_ok()) || (acu_lv_svc_check_cell_voltage() != OK))
     {
        return ACU_LV_APP_STATE_FAULT;
     }
     // if sdc_reserve is less than 9V then stay in idle state
-    else if(acu_lv_svc_sdc_reserve_good())
+    else if((acu_lv_svc_sdc_reserve_good()))
     {
         return ACU_LV_APP_STATE_PRECHARGE;
     }
@@ -143,16 +139,19 @@ static acu_lv_app_state_t handle_idle_state()
 }
 
 static acu_lv_app_state_t handle_precharge_state()
-{
+{   
+    //check IMD and cell voltages, add temp measurement
+    if((!acu_lv_svc_imd_ok()) || (acu_lv_svc_check_cell_voltage() != OK) || (acu_lv_svc_check_precharge_timeout() != OK))
+    {
+       return ACU_LV_APP_STATE_FAULT;
+    }
     // monitor accu and ts voltage
-    if(acu_lv_svc_check_precharge_done())
+    else if(acu_lv_svc_check_precharge_done()) 
     {
         return ACU_LV_APP_STATE_ACTIVE;
     }
     // monitor pack current
-    // monitor cell voltage and temp
     // monitor sdc
-    // monitor imd
     // tssi enabled
 
     //transition to active when ts and accu reach 90%
@@ -168,6 +167,16 @@ static acu_lv_app_state_t handle_active_state()
     // monitor sdc
     // monitor imd
     // tssi enabled
+    if((!acu_lv_svc_imd_ok()) || (acu_lv_svc_check_cell_voltage() != OK))
+    {
+       return ACU_LV_APP_STATE_FAULT;
+    }
+    //check ts voltage, accu voltage and pack current to see if in bounds
+    else if((acu_lv_svc_check_accu_voltage() != OK) || (acu_lv_svc_check_ts_voltage() != OK) || (acu_lv_svc_check_shunt_current() != OK))
+    {
+        // go to fault? should ts out of range go back to precharge depending on which way its out of bound?
+        return ACU_LV_APP_STATE_FAULT;
+    }
 
     //transition to charge if charging message recieved
     //fault transition if imd fault, cell voltage or temp out of range
@@ -180,6 +189,8 @@ static acu_lv_app_state_t handle_fault_state()
     // monitor temps and voltage
     // monitor imd
     // disable logging
+
+    // check for imd reset button to reset the latches and exit fault state
     // tssi enabled/ flash red
     return ACU_LV_APP_STATE_FAULT;
 }
@@ -219,10 +230,10 @@ static void state_entry(acu_lv_app_state_t state)
         /* code */
         break;
     case ACU_LV_APP_STATE_PRECHARGE:
-        /* code */
+        acu_lv_svc_start_precharge_timer();
         break;
     case ACU_LV_APP_STATE_ACTIVE:
-        // send 
+        // send TS active signal
         break;
     case ACU_LV_APP_STATE_FAULT:
         // check what faulted and send tssi red signal

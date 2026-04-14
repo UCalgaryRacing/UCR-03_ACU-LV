@@ -50,3 +50,12 @@ acu_lv_status_t acu_lv_svc_stop_shunt_filter()
     }
     return status;
 }
+
+status_t acu_lv_svc_check_shunt_current()
+{
+    if(acu_lv_svc_get_shunt_current() > CURRENT_MAX_DISCHARGE_A)
+    {
+        return ERROR_GENERAL;
+    }
+    return OK;
+}

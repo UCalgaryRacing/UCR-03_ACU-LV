@@ -46,7 +46,14 @@ Core/application/acu_lv_app_state_manager.o: \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart_ex.h \
  ../Core/service/acu_lv/acu_lv_svc_air.h \
  ../Core/service/acu_lv/acu_lv_svc_precharge.h \
- ../Core/service/acu_lv/acu_lv_svc_sdc.h \
+ ../Core/common/com_typ_common.h ../Core/service/acu_lv/acu_lv_svc_sdc.h \
+ ../Core/service/acu_lv/acu_lv_svc_cell_voltage.h \
+ ../Core/driver/acu_lv/acu_lv_drv_adbms6830.h \
+ ../Core/driver/acu_lv/acu_lv_drv_adbms6830_regs.h \
+ ../Core/driver/acu_lv/acu_lv_drv_adbms6830_types.h \
+ ../Core/service/acu_lv/acu_lv_svc_ts.h \
+ ../Core/service/acu_lv/acu_lv_svc_accu.h \
+ ../Core/service/acu_lv/acu_lv_svc_shunt.h \
  ../Core/driver/acu_lv/acu_lv_drv_air.h \
  ../Core/driver/acu_lv/acu_lv_drv_sdc.h
 ../Core/application/acu_lv_app_state_manager.h:
@@ -95,6 +102,14 @@ Core/application/acu_lv_app_state_manager.o: \
 ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart_ex.h:
 ../Core/service/acu_lv/acu_lv_svc_air.h:
 ../Core/service/acu_lv/acu_lv_svc_precharge.h:
+../Core/common/com_typ_common.h:
 ../Core/service/acu_lv/acu_lv_svc_sdc.h:
+../Core/service/acu_lv/acu_lv_svc_cell_voltage.h:
+../Core/driver/acu_lv/acu_lv_drv_adbms6830.h:
+../Core/driver/acu_lv/acu_lv_drv_adbms6830_regs.h:
+../Core/driver/acu_lv/acu_lv_drv_adbms6830_types.h:
+../Core/service/acu_lv/acu_lv_svc_ts.h:
+../Core/service/acu_lv/acu_lv_svc_accu.h:
+../Core/service/acu_lv/acu_lv_svc_shunt.h:
 ../Core/driver/acu_lv/acu_lv_drv_air.h:
 ../Core/driver/acu_lv/acu_lv_drv_sdc.h:

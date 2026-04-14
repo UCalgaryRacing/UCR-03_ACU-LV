@@ -13,13 +13,13 @@
 /* Voltage Sampling                                                           */
 /*============================================================================*/
 
-uint16_t raw_adc[ADBMS_NUM_SLAVES][ADBMS_CELLS_PER_IC];
-float voltages[ADBMS_CELLS_PER_IC];
+
+float voltages[ADBMS_NUM_SLAVES][ADBMS_CELLS_PER_IC];
 int voltage_acquisition_sample(void)
 {
 
     /* Raw ADC buffer */
-    
+    uint16_t raw_adc[ADBMS_NUM_SLAVES][ADBMS_CELLS_PER_IC];
 
     /* Converted voltage buffer (per-slave) */
 //    float voltages[ADBMS_CELLS_PER_IC];
@@ -70,21 +70,21 @@ int voltage_acquisition_sample(void)
         /* Convert raw ADC to volts */
         for (uint8_t cell_idx = 0U; cell_idx < ADBMS_CELLS_PER_IC; cell_idx++)
         {
-            voltages[cell_idx] = adbms6830_adc_to_volts(raw_adc[slave_idx][cell_idx]);
+            voltages[slave_idx][cell_idx] = adbms6830_adc_to_volts(raw_adc[slave_idx][cell_idx]);
 
             /* Update voltage statistics */
-            voltage_sum += voltages[cell_idx];
+            voltage_sum += voltages[slave_idx][cell_idx];
             cell_count++;
 
-            if (voltages[cell_idx] < voltage_stats.cell_min_v)
+            if (voltages[slave_idx][cell_idx] < voltage_stats.cell_min_v)
             {
-                voltage_stats.cell_min_v = voltages[cell_idx];
+                voltage_stats.cell_min_v = voltages[slave_idx][cell_idx];
                 voltage_stats.cell_min_slave = slave_idx;
                 voltage_stats.cell_min_idx = cell_idx;
             }
-            if (voltages[cell_idx] > voltage_stats.cell_max_v)
+            if (voltages[slave_idx][cell_idx] > voltage_stats.cell_max_v)
             {
-                voltage_stats.cell_max_v = voltages[cell_idx];
+                voltage_stats.cell_max_v = voltages[slave_idx][cell_idx];
                 voltage_stats.cell_max_slave = slave_idx;
                 voltage_stats.cell_max_idx = cell_idx;
             }

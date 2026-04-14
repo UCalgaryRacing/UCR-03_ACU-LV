@@ -48,6 +48,9 @@
 #define ACCU_VOLTAGE_MIN_V                  325.0f
 #define ACCU_VOLTAGE_MAX_V                  546.0f
 
+// timeout for precharge based on os tick counts
+#define ACU_LV_PRECHARGE_TIMEOUT 3000
+
 /*============================================================================*/
 /* Current Shunt Configuration                                          */
 /*============================================================================*/
@@ -103,7 +106,7 @@
 /* Battery Pack / Daisy Chain Topology                                        */
 
 /** Number of ADBMS6830B slave ICs in the daisy chain. */
-#define ADBMS_NUM_SLAVES            1U
+#define ADBMS_NUM_SLAVES            10U
 
 /** Number of cells monitored per slave IC (max 16). */
 #define ADBMS_CELLS_PER_IC          13U
@@ -174,6 +177,15 @@
 
 /** Reference voltage for GPIO ADC (V). */
 #define ADBMS_GPIO_VREF             5.0f
+
+/*============================================================================*/
+/* Cell Parameters                                                      */
+/*============================================================================*/
+
+// TODO: change to what the actual max and min values are instead of placeholders
+#define ACU_LV_CELL_MAXIMUM_VOLTAGE 4.0f
+
+#define ACU_LV_CELL_MINIMUM_VOLTAGE 2.0f
 
 /*============================================================================*/
 /* Default Register Configuration                                             */

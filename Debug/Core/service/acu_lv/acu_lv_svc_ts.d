@@ -40,8 +40,9 @@ Core/service/acu_lv/acu_lv_svc_ts.o: \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_tim_ex.h \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart.h \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart_ex.h \
- ../Core/service/acu_lv/acu_lv_svc_ts.h \
- ../Core/driver/acu_lv/acu_lv_drv_dfsdm.h
+ ../Core/service/acu_lv/acu_lv_svc_ts.h ../Core/common/com_typ_common.h \
+ ../Core/driver/acu_lv/acu_lv_drv_dfsdm.h \
+ ../Core/service/acu_lv/acu_lv_svc_accu.h
 ../Core/config/acu_lv/acu_lv_config.h:
 ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:
 ../Core/Inc/stm32h7xx_hal_conf.h:
@@ -83,4 +84,6 @@ Core/service/acu_lv/acu_lv_svc_ts.o: \
 ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart.h:
 ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart_ex.h:
 ../Core/service/acu_lv/acu_lv_svc_ts.h:
+../Core/common/com_typ_common.h:
 ../Core/driver/acu_lv/acu_lv_drv_dfsdm.h:
+../Core/service/acu_lv/acu_lv_svc_accu.h:

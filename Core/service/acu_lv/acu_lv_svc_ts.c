@@ -8,6 +8,7 @@
 #include "acu_lv_config.h" 
 #include "acu_lv_svc_ts.h"
 #include "acu_lv_drv_dfsdm.h"
+#include "acu_lv_svc_accu.h"
 
 extern acu_lv_pack_measurement_t ts_voltage;
 
@@ -49,4 +50,20 @@ acu_lv_status_t acu_lv_svc_stop_ts_filter()
     	ts_voltage.hw.dma_started = false;
     }
     return status;
+}
+
+status_t acu_lv_svc_check_ts_voltage()
+{
+    // check if ts voltage is within 10% of accumulator
+    // should tractive be allowed to be greater that accu?
+    if(acu_lv_svc_get_ts_voltage() > acu_lv_svc_get_accu_voltage() * 1.1)
+    {
+        return ERROR_GENERAL;
+    } 
+    else if(acu_lv_svc_get_ts_voltage() < acu_lv_svc_get_accu_voltage() * 0.9)
+    {
+        return ERROR_GENERAL;
+    }
+
+    return OK;
 }

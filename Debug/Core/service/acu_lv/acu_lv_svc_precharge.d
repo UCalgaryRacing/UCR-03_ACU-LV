@@ -1,7 +1,6 @@
 Core/service/acu_lv/acu_lv_svc_precharge.o: \
  ../Core/service/acu_lv/acu_lv_svc_precharge.c \
- ../Core/service/acu_lv/acu_lv_svc_precharge.h \
- ../Core/service/acu_lv/acu_lv_svc_accu.h \
+ ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h \
  ../Core/config/acu_lv/acu_lv_config.h \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h \
  ../Core/Inc/stm32h7xx_hal_conf.h \
@@ -42,9 +41,10 @@ Core/service/acu_lv/acu_lv_svc_precharge.o: \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_tim_ex.h \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart.h \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart_ex.h \
+ ../Core/service/acu_lv/acu_lv_svc_precharge.h \
+ ../Core/common/com_typ_common.h ../Core/service/acu_lv/acu_lv_svc_accu.h \
  ../Core/service/acu_lv/acu_lv_svc_ts.h
-../Core/service/acu_lv/acu_lv_svc_precharge.h:
-../Core/service/acu_lv/acu_lv_svc_accu.h:
+../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h:
 ../Core/config/acu_lv/acu_lv_config.h:
 ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:
 ../Core/Inc/stm32h7xx_hal_conf.h:
@@ -85,4 +85,7 @@ Core/service/acu_lv/acu_lv_svc_precharge.o: \
 ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_tim_ex.h:
 ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart.h:
 ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart_ex.h:
+../Core/service/acu_lv/acu_lv_svc_precharge.h:
+../Core/common/com_typ_common.h:
+../Core/service/acu_lv/acu_lv_svc_accu.h:
 ../Core/service/acu_lv/acu_lv_svc_ts.h:

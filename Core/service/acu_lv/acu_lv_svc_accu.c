@@ -61,3 +61,17 @@ acu_lv_status_t acu_lv_svc_stop_accu_filter()
     }
     return status;
 }
+
+status_t acu_lv_svc_check_accu_voltage()
+{
+    // check if accumulator voltage is within allowed range
+    if(acu_lv_svc_get_accu_voltage() > acu_lv_svc_get_accu_max())
+    {
+        return ERROR_GENERAL;
+    }
+    else if(acu_lv_svc_get_accu_voltage() < acu_lv_svc_get_accu_min())
+    {
+        return ERROR_GENERAL;
+    }
+    return OK;
+}
