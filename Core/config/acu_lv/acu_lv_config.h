@@ -28,7 +28,7 @@
 #define ACU_LV_ADC_3_MAX_COUNTS ((1U << ACU_LV_ADC_2_RESOLUTION_BITS) -1)
 #define ACU_LV_ADC_3_MAX_NUMBER_CHANNELS 4U
 
-#define ACU_LV_ADC_SCALING_FACTOR 0.18458f
+#define ACU_LV_ADC_SCALING_FACTOR 8.064f
 
 #define ACU_LV_ADC_VREF                    2.5f
 
@@ -319,6 +319,7 @@ typedef struct
 typedef struct {
     ADC_HandleTypeDef *adc_handle;
     float adc_vref;
+    float adc_scaling; // all adcs on the LV have the same scaling factor
     uint16_t adc_max;  
     bool calibrated;
     bool dma_started;
@@ -349,7 +350,7 @@ typedef struct
 typedef struct 
 {
     acu_lv_air_hw_t air_hw;
-    analog_hw_t analog_hw;
+    analog_hw_t *analog_hw;
     float sdc_reserve;
     const uint8_t adc_buffer_index;
     bool air_closed;

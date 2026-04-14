@@ -29,6 +29,16 @@ float acu_lv_svc_get_accu_voltage()
     return *accu_voltage.data;
 }
 
+float acu_lv_svc_get_accu_min()
+{
+    return accu_voltage.settings.valid_min;
+}
+
+float acu_lv_svc_get_accu_max()
+{
+    return accu_voltage.settings.valid_max;
+} 
+
 acu_lv_status_t acu_lv_svc_start_accu_filter()
 {
     acu_lv_status_t status;

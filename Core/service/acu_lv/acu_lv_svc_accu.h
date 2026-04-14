@@ -12,6 +12,8 @@
 
 acu_lv_status_t acu_lv_svc_update_accu_voltage();
 float acu_lv_svc_get_accu_voltage();
+float acu_lv_svc_get_accu_min();
+float acu_lv_svc_get_accu_max();
 acu_lv_status_t acu_lv_svc_start_accu_filter();
 acu_lv_status_t acu_lv_svc_stop_accu_filter();
 

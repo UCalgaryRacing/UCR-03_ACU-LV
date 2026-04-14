@@ -11,7 +11,7 @@
 
 bool acu_lv_svc_check_precharge_done()
 {   
-    if(acu_lv_svc_get_accu_voltage() > 1.0f)
+    if(acu_lv_svc_get_accu_voltage() > acu_lv_svc_get_accu_min())
     {
         if((acu_lv_svc_get_accu_voltage() * 0.9f) <= acu_lv_svc_get_ts_voltage())
         {

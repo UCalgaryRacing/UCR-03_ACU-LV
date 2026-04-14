@@ -25,12 +25,13 @@ void acu_lv_drv_air_init()
 
 acu_lv_status_t acu_lv_drv_update_sdc_reserve()
 {
-    if(air.analog_hw.adc_context->dma_started == false)
-    {
-        return ACU_LV_ERROR;
-    }
+   if(air.analog_hw->adc_context->dma_started == false)
+   {
+       return ACU_LV_ERROR;
+   }
 
-    air.sdc_reserve = ((float)air.analog_hw.adc_buffer[air.adc_buffer_index] / air.analog_hw.adc_context->adc_max) * air.analog_hw.adc_context->adc_vref;
+    air.sdc_reserve = ((float)air.analog_hw->adc_buffer[air.adc_buffer_index] * air.analog_hw->adc_context->adc_vref * 
+                        air.analog_hw->adc_context->adc_scaling) / air.analog_hw->adc_context->adc_max;
 
     return ACU_LV_OK;
 }

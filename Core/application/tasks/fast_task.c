@@ -33,13 +33,12 @@ extern analog_hw_t adc_2_hw, adc_3_hw;
 extern uint16_t g_adc_2_dma_buffer[ACU_LV_ADC_2_MAX_NUMBER_CHANNELS];
 extern uint16_t g_adc_3_dma_buffer[ACU_LV_ADC_3_MAX_NUMBER_CHANNELS];
 
-extern volatile uint8_t adc_dma;
-
 extern analog_adc_context_t adc_2_context;
 extern ADC_HandleTypeDef hadc2;
 
 uint32_t g_test_buffer;
-int g_result;
+
+bool g_bms_valid;
 // initialization functions for the fast task
 void fast_task_init()
 {   
@@ -52,14 +51,14 @@ void fast_task_init()
     acu_lv_svc_start_shunt_filter();
     
     // calibrate both the ADCs
-//    acu_lv_drv_adc_init(adc_2_hw.adc_context);
+    acu_lv_drv_adc_init(adc_2_hw.adc_context);
     acu_lv_drv_adc_init(adc_3_hw.adc_context);
 
     //start the DMA for ADCs
-//    acu_lv_drv_adc_start_dma(&adc_2_hw, &g_test_buffer);
-    // acu_lv_drv_adc_start_dma(&adc_3_hw,(uint32_t*)g_adc_2_dma_buffer);
-    HAL_ADCEx_Calibration_Start(&hadc2, ADC_CALIB_OFFSET, ADC_SINGLE_ENDED);
-    HAL_ADC_Start_DMA(&hadc2,&g_test_buffer,1);
+    acu_lv_drv_adc_start_dma(&adc_2_hw, (uint32_t*)g_adc_2_dma_buffer);
+    acu_lv_drv_adc_start_dma(&adc_3_hw,(uint32_t*)g_adc_3_dma_buffer);
+    // HAL_ADCEx_Calibration_Start(&hadc2, ADC_CALIB_OFFSET, ADC_SINGLE_ENDED);
+    // HAL_ADC_Start_DMA(&hadc2,&g_test_buffer,1);
 
     // initialize airs, should make svc layer do it eventually
     acu_lv_drv_air_init();
@@ -89,11 +88,16 @@ void fast_task_loop()
     // update sdc reserve
     acu_lv_drv_update_sdc_reserve();
     
-    if(adc_dma == 1)
-    {
-    	adc_dma = 0;
-    }
 
-    g_result=  voltage_acquisition_sample();
+    
+    int valid =  voltage_acquisition_sample();
+    if(valid == 0)
+    {
+        g_bms_valid = true;
+    }
+    else
+    {
+        g_bms_valid = false;
+    }
     acu_lv_drv_toggle_led(&blue_led);
 }

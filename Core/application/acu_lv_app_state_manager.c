@@ -33,6 +33,8 @@ static void state_exit(acu_lv_app_state_t state);
 static acu_lv_app_state_t g_current_state = ACU_LV_APP_STATE_STARTUP;
 static acu_lv_app_state_t g_previous_state = ACU_LV_APP_STATE_STARTUP;
 
+extern bool g_bms_valid;
+
 void acu_lv_app_state_machine_init()
 {
     g_current_state = ACU_LV_APP_STATE_STARTUP;
@@ -94,21 +96,27 @@ void acu_lv_app_state_machine_step()
 
 static acu_lv_app_state_t handle_startup_state()
 {
+    //delay before checking IMD because it takes forever, might need to change to allow for it to check before getting
+    osDelay(2000);
 
-    // start cell temp and voltage measurement
-    // check imd, potentially change to happen in idle to allow imd time to boot or add delay
-    if(acu_lv_svc_imd_ok())
+    // check imd
+    if(!acu_lv_svc_imd_ok())
     {
         return ACU_LV_APP_STATE_FAULT;
     }
-    // tssi enabled
+    //add any other conditions for state transition here
+    else if(g_bms_valid)
+    {
+        return ACU_LV_APP_STATE_IDLE;
+    }
 
-    // if imd good and after first voltage and temp then transition to idle
-    return ACU_LV_APP_STATE_IDLE;
+    return ACU_LV_APP_STATE_STARTUP;
 }
 
 static acu_lv_app_state_t handle_idle_state()
 {
+//TODO: change once Ryland populates the dividers
+
     // start measuring ts and accu voltage, add logic to fast task
     // write the getter function for accu and ts voltage
 
@@ -116,27 +124,22 @@ static acu_lv_app_state_t handle_idle_state()
 
     // check state transition, start with transition case
     // then move through to check for errors based on safety/priority
-
-	//add imd stuff back
-    // if(acu_lv_svc_sdc_reserve_good())
-    // {
-    //     return ACU_LV_APP_STATE_IDLE;
-    // }
     
-//    else if(!acu_lv_svc_imd_ok())
-//    {
-//        return ACU_LV_APP_STATE_FAULT;
-//    }
-    // else if(!acu_lv_svc_sdc_reserve_good())
-    // {
-    //     return ACU_LV_APP_STATE_IDLE;
-    // }
-    osDelay(2000);
+    if(!acu_lv_svc_imd_ok())
+    {
+       return ACU_LV_APP_STATE_FAULT;
+    }
+    // if sdc_reserve is less than 9V then stay in idle state
+    else if(acu_lv_svc_sdc_reserve_good())
+    {
+        return ACU_LV_APP_STATE_PRECHARGE;
+    }
+
     // tssi enabled
 
     // transition to precharge once sdc reserve is 9V
     // fault transition if imd fault, cell voltage or temp out of range
-    return ACU_LV_APP_STATE_PRECHARGE;
+    return ACU_LV_APP_STATE_IDLE;
 }
 
 static acu_lv_app_state_t handle_precharge_state()

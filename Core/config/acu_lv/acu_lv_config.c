@@ -83,6 +83,7 @@ analog_adc_context_t adc_2_context = {
     .adc_channels = ACU_LV_ADC_2_MAX_NUMBER_CHANNELS,
     .adc_max = ACU_LV_ADC_2_MAX_COUNTS,
     .adc_vref = ACU_LV_ADC_VREF,
+    .adc_scaling = ACU_LV_ADC_SCALING_FACTOR,
     .calibrated = false,
     .dma_started = false
 };
@@ -97,6 +98,7 @@ analog_adc_context_t adc_3_context = {
     .adc_channels = ACU_LV_ADC_3_MAX_NUMBER_CHANNELS,
     .adc_max = ACU_LV_ADC_3_MAX_COUNTS,
     .adc_vref = ACU_LV_ADC_VREF,
+    .adc_scaling = ACU_LV_ADC_SCALING_FACTOR,
     .calibrated = false,
     .dma_started = false
 };
@@ -112,7 +114,7 @@ analog_hw_t adc_3_hw = {
 
 
 acu_lv_air_t air = {
-    .analog_hw = {&adc_2_context},
+    .analog_hw = &adc_2_hw,
     .air_hw = {
         .air_neg_port = AIR_NEG_EN_PORT,
         .air_neg_pin = AIR_NEG_EN_PIN,
