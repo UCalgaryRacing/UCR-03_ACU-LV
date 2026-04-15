@@ -451,34 +451,32 @@ static inline uint16_t adbms_cfga_get_gpo(const uint8_t *cfga)
  *
  * @param cfga    CFGA buffer.
  * @param pin     GPO pin to configure (ADBMS_GPO_PIN_1 to ADBMS_GPO_PIN_10).
- * @param pulldown_off  true = pull-down OFF (high-Z), false = pull-down ON.
+ * @param pin_state  true = floating (pulled up by external resistor), false = pull-down enabled.
  *
  * Example:
  *   adbms_cfga_set_gpo_pin(cfga, ADBMS_GPO_PIN_3, false);  // Enable pull-down on GPIO3
  */
-static inline void adbms_cfga_set_gpo_pin(uint8_t *cfga,
-                                          adbms_gpo_pin_t pin,
-                                          bool pulldown_off)
-{
-    if (pin < ADBMS_GPO_PIN_1 || pin > ADBMS_GPO_PIN_10)
-    {
-        return;
-    }
+// void adbms_cfga_set_gpo_pin(uint8_t *cfga, adbms_gpo_pin_t pin, bool pin_state)
+// {
+//     if (pin < ADBMS_GPO_PIN_1 || pin > ADBMS_GPO_PIN_10)
+//     {
+//         return;
+//     }
 
-    uint16_t gpo = adbms_cfga_get_gpo(cfga);
-    uint16_t mask = (uint16_t)(1U << ((uint8_t)pin - 1U));
+//     uint16_t gpo = adbms_cfga_get_gpo(cfga);
+//     uint16_t mask = (uint16_t)(1U << ((uint8_t)pin - 1U));
 
-    if (pulldown_off)
-    {
-        gpo |= mask;   /* Set bit = pull-down OFF */
-    }
-    else
-    {
-        gpo &= (uint16_t)~mask;  /* Clear bit = pull-down ON */
-    }
+//     if (pin_state)
+//     {
+//         gpo |= mask;   /* Set bit = pull-down OFF */
+//     }
+//     else
+//     {
+//         gpo &= (uint16_t)~mask;  /* Clear bit = pull-down ON */
+//     }
 
-    adbms_cfga_set_gpo(cfga, gpo);
-}
+//     adbms_cfga_set_gpo(cfga, gpo);
+// }
 
 /**
  * @brief Get the pull-down state of a single GPO pin.

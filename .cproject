@@ -72,6 +72,7 @@
 									<listOptionValue builtIn="false" value="../Core/service/can"/>
 									<listOptionValue builtIn="false" value="../Core/driver/can"/>
 									<listOptionValue builtIn="false" value="../Core/common"/>
+									<listOptionValue builtIn="false" value="../Core/service/bms"/>
 								</option>
 								<inputType id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.input.c.1950292894" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.input.c"/>
 							</tool>

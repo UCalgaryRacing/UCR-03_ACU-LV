@@ -31,6 +31,7 @@
 "./Core/service/acu_lv/acu_lv_svc_sdc.o"
 "./Core/service/acu_lv/acu_lv_svc_shunt.o"
 "./Core/service/acu_lv/acu_lv_svc_ts.o"
+"./Core/service/bms/bms_svc_thermistor.o"
 "./Core/service/can/can_svc.o"
 "./Core/service/can/ucr_03.o"
 "./Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal.o"

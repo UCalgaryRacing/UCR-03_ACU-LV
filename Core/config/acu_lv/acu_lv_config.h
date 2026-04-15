@@ -212,7 +212,6 @@ typedef struct
 typedef struct
 {
     uint8_t cfga[ADBMS_REG_GROUP_SIZE];
-
 } adbms6830_shadow_t;
 
 

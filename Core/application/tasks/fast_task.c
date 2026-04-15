@@ -22,6 +22,8 @@
 #include "acu_lv_drv_sdc.h"
 #include "acu_lv_drv_adbms6830.h"
 
+#include "bms_svc_thermistor.h"
+
 #include "stm32h7xx_hal.h"
 
 const static uint32_t period = 10;
@@ -68,7 +70,7 @@ void fast_task_init()
     acu_lv_drv_sdc_init();
 
     bms_manager_init();
-    
+
     acu_lv_drv_turn_on_led(&blue_led);
 }
 
@@ -95,5 +97,14 @@ void fast_task_loop()
     }
 
     g_result=  voltage_acquisition_sample();
+
+
+    bms_svc_acquire_thermistor_temps();
+
+    bms_svc_admbs_toggle_mux(ADBMS_GPO_PIN_1);
+
+    osDelay(500);
+
     acu_lv_drv_toggle_led(&blue_led);
+
 }

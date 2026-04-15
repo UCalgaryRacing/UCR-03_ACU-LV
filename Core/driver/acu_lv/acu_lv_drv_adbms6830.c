@@ -76,7 +76,7 @@ static HAL_StatusTypeDef adbms_spi_send_cmd(const uint8_t cmd_frame[4])
         temp_buffer[i] = cmd_frame[i];
     }
     HAL_GPIO_WritePin(ADBMS_2_CSN_PORT, ADBMS_2_CSN_PIN, GPIO_PIN_RESET);
-    HAL_StatusTypeDef hal_status = HAL_SPI_Transmit(ADBMS_2_SPI_HANDLE, &temp_buffer, 4U, HAL_MAX_DELAY);
+    HAL_StatusTypeDef hal_status = HAL_SPI_Transmit(ADBMS_2_SPI_HANDLE, temp_buffer, 4U, HAL_MAX_DELAY);
     HAL_GPIO_WritePin(ADBMS_2_CSN_PORT, ADBMS_2_CSN_PIN, GPIO_PIN_SET);
     return hal_status;
 }
@@ -135,6 +135,11 @@ static HAL_StatusTypeDef adbms_spi_write(const uint8_t cmd_frame[4], const uint8
     memcpy(&tx_buf[4], data, data_len);
 
     HAL_GPIO_WritePin(ADBMS_2_CSN_PORT, ADBMS_2_CSN_PIN, GPIO_PIN_RESET);
+    osDelay(1);
+    HAL_GPIO_WritePin(ADBMS_2_CSN_PORT, ADBMS_2_CSN_PIN, GPIO_PIN_SET);
+    osDelay(1);
+
+    HAL_GPIO_WritePin(ADBMS_2_CSN_PORT, ADBMS_2_CSN_PIN, GPIO_PIN_RESET);
     HAL_StatusTypeDef hal_status = HAL_SPI_Transmit(ADBMS_2_SPI_HANDLE,tx_buf, 4U + data_len, HAL_MAX_DELAY);
     HAL_GPIO_WritePin(ADBMS_2_CSN_PORT, ADBMS_2_CSN_PIN, GPIO_PIN_SET);
     return hal_status;
@@ -177,40 +182,78 @@ static uint16_t adbms6830_pec15_calc(const uint8_t *data, uint8_t len)
     return (uint16_t)(remainder << 1);
 }
 
+
+
+
+
+
+
+
+
+
+
 /**
- * @brief Calculate PEC10 over data frame bytes.
+ * @brief Calculate PEC10 over data bytes and 6-bit command counter.
  *
- * Polynomial: x^10 + x^7 + x^3 + x^2 + x + 1 (0x18F with implicit x^10).
- * Initial remainder: 0x0010 (16 decimal), per datasheet "Data PEC" section.
+ * The ADBMS6830B data PEC is always computed over the 6 register bytes
+ * followed by 6 command-counter bits.  For write commands the counter
+ * value is 0; for read-back verification it is the CCNT returned by
+ * the device.
  *
- * @param data Pointer to input bytes.
- * @param len  Number of bytes.
+ * @param data        Pointer to register data bytes.
+ * @param len         Number of data bytes (typically 6).
+ * @param cmd_counter 6-bit command counter (0 for write PEC).
  * @return 10-bit PEC value in bits [9:0].
  */
-static uint16_t adbms6830_pec10_calc(const uint8_t *data, uint8_t len)
+static uint16_t adbms6830_pec10_calc(const uint8_t *data, uint8_t len,
+                                     uint8_t cmd_counter)
 {
-    uint16_t remainder = 0x0010U; /* Initial seed per datasheet */
-    const uint16_t polynomial = 0x18FU; /* CRC-10 polynomial */
+    uint16_t remainder = 16U; /* 0x0010 */
 
     for (uint8_t byte_idx = 0U; byte_idx < len; byte_idx++)
     {
-        remainder ^= (uint16_t)data[byte_idx] << 2; /* XOR byte into upper 8 bits of 10-bit remainder */
+        remainder ^= (uint16_t)data[byte_idx] << 2;
         for (uint8_t bit_idx = 0U; bit_idx < 8U; bit_idx++)
         {
-            if (remainder & 0x200U) /* Check bit 9 (MSB of 10-bit remainder) */
+            if (remainder & 0x0200U)
             {
-                remainder = (uint16_t)(((remainder << 1) ^ polynomial) & 0x3FFU);
+                remainder = (uint16_t)((remainder << 1) ^ 0x008FU);
             }
             else
             {
-                remainder = (uint16_t)((remainder << 1) & 0x3FFU);
+                remainder <<= 1;
             }
+        }
+        remainder &= 0x03FFU;
+    }
+
+    /* XOR the 6-bit command counter into bits [9:4] of the remainder,
+     * then clock 6 more bits through the CRC register. */
+    remainder ^= (uint16_t)((uint16_t)(cmd_counter & 0x3FU) << 4);
+    for (uint8_t bit_idx = 0U; bit_idx < 6U; bit_idx++)
+    {
+        if (remainder & 0x0200U)
+        {
+            remainder = (uint16_t)((remainder << 1) ^ 0x008FU);
+        }
+        else
+        {
+            remainder <<= 1;
         }
     }
 
-    /* Return 10-bit PEC in bits [9:0] */
-    return (uint16_t)(remainder & 0x3FFU);
+    return remainder & 0x03FFU;
 }
+
+
+
+
+
+
+
+
+
+
 
 /*============================================================================*/
 /* Driver Initialization                                                      */
@@ -331,7 +374,7 @@ int adbms6830_write_cfga(const adbms6830_shadow_t *shadow)
     uint8_t data_buf[ADBMS_REG_GROUP_SIZE + 2U];
     memcpy(data_buf, cfga, ADBMS_REG_GROUP_SIZE);
 
-    uint16_t data_pec = adbms6830_pec10_calc(data_buf, ADBMS_REG_GROUP_SIZE);
+    uint16_t data_pec = adbms6830_pec10_calc(data_buf, ADBMS_REG_GROUP_SIZE, 0U);
     data_buf[6] = (uint8_t)((data_pec >> 8) & 0x03U);  /* PEC[9:8] in bits [1:0] */
     data_buf[7] = (uint8_t)data_pec;                   /* PEC[7:0] */
 
@@ -377,14 +420,7 @@ int adbms6830_read_cfga(adbms6830_shadow_t *shadow)
     /* Extract command counter from PEC0[7:2] */
     uint8_t cmd_counter = (uint8_t)((rx_buf[6] >> 2) & 0x3FU);
 
-    /* PEC is calculated over data bytes + command counter.
-     * Build a temporary buffer with data + CCNT for PEC calculation.
-     */
-    uint8_t pec_data[ADBMS_REG_GROUP_SIZE + 1U];
-    memcpy(pec_data, rx_buf, ADBMS_REG_GROUP_SIZE);
-    pec_data[ADBMS_REG_GROUP_SIZE] = cmd_counter;
-
-    uint16_t calculated_pec = adbms6830_pec10_calc(pec_data, ADBMS_REG_GROUP_SIZE + 1U);
+    uint16_t calculated_pec = adbms6830_pec10_calc(rx_buf, ADBMS_REG_GROUP_SIZE, cmd_counter);
 
     if (received_pec != calculated_pec)
     {
@@ -457,17 +493,12 @@ static int adbms6830_read_register_group(uint16_t cmd, uint8_t rx_data[ADBMS_NUM
         uint16_t received_pec = (uint16_t)(((uint16_t)(slave_data[6] & 0x03U) << 8) | slave_data[7]);
         uint8_t cmd_counter = (uint8_t)((slave_data[6] >> 2) & 0x3FU);
 
-        /* Build PEC input: data + command counter */
-        uint8_t pec_input[ADBMS_REG_GROUP_SIZE + 1U];
-        memcpy(pec_input, slave_data, ADBMS_REG_GROUP_SIZE);
-        pec_input[ADBMS_REG_GROUP_SIZE] = cmd_counter;
+        uint16_t calculated_pec = adbms6830_pec10_calc(slave_data, ADBMS_REG_GROUP_SIZE, cmd_counter);
 
-        // uint16_t calculated_pec = adbms6830_pec10_calc(pec_input, ADBMS_REG_GROUP_SIZE + 1U);
-
-        // if (received_pec != calculated_pec)
-        // {
-        //     return -2; /* PEC error on slave */
-        // }
+        if (received_pec != calculated_pec)
+        {
+            return -2; /* PEC error on slave */
+        }
 
         /* Copy validated data */
         memcpy(rx_data[slave_idx], slave_data, ADBMS_REG_GROUP_SIZE);
