@@ -31,6 +31,7 @@ Core/config/can \
 Core/driver/acu_lv \
 Core/driver/can \
 Core/service/acu_lv \
+Core/service/bms \
 Core/service/can \
 Drivers/STM32H7xx_HAL_Driver/Src \
 Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 \

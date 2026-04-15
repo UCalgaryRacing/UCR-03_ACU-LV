@@ -15,6 +15,7 @@ RM := rm -rf
 -include Middlewares/Third_Party/FreeRTOS/Source/subdir.mk
 -include Drivers/STM32H7xx_HAL_Driver/Src/subdir.mk
 -include Core/service/can/subdir.mk
+-include Core/service/bms/subdir.mk
 -include Core/service/acu_lv/subdir.mk
 -include Core/driver/can/subdir.mk
 -include Core/driver/acu_lv/subdir.mk
@@ -72,8 +73,8 @@ all: main-build
 main-build: UCR_03_ACU_LV.elf secondary-outputs
 
 # Tool invocations
-UCR_03_ACU_LV.elf UCR_03_ACU_LV.map: $(OBJS) $(USER_OBJS) C:\Users\clayd\OneDrive\Documents\UCR_03\UCR_03_ACU_LV\STM32H753XIHX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "UCR_03_ACU_LV.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m7 -T"C:\Users\clayd\OneDrive\Documents\UCR_03\UCR_03_ACU_LV\STM32H753XIHX_FLASH.ld" --specs=nosys.specs -Wl,-Map="UCR_03_ACU_LV.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+UCR_03_ACU_LV.elf UCR_03_ACU_LV.map: $(OBJS) $(USER_OBJS) C:\Users\esall\OneDrive\ -\ University\ of\ Calgary\UCalgary\ Racing\STM32\UCR_03_ACU_LV\STM32H753XIHX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "UCR_03_ACU_LV.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m7 -T"C:\Users\esall\OneDrive - University of Calgary\UCalgary Racing\STM32\UCR_03_ACU_LV\STM32H753XIHX_FLASH.ld" --specs=nosys.specs -Wl,-Map="UCR_03_ACU_LV.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 

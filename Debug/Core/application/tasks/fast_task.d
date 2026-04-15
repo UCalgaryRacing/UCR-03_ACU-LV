@@ -52,7 +52,9 @@ Core/application/tasks/fast_task.o: ../Core/application/tasks/fast_task.c \
  ../Core/driver/acu_lv/acu_lv_drv_sdc.h \
  ../Core/driver/acu_lv/acu_lv_drv_adbms6830.h \
  ../Core/driver/acu_lv/acu_lv_drv_adbms6830_regs.h \
- ../Core/driver/acu_lv/acu_lv_drv_adbms6830_types.h
+ ../Core/driver/acu_lv/acu_lv_drv_adbms6830_types.h \
+ ../Core/service/bms/bms_svc_thermistor.h \
+ ../Core/driver/acu_lv/acu_lv_drv_adbms6830_regs.h
 ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h:
 ../Core/config/acu_lv/acu_lv_config.h:
 ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:
@@ -108,3 +110,5 @@ Core/application/tasks/fast_task.o: ../Core/application/tasks/fast_task.c \
 ../Core/driver/acu_lv/acu_lv_drv_adbms6830.h:
 ../Core/driver/acu_lv/acu_lv_drv_adbms6830_regs.h:
 ../Core/driver/acu_lv/acu_lv_drv_adbms6830_types.h:
+../Core/service/bms/bms_svc_thermistor.h:
+../Core/driver/acu_lv/acu_lv_drv_adbms6830_regs.h:
