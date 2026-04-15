@@ -6,7 +6,7 @@
 ../Core/driver/acu_lv/acu_lv_drv_adbms6830_regs.h:429:20:adbms_cfga_set_gpo	16	static
 ../Core/driver/acu_lv/acu_lv_drv_adbms6830_regs.h:508:20:adbms_cfga_set_fc	16	static
 ../Core/driver/acu_lv/acu_lv_drv_adbms6830.h:172:21:adbms6830_adc_to_volts	16	static
-../Core/service/acu_lv/acu_lv_svc_adbms6830.c:18:5:voltage_acquisition_sample	312	static
+../Core/service/acu_lv/acu_lv_svc_adbms6830.c:18:5:voltage_acquisition_sample	80	static
 ../Core/service/acu_lv/acu_lv_svc_adbms6830.c:134:5:bms_manager_init	16	static
 ../Core/service/acu_lv/acu_lv_svc_adbms6830.c:181:6:bms_manager_is_ready	4	static
 ../Core/service/acu_lv/acu_lv_svc_adbms6830.c:186:5:bms_manager_verify_communication	24	static

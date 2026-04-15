@@ -8,7 +8,7 @@
 ../Core/driver/acu_lv/acu_lv_drv_adbms6830_regs.h:508:20:adbms_cfga_set_fc	16	static
 ../Core/driver/acu_lv/acu_lv_drv_adbms6830_regs.h:541:20:adbms_cfga_set_defaults	24	static
 ../Core/driver/acu_lv/acu_lv_drv_adbms6830.c:71:26:adbms_spi_send_cmd	24	static
-../Core/driver/acu_lv/acu_lv_drv_adbms6830.c:96:26:adbms_spi_read	208	static
+../Core/driver/acu_lv/acu_lv_drv_adbms6830.c:96:26:adbms_spi_read	64	static
 ../Core/driver/acu_lv/acu_lv_drv_adbms6830.c:130:26:adbms_spi_write	40	static
 ../Core/driver/acu_lv/acu_lv_drv_adbms6830.c:157:17:adbms6830_pec15_calc	24	static
 ../Core/driver/acu_lv/acu_lv_drv_adbms6830.c:190:17:adbms6830_pec10_calc	24	static
@@ -21,8 +21,8 @@
 ../Core/driver/acu_lv/acu_lv_drv_adbms6830.c:308:5:adbms6830_write_cfga	40	static
 ../Core/driver/acu_lv/acu_lv_drv_adbms6830.c:343:5:adbms6830_read_cfga	48	static
 ../Core/driver/acu_lv/acu_lv_drv_adbms6830.c:409:12:adbms6830_send_command	24	static
-../Core/driver/acu_lv/acu_lv_drv_adbms6830.c:430:12:adbms6830_read_register_group	128	static
+../Core/driver/acu_lv/acu_lv_drv_adbms6830.c:430:12:adbms6830_read_register_group	56	static
 ../Core/driver/acu_lv/acu_lv_drv_adbms6830.c:479:5:adbms6830_start_cell_adc	24	static
-../Core/driver/acu_lv/acu_lv_drv_adbms6830.c:492:5:adbms6830_read_cell_voltages_raw	88	static
+../Core/driver/acu_lv/acu_lv_drv_adbms6830.c:492:5:adbms6830_read_cell_voltages_raw	40	static
 ../Core/driver/acu_lv/acu_lv_drv_adbms6830.c:539:5:adbms6830_start_gpio_adc	16	static
-../Core/driver/acu_lv/acu_lv_drv_adbms6830.c:546:5:adbms6830_read_gpio_voltages_raw	88	static
+../Core/driver/acu_lv/acu_lv_drv_adbms6830.c:546:5:adbms6830_read_gpio_voltages_raw	40	static

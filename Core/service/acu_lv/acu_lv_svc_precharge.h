@@ -14,5 +14,6 @@
 bool acu_lv_svc_check_precharge_done();
 status_t acu_lv_svc_check_precharge_timeout();
 void acu_lv_svc_start_precharge_timer();
+void acu_lv_svc_stop_precharge_timer();
 
 #endif /* SERVICE_ACU_LV_SVC_PRECHARGE_H_ */
