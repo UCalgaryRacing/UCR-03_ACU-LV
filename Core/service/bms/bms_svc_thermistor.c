@@ -2,19 +2,30 @@
 #include "acu_lv_drv_adbms6830.h"
 #include "acu_lv_svc_adbms6830.h"
 #include "acu_lv_drv_adbms6830_regs.h"
-
+#include "bms_svc_thermistor.h"
 // void bms_svc_admbs_toggle_mux(uint16_t gpio);
 
-
+/* Private Functions */
+static float get_highest_temp();
+static float get_lowest_temp();
 
 /*============================================================================*/
 /* Temperature Sampling                                                       */
 /*============================================================================*/
 
-static uint16_t raw_temps[ADBMS_NUM_SLAVES][ADBMS_NUM_GPIOS];
-static float processed_temps[ADBMS_NUM_SLAVES][ADBMS_NUM_GPIOS];
+static uint16_t raw_temps[ADBMS_NUM_SLAVES][ADBMS_THERMS_PER_IC];
+static float processed_temps[ADBMS_NUM_SLAVES][ADBMS_THERMS_PER_IC];
 
-
+bms_temp_stats_t temp_stats = 
+{
+    .temp_min_c = ACULV_CELL_MAX_TEMPERATURE,     
+    .temp_max_c = ACULV_CELL_MAX_TEMPERATURE,     
+    .temp_avg_c = 0.0f,
+    .temp_min_slave = 0,
+    .temp_min_idx = 0,
+    .temp_max_slave = 0,
+    .temp_max_idx = 0
+};
 
 static float calculate_thermistor_temperature(float adc_voltage)
 {
@@ -55,7 +66,11 @@ void bms_svc_acquire_thermistor_temps()
     //TODO remove hardcoded delay
     osDelay(1);
 
-    result = adbms6830_read_gpio_voltages_raw(raw_temps);
+    result = adbms6830_read_gpio_voltages_raw(raw_temps,0U);
+
+    bms_svc_admbs_toggle_mux(ADBMS_GPO_PIN_1);
+
+    result = adbms6830_read_gpio_voltages_raw(raw_temps,1U);
 
     for (int slave = 0; slave < ADBMS_NUM_SLAVES; slave++)
     {
@@ -63,11 +78,41 @@ void bms_svc_acquire_thermistor_temps()
         {
             float thermistor_voltage = adbms6830_adc_to_volts(raw_temps[slave][thermistor]);
             processed_temps[slave][thermistor] = calculate_thermistor_temperature(thermistor_voltage);
+
+            if(processed_temps[slave][thermistor] > temp_stats.temp_max_c)
+            {
+                temp_stats.temp_max_c = processed_temps[slave][thermistor];
+                temp_stats.temp_max_idx = thermistor;
+                temp_stats.temp_max_slave = slave;
+            }
+            else if(processed_temps[slave][thermistor] < temp_stats.temp_min_c)
+            {
+                temp_stats.temp_min_c = processed_temps[slave][thermistor];
+                temp_stats.temp_min_idx = thermistor;
+                temp_stats.temp_max_slave = slave;
+            }
         }
 
     }
 
     // bms_svc_admbs_toggle_gpio(ADBMS_GPO_PIN_1);
-    
 }
 
+status_t bms_svc_check_temps()
+{
+    if((get_lowest_temp() < ACULV_CELL_MIN_TEMPERATURE) || (get_highest_temp() > ACULV_CELL_MAX_TEMPERATURE))
+    {
+        return ERROR_GENERAL;
+    }
+    return OK;
+}
+
+static float get_highest_temp()
+{   
+    return temp_stats.temp_max_c;
+}
+
+static float get_lowest_temp()
+{
+    return temp_stats.temp_min_c;
+}

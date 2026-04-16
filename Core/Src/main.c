@@ -105,7 +105,7 @@ const osThreadAttr_t CanTask_attributes = {
   .priority = (osPriority_t) osPriorityRealtime,
 };
 /* USER CODE BEGIN PV */
-uint8_t adc_dma;
+
 extern uint8_t precharge_time;
 /* USER CODE END PV */
 
@@ -1077,7 +1077,6 @@ static void MX_GPIO_Init(void)
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc)
 {
   //adc conversion complete callback
-  adc_dma = 1;
 }
 /* USER CODE END 4 */
 

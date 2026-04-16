@@ -106,7 +106,7 @@
 /* Battery Pack / Daisy Chain Topology                                        */
 
 /** Number of ADBMS6830B slave ICs in the daisy chain. */
-#define ADBMS_NUM_SLAVES            1U
+#define ADBMS_NUM_SLAVES            10U
 
 /** Number of cells monitored per slave IC (max 16). */
 #define ADBMS_CELLS_PER_IC          13U
@@ -183,9 +183,11 @@
 /*============================================================================*/
 
 // TODO: change to what the actual max and min values are instead of placeholders
-#define ACU_LV_CELL_MAXIMUM_VOLTAGE 4.0f
+#define ACU_LV_CELL_MAXIMUM_VOLTAGE 4.2f
+#define ACU_LV_CELL_MINIMUM_VOLTAGE 2.5f
 
-#define ACU_LV_CELL_MINIMUM_VOLTAGE 2.0f
+#define ACULV_CELL_MIN_TEMPERATURE 0.0f
+#define ACULV_CELL_MAX_TEMPERATURE 60.0f
 
 /*============================================================================*/
 /* Default Register Configuration                                             */

@@ -574,7 +574,7 @@ int adbms6830_start_gpio_adc(void)
     return result;
 }
 
-int adbms6830_read_gpio_voltages_raw(uint16_t raw_adc[ADBMS_NUM_SLAVES][ADBMS_NUM_GPIOS])
+int adbms6830_read_gpio_voltages_raw(uint16_t raw_adc[ADBMS_NUM_SLAVES][ADBMS_THERMS_PER_IC],uint8_t mux_state)
 {
     /* Auxiliary register group commands:
      * RDAUXA: GPIO1, GPIO2, GPIO3
@@ -588,6 +588,8 @@ int adbms6830_read_gpio_voltages_raw(uint16_t raw_adc[ADBMS_NUM_SLAVES][ADBMS_NU
 
     uint8_t reg_data[ADBMS_NUM_SLAVES][ADBMS_REG_GROUP_SIZE];
     int result;
+
+    uint8_t mux_index = 9*mux_state;
 
     /* Read all 4 auxiliary register groups */
     for (uint8_t reg_group = 0U; reg_group < 4U; reg_group++)
@@ -610,14 +612,14 @@ int adbms6830_read_gpio_voltages_raw(uint16_t raw_adc[ADBMS_NUM_SLAVES][ADBMS_NU
                 {
                     uint8_t gpio_idx = first_gpio_in_group + gpio_in_group;
                     uint8_t byte_offset = gpio_in_group * 2U;
-                    raw_adc[slave_idx][gpio_idx] = (uint16_t)reg_data[slave_idx][byte_offset] |
+                    raw_adc[slave_idx][gpio_idx + mux_index] = (uint16_t)reg_data[slave_idx][byte_offset] |
                                                    ((uint16_t)reg_data[slave_idx][byte_offset + 1U] << 8);
                 }
             }
             else
             {
                 /* Group D: GPIO10 only (bytes 0-1), VM and VP are not needed */
-                raw_adc[slave_idx][ADBMS_NUM_GPIOS - 1U] = (uint16_t)reg_data[slave_idx][0] |
+                raw_adc[slave_idx][ADBMS_NUM_GPIOS - 1U + mux_index] = (uint16_t)reg_data[slave_idx][0] |
                                                            ((uint16_t)reg_data[slave_idx][1] << 8);
             }
         }

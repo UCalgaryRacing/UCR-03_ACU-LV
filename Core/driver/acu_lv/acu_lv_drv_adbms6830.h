@@ -209,7 +209,7 @@ bool adbms6830_poll_gpio_adc(void);
  *                 Each value is a 16-bit ADC count.
  * @return 0 on success, negative error code on failure (e.g., PEC error).
  */
-int adbms6830_read_gpio_voltages_raw(uint16_t raw_adc[ADBMS_NUM_SLAVES][ADBMS_NUM_GPIOS]);
+int adbms6830_read_gpio_voltages_raw(uint16_t raw_adc[ADBMS_NUM_SLAVES][ADBMS_THERMS_PER_IC],uint8_t mux_state);
 
 /**
  * @brief Convert raw GPIO ADC count to voltage in volts.

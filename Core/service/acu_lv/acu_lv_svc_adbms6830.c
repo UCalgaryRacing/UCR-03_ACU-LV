@@ -12,7 +12,16 @@
 /*============================================================================*/
 /* Voltage Sampling                                                           */
 /*============================================================================*/
-
+bms_voltage_stats_t voltage_stats = {
+        .cell_min_v     = 10.0f,    /* Start high (will be replaced by first valid reading) */
+        .cell_max_v     = 0.0f,     /* Start low (will be replaced by first valid reading) */
+        .cell_avg_v     = 0.0f,
+        .pack_v         = 0.0f,
+        .cell_min_slave = 0U,
+        .cell_min_idx   = 0U,
+        .cell_max_slave = 0U,
+        .cell_max_idx   = 0U,
+    };
 
 float voltages[ADBMS_NUM_SLAVES][ADBMS_CELLS_PER_IC];
 int voltage_acquisition_sample(void)
@@ -24,17 +33,6 @@ int voltage_acquisition_sample(void)
     /* Converted voltage buffer (per-slave) */
 //    float voltages[ADBMS_CELLS_PER_IC];
 
-    /* Voltage statistics - initialize with extreme values for min/max tracking */
-    bms_voltage_stats_t voltage_stats = {
-        .cell_min_v     = 10.0f,    /* Start high (will be replaced by first valid reading) */
-        .cell_max_v     = 0.0f,     /* Start low (will be replaced by first valid reading) */
-        .cell_avg_v     = 0.0f,
-        .pack_v         = 0.0f,
-        .cell_min_slave = 0U,
-        .cell_min_idx   = 0U,
-        .cell_max_slave = 0U,
-        .cell_max_idx   = 0U,
-    };
 
     float voltage_sum = 0.0f;
     uint32_t cell_count = 0U;

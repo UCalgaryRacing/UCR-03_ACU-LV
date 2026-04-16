@@ -45,7 +45,8 @@ Core/service/bms/bms_svc_thermistor.o: \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart_ex.h \
  ../Core/driver/acu_lv/acu_lv_drv_adbms6830_types.h \
  ../Core/service/acu_lv/acu_lv_svc_adbms6830.h \
- ../Core/driver/acu_lv/acu_lv_drv_adbms6830_regs.h
+ ../Core/driver/acu_lv/acu_lv_drv_adbms6830_regs.h \
+ ../Core/service/bms/bms_svc_thermistor.h ../Core/common/com_typ_common.h
 ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h:
 ../Core/driver/acu_lv/acu_lv_drv_adbms6830.h:
 ../Core/driver/acu_lv/acu_lv_drv_adbms6830_regs.h:
@@ -92,3 +93,5 @@ Core/service/bms/bms_svc_thermistor.o: \
 ../Core/driver/acu_lv/acu_lv_drv_adbms6830_types.h:
 ../Core/service/acu_lv/acu_lv_svc_adbms6830.h:
 ../Core/driver/acu_lv/acu_lv_drv_adbms6830_regs.h:
+../Core/service/bms/bms_svc_thermistor.h:
+../Core/common/com_typ_common.h:

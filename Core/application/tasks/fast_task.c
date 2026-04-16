@@ -21,10 +21,10 @@
 #include "acu_lv_drv_air.h"
 #include "acu_lv_drv_sdc.h"
 #include "acu_lv_drv_adbms6830.h"
+#include "acu_lv_drv_adbms6830_types.h"
 
 #include "bms_svc_thermistor.h"
 
-#include "stm32h7xx_hal.h"
 
 const static uint32_t period = 10;
 static uint32_t next_wake;
@@ -38,7 +38,7 @@ extern uint16_t g_adc_3_dma_buffer[ACU_LV_ADC_3_MAX_NUMBER_CHANNELS];
 extern analog_adc_context_t adc_2_context;
 extern ADC_HandleTypeDef hadc2;
 
-uint32_t g_test_buffer;
+int g_result;
 
 bool g_bms_valid;
 // initialization functions for the fast task
@@ -89,20 +89,14 @@ void fast_task_loop()
 
     // update sdc reserve
     acu_lv_drv_update_sdc_reserve();
-    
-    if(adc_dma == 1)
-    {
-    	adc_dma = 0;
-    }
 
-    g_result=  voltage_acquisition_sample();
+
+    g_result =  voltage_acquisition_sample();
 
 
     bms_svc_acquire_thermistor_temps();
 
-    bms_svc_admbs_toggle_mux(ADBMS_GPO_PIN_1);
-
-    osDelay(500);
+    // bms_svc_admbs_toggle_mux(ADBMS_GPO_PIN_1);
 
     acu_lv_drv_toggle_led(&blue_led);
 

@@ -1,4 +1,7 @@
 ../Core/driver/acu_lv/acu_lv_drv_adbms6830.h:172:21:adbms6830_adc_to_volts	16	static
-../Core/service/bms/bms_svc_thermistor.c:19:14:calculate_thermistor_temperature	24	static
-../Core/service/bms/bms_svc_thermistor.c:37:6:bms_svc_admbs_toggle_mux	24	static
-../Core/service/bms/bms_svc_thermistor.c:51:6:bms_svc_acquire_thermistor_temps	24	static
+../Core/service/bms/bms_svc_thermistor.c:30:14:calculate_thermistor_temperature	24	static
+../Core/service/bms/bms_svc_thermistor.c:48:6:bms_svc_admbs_toggle_mux	24	static
+../Core/service/bms/bms_svc_thermistor.c:62:6:bms_svc_acquire_thermistor_temps	24	static
+../Core/service/bms/bms_svc_thermistor.c:101:10:bms_svc_check_temps	8	static
+../Core/service/bms/bms_svc_thermistor.c:110:14:get_highest_temp	4	static
+../Core/service/bms/bms_svc_thermistor.c:115:14:get_lowest_temp	4	static
