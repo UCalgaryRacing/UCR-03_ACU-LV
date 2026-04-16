@@ -1,0 +1,11 @@
+../Core/shared/driver/can/can_drv_can.c:17:10:can_drv_init	4	static
+../Core/shared/driver/can/can_drv_can.c:36:10:can_drv_start	16	static
+../Core/shared/driver/can/can_drv_can.c:66:10:can_drv_configure_filter	48	static
+../Core/shared/driver/can/can_drv_can.c:92:10:can_drv_transmit	56	static
+../Core/shared/driver/can/can_drv_can.c:138:6:HAL_FDCAN_RxFifo0Callback	16	static
+../Core/shared/driver/can/can_drv_can.c:148:6:HAL_FDCAN_RxFifo1Callback	16	static
+../Core/shared/driver/can/can_drv_can.c:161:13:can_drv_isr_handler	96	static
+../Core/shared/driver/can/can_drv_can.c:193:17:can_drv_receive	56	static
+../Core/shared/driver/can/can_drv_can.c:220:16:fdcan_dlc_to_bytes	16	static
+../Core/shared/driver/can/can_drv_can.c:244:17:dlc_to_fdcan_dlc	16	static
+../Core/shared/driver/can/can_drv_can.c:269:24:can_drv_get_hw_from_handle	24	static

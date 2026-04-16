@@ -12,6 +12,8 @@
 
 extern FDCAN_HandleTypeDef hfdcan2;
 
+
+#define CAN_1_HANDLE (&hfdcan2)
 #define CAN_2_HANDLE (&hfdcan2)
 
 #endif /* CONFIG_CAN_CAN_CONFIG_PINOUT_H_ */

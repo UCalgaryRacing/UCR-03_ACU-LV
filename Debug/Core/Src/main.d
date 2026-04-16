@@ -52,7 +52,10 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
  ../Core/application/tasks/fast_task.h \
  ../Core/application/tasks/medium_task.h \
  ../Core/application/tasks/slow_task.h \
- ../Core/application/tasks/task_manager.h
+ ../Core/application/tasks/task_manager.h \
+ ../Core/shared/application/tasks/task_can_tx.h \
+ ../Core/shared/application/tasks/task_can_rx.h \
+ ../Core/shared/driver/can/can_typ_common.h
 ../Core/Inc/main.h:
 ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:
 ../Core/Inc/stm32h7xx_hal_conf.h:
@@ -108,3 +111,6 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
 ../Core/application/tasks/medium_task.h:
 ../Core/application/tasks/slow_task.h:
 ../Core/application/tasks/task_manager.h:
+../Core/shared/application/tasks/task_can_tx.h:
+../Core/shared/application/tasks/task_can_rx.h:
+../Core/shared/driver/can/can_typ_common.h:

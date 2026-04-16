@@ -29,10 +29,13 @@ Core/application/tasks \
 Core/config/acu_lv \
 Core/config/can \
 Core/driver/acu_lv \
-Core/driver/can \
 Core/service/acu_lv \
 Core/service/bms \
-Core/service/can \
+Core/shared/application/tasks \
+Core/shared/data/accumulator \
+Core/shared/driver/can \
+Core/shared/service/accumulator \
+Core/shared/service/can \
 Drivers/STM32H7xx_HAL_Driver/Src \
 Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 \
 Middlewares/Third_Party/FreeRTOS/Source \

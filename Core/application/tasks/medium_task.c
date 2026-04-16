@@ -22,13 +22,13 @@ void medium_task_init()
 {
     next_wake = osKernelGetTickCount();
 
-    acu_lv_drv_turn_on_led(&green_led);
+    acu_lv_drv_turn_off_led(&green_led);
 }
 void medium_task_loop()
 {
     next_wake += period;
     osDelayUntil(next_wake);
-    acu_lv_drv_toggle_led(&green_led);
+    // acu_lv_drv_toggle_led(&green_led);
 
     // check imd state
     // acu_lv_drv_update_imd_state();

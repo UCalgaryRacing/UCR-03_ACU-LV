@@ -26,6 +26,9 @@
 #include "medium_task.h"
 #include "slow_task.h"
 #include "task_manager.h"
+#include "task_can_tx.h"
+#include "task_can_rx.h"
+#include "can_typ_common.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -74,39 +77,67 @@ osThreadId_t TaskManagerHandle;
 const osThreadAttr_t TaskManager_attributes = {
   .name = "TaskManager",
   .stack_size = 512 * 4,
-  .priority = (osPriority_t) osPriorityRealtime7,
+  .priority = (osPriority_t) osPriorityNormal,
 };
 /* Definitions for FastTask */
 osThreadId_t FastTaskHandle;
 const osThreadAttr_t FastTask_attributes = {
   .name = "FastTask",
   .stack_size = 512 * 4,
-  .priority = (osPriority_t) osPriorityRealtime,
+  .priority = (osPriority_t) osPriorityNormal,
 };
 /* Definitions for MediumTask */
 osThreadId_t MediumTaskHandle;
 const osThreadAttr_t MediumTask_attributes = {
   .name = "MediumTask",
   .stack_size = 512 * 4,
-  .priority = (osPriority_t) osPriorityRealtime,
+  .priority = (osPriority_t) osPriorityNormal,
 };
 /* Definitions for SlowTask */
 osThreadId_t SlowTaskHandle;
 const osThreadAttr_t SlowTask_attributes = {
   .name = "SlowTask",
   .stack_size = 512 * 4,
-  .priority = (osPriority_t) osPriorityRealtime,
+  .priority = (osPriority_t) osPriorityNormal,
 };
-/* Definitions for CanTask */
-osThreadId_t CanTaskHandle;
-const osThreadAttr_t CanTask_attributes = {
-  .name = "CanTask",
+/* Definitions for CanTx */
+osThreadId_t CanTxHandle;
+const osThreadAttr_t CanTx_attributes = {
+  .name = "CanTx",
   .stack_size = 512 * 4,
-  .priority = (osPriority_t) osPriorityRealtime,
+  .priority = (osPriority_t) osPriorityBelowNormal,
+};
+/* Definitions for CanRx */
+osThreadId_t CanRxHandle;
+const osThreadAttr_t CanRx_attributes = {
+  .name = "CanRx",
+  .stack_size = 512 * 4,
+  .priority = (osPriority_t) osPriorityBelowNormal1,
 };
 /* USER CODE BEGIN PV */
 
 extern uint8_t precharge_time;
+
+
+osMessageQueueId_t Can1TxQueueHandle;
+const osMessageQueueAttr_t Can1TxQueue_attributes = {
+  .name = "Can1TxQueue"
+};
+
+osMessageQueueId_t Can1RxQueueHandle;
+const osMessageQueueAttr_t Can1RxQueue_attributes = {
+  .name = "Can1RxQueue"
+};
+
+osMessageQueueId_t Can2TxQueueHandle;
+const osMessageQueueAttr_t Can2TxQueue_attributes = {
+  .name = "Can2TxQueue"
+};
+
+osMessageQueueId_t Can2RxQueueHandle;
+const osMessageQueueAttr_t Can2RxQueue_attributes = {
+  .name = "Can2RxQueue"
+};
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -130,6 +161,7 @@ void StartFastTask(void *argument);
 void StartMediumTask(void *argument);
 void StartSlowTask(void *argument);
 void StartCanTask(void *argument);
+void StartCanRx(void *argument);
 
 /* USER CODE BEGIN PFP */
 
@@ -188,6 +220,32 @@ int main(void)
   MX_TIM3_Init();
   /* USER CODE BEGIN 2 */
 
+//  HAL_FDCAN_Start(&hfdcan2);
+//  HAL_FDCAN_ActivateNotification(&hfdcan2, FDCAN_IT_RX_FIFO0_NEW_MESSAGE, 0);
+//
+//  uint8_t test[64] = {0};
+//  test[0] = 0xFF;
+//
+//
+//  FDCAN_TxHeaderTypeDef tx_header;
+//
+//  tx_header.Identifier = 300;
+//  tx_header.IdType = FDCAN_STANDARD_ID;
+//  tx_header.TxFrameType = FDCAN_DATA_FRAME;
+//  tx_header.DataLength = FDCAN_DLC_BYTES_1;
+//  tx_header.ErrorStateIndicator = FDCAN_ESI_ACTIVE;
+//  tx_header.BitRateSwitch = FDCAN_BRS_ON;
+//  tx_header.FDFormat =  FDCAN_FD_CAN;
+//  tx_header.TxEventFifoControl = FDCAN_NO_TX_EVENTS;
+//  tx_header.MessageMarker = 0;
+//
+//  while(1)
+//  {
+//	  HAL_FDCAN_AddMessageToTxFifoQ(&hfdcan2, &tx_header, (uint8_t *)test);
+//	  HAL_Delay(100);
+//  }
+
+
   /* USER CODE END 2 */
 
   /* Init scheduler */
@@ -206,7 +264,11 @@ int main(void)
   /* USER CODE END RTOS_TIMERS */
 
   /* USER CODE BEGIN RTOS_QUEUES */
-  /* add queues, ... */
+  Can1TxQueueHandle = osMessageQueueNew (16, sizeof(can_msg_t), &Can1TxQueue_attributes);
+  Can1RxQueueHandle = osMessageQueueNew (16, sizeof(can_msg_t), &Can1RxQueue_attributes);
+
+  Can2TxQueueHandle = osMessageQueueNew (16, sizeof(can_msg_t), &Can2TxQueue_attributes);
+  Can2RxQueueHandle = osMessageQueueNew (16, sizeof(can_msg_t), &Can2RxQueue_attributes);
   /* USER CODE END RTOS_QUEUES */
 
   /* Create the thread(s) */
@@ -222,8 +284,11 @@ int main(void)
   /* creation of SlowTask */
   SlowTaskHandle = osThreadNew(StartSlowTask, NULL, &SlowTask_attributes);
 
-  /* creation of CanTask */
-  CanTaskHandle = osThreadNew(StartCanTask, NULL, &CanTask_attributes);
+  /* creation of CanTx */
+  CanTxHandle = osThreadNew(StartCanTask, NULL, &CanTx_attributes);
+
+  /* creation of CanRx */
+  CanRxHandle = osThreadNew(StartCanRx, NULL, &CanRx_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -622,33 +687,33 @@ static void MX_FDCAN2_Init(void)
 
   /* USER CODE END FDCAN2_Init 1 */
   hfdcan2.Instance = FDCAN2;
-  hfdcan2.Init.FrameFormat = FDCAN_FRAME_CLASSIC;
+  hfdcan2.Init.FrameFormat = FDCAN_FRAME_FD_BRS;
   hfdcan2.Init.Mode = FDCAN_MODE_NORMAL;
   hfdcan2.Init.AutoRetransmission = DISABLE;
   hfdcan2.Init.TransmitPause = DISABLE;
   hfdcan2.Init.ProtocolException = DISABLE;
-  hfdcan2.Init.NominalPrescaler = 16;
-  hfdcan2.Init.NominalSyncJumpWidth = 1;
-  hfdcan2.Init.NominalTimeSeg1 = 1;
-  hfdcan2.Init.NominalTimeSeg2 = 1;
-  hfdcan2.Init.DataPrescaler = 1;
+  hfdcan2.Init.NominalPrescaler = 30;
+  hfdcan2.Init.NominalSyncJumpWidth = 2;
+  hfdcan2.Init.NominalTimeSeg1 = 5;
+  hfdcan2.Init.NominalTimeSeg2 = 2;
+  hfdcan2.Init.DataPrescaler = 15;
   hfdcan2.Init.DataSyncJumpWidth = 1;
-  hfdcan2.Init.DataTimeSeg1 = 1;
+  hfdcan2.Init.DataTimeSeg1 = 2;
   hfdcan2.Init.DataTimeSeg2 = 1;
   hfdcan2.Init.MessageRAMOffset = 0;
   hfdcan2.Init.StdFiltersNbr = 0;
   hfdcan2.Init.ExtFiltersNbr = 0;
-  hfdcan2.Init.RxFifo0ElmtsNbr = 0;
-  hfdcan2.Init.RxFifo0ElmtSize = FDCAN_DATA_BYTES_8;
-  hfdcan2.Init.RxFifo1ElmtsNbr = 0;
-  hfdcan2.Init.RxFifo1ElmtSize = FDCAN_DATA_BYTES_8;
+  hfdcan2.Init.RxFifo0ElmtsNbr = 16;
+  hfdcan2.Init.RxFifo0ElmtSize = FDCAN_DATA_BYTES_64;
+  hfdcan2.Init.RxFifo1ElmtsNbr = 16;
+  hfdcan2.Init.RxFifo1ElmtSize = FDCAN_DATA_BYTES_64;
   hfdcan2.Init.RxBuffersNbr = 0;
-  hfdcan2.Init.RxBufferSize = FDCAN_DATA_BYTES_8;
+  hfdcan2.Init.RxBufferSize = FDCAN_DATA_BYTES_64;
   hfdcan2.Init.TxEventsNbr = 0;
   hfdcan2.Init.TxBuffersNbr = 0;
-  hfdcan2.Init.TxFifoQueueElmtsNbr = 0;
+  hfdcan2.Init.TxFifoQueueElmtsNbr = 16;
   hfdcan2.Init.TxFifoQueueMode = FDCAN_TX_FIFO_OPERATION;
-  hfdcan2.Init.TxElmtSize = FDCAN_DATA_BYTES_8;
+  hfdcan2.Init.TxElmtSize = FDCAN_DATA_BYTES_64;
   if (HAL_FDCAN_Init(&hfdcan2) != HAL_OK)
   {
     Error_Handler();
@@ -1166,12 +1231,32 @@ void StartSlowTask(void *argument)
 void StartCanTask(void *argument)
 {
   /* USER CODE BEGIN StartCanTask */
+  task_can_tx_init();
   /* Infinite loop */
   for(;;)
   {
-    osDelay(1);
+	task_can_tx_loop();
   }
   /* USER CODE END StartCanTask */
+}
+
+/* USER CODE BEGIN Header_StartCanRx */
+/**
+* @brief Function implementing the CanRx thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_StartCanRx */
+void StartCanRx(void *argument)
+{
+  /* USER CODE BEGIN StartCanRx */
+  task_can_rx_init();
+  /* Infinite loop */
+  for(;;)
+  {
+	task_can_rx_loop();
+  }
+  /* USER CODE END StartCanRx */
 }
 
  /* MPU Configuration */

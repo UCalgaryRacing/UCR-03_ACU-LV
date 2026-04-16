@@ -14,10 +14,13 @@ RM := rm -rf
 -include Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/subdir.mk
 -include Middlewares/Third_Party/FreeRTOS/Source/subdir.mk
 -include Drivers/STM32H7xx_HAL_Driver/Src/subdir.mk
--include Core/service/can/subdir.mk
+-include Core/shared/service/can/subdir.mk
+-include Core/shared/service/accumulator/subdir.mk
+-include Core/shared/driver/can/subdir.mk
+-include Core/shared/data/accumulator/subdir.mk
+-include Core/shared/application/tasks/subdir.mk
 -include Core/service/bms/subdir.mk
 -include Core/service/acu_lv/subdir.mk
--include Core/driver/can/subdir.mk
 -include Core/driver/acu_lv/subdir.mk
 -include Core/config/can/subdir.mk
 -include Core/config/acu_lv/subdir.mk
