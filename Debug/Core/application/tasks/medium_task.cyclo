@@ -1,4 +1,3 @@
-../Core/driver/acu_lv/acu_lv_drv_debug_led.h:13:20:acu_lv_drv_turn_on_led	1
-../Core/driver/acu_lv/acu_lv_drv_debug_led.h:25:20:acu_lv_drv_toggle_led	2
+../Core/driver/acu_lv/acu_lv_drv_debug_led.h:19:20:acu_lv_drv_turn_off_led	1
 ../Core/application/tasks/medium_task.c:21:6:medium_task_init	1
 ../Core/application/tasks/medium_task.c:27:6:medium_task_loop	1

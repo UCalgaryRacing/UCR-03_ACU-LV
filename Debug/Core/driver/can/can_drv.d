@@ -39,7 +39,7 @@ Core/driver/can/can_drv.o: ../Core/driver/can/can_drv.c \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_tim_ex.h \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart.h \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart_ex.h \
- ../Core/config/can/can_config.h ../Core/config/can/can_config_pinout.h \
+ ../Core/shared/config/can/can_config.h \
  ../Core/config/can/can_config_pinout.h ../Core/common/com_typ_common.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h
 ../Core/driver/can/can_drv.h:
@@ -82,8 +82,7 @@ Core/driver/can/can_drv.o: ../Core/driver/can/can_drv.c \
 ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_tim_ex.h:
 ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart.h:
 ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart_ex.h:
-../Core/config/can/can_config.h:
-../Core/config/can/can_config_pinout.h:
+../Core/shared/config/can/can_config.h:
 ../Core/config/can/can_config_pinout.h:
 ../Core/common/com_typ_common.h:
 ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h:

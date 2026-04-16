@@ -1,5 +1,6 @@
 Core/config/can/can_config.o: ../Core/config/can/can_config.c \
- ../Core/config/can/can_config.h ../Core/config/can/can_config_pinout.h \
+ ../Core/shared/config/can/can_config.h \
+ ../Core/config/can/can_config_pinout.h \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h \
  ../Core/Inc/stm32h7xx_hal_conf.h \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h \
@@ -38,8 +39,10 @@ Core/config/can/can_config.o: ../Core/config/can/can_config.c \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_tim.h \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_tim_ex.h \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart.h \
- ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart_ex.h
-../Core/config/can/can_config.h:
+ ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart_ex.h \
+ ../Core/config/can/can_config_pinout.h \
+ ../Core/shared/driver/can/can_typ_common.h
+../Core/shared/config/can/can_config.h:
 ../Core/config/can/can_config_pinout.h:
 ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:
 ../Core/Inc/stm32h7xx_hal_conf.h:
@@ -80,3 +83,5 @@ Core/config/can/can_config.o: ../Core/config/can/can_config.c \
 ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_tim_ex.h:
 ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart.h:
 ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart_ex.h:
+../Core/config/can/can_config_pinout.h:
+../Core/shared/driver/can/can_typ_common.h:

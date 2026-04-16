@@ -18,13 +18,15 @@ void slow_task_init()
 {
     next_wake = osKernelGetTickCount();
 
-    acu_lv_drv_turn_on_led(&red_led);
+    //acu_lv_drv_turn_on_led(&red_led);
+
+    acu_lv_drv_turn_off_led(&red_led);
 }
 void slow_task_loop()
 {
     next_wake += period;
     osDelayUntil(next_wake);
 
-   acu_lv_drv_toggle_led(&red_led);
+//    acu_lv_drv_toggle_led(&red_led);
 }
 

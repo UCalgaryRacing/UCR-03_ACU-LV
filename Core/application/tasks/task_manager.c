@@ -22,5 +22,5 @@ void task_manager_loop()
     next_wake += period;
     osDelayUntil(next_wake);
 
-    acu_lv_app_state_machine_step();
+    //acu_lv_app_state_machine_step();
 }

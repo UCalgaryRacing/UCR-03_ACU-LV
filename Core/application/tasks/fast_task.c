@@ -23,6 +23,14 @@
 #include "acu_lv_drv_adbms6830.h"
 
 #include "bms_svc_thermistor.h"
+#include "bms_svc_fault.h"
+#include "bms_svc_can.h"
+
+#include "acu_data.h"
+
+
+
+#include "acu_svc_can_route.h"
 
 #include "stm32h7xx_hal.h"
 
@@ -71,6 +79,8 @@ void fast_task_init()
     bms_manager_init();
 
     acu_lv_drv_turn_on_led(&blue_led);
+
+    acu_svc_can_route_init();
 }
 
 // code that runs in the infinite loop for the fast task
@@ -90,20 +100,15 @@ void fast_task_loop()
     // update sdc reserve
     acu_lv_drv_update_sdc_reserve();
     
-    if(adc_dma == 1)
-    {
-    	adc_dma = 0;
-    }
-
-    g_result=  voltage_acquisition_sample();
-
+    voltage_acquisition_sample();
 
     bms_svc_acquire_thermistor_temps();
 
     bms_svc_admbs_toggle_mux(ADBMS_GPO_PIN_1);
 
-    osDelay(500);
+    bms_svc_check_faults();
 
-    acu_lv_drv_toggle_led(&blue_led);
+    bms_svc_can_tx_acu_fault_data();
 
+    
 }

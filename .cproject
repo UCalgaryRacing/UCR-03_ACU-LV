@@ -73,6 +73,12 @@
 									<listOptionValue builtIn="false" value="../Core/driver/can"/>
 									<listOptionValue builtIn="false" value="../Core/common"/>
 									<listOptionValue builtIn="false" value="../Core/service/bms"/>
+									<listOptionValue builtIn="false" value="../Core/shared/application/tasks"/>
+									<listOptionValue builtIn="false" value="../Core/shared/driver/can"/>
+									<listOptionValue builtIn="false" value="../Core/shared/service/can"/>
+									<listOptionValue builtIn="false" value="../Core/shared/config/can"/>
+									<listOptionValue builtIn="false" value="../Core/shared/data/accumulator"/>
+									<listOptionValue builtIn="false" value="../Core/shared/service/accumulator"/>
 								</option>
 								<inputType id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.input.c.1950292894" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.input.c"/>
 							</tool>

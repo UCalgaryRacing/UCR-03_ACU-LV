@@ -1,0 +1,13 @@
+../Core/shared/data/accumulator/acu_data.c:13:10:acu_data_init	1
+../Core/shared/data/accumulator/acu_data.c:36:10:acu_data_set_aculv	2
+../Core/shared/data/accumulator/acu_data.c:48:7:acu_data_get_aculv_battery_voltage	1
+../Core/shared/data/accumulator/acu_data.c:53:7:acu_data_get_aculv_battery_current	1
+../Core/shared/data/accumulator/acu_data.c:58:7:acu_data_get_aculv_battery_power	1
+../Core/shared/data/accumulator/acu_data.c:63:7:acu_data_get_aculv_ts_voltage	1
+../Core/shared/data/accumulator/acu_data.c:68:6:acu_data_get_aculv_ts_active	1
+../Core/shared/data/accumulator/acu_data.c:76:10:acu_data_set_fault_status	2
+../Core/shared/data/accumulator/acu_data.c:88:10:acu_data_get_fault_status	1
+../Core/shared/data/accumulator/acu_data.c:94:6:acu_data_set_bms_fault_status	1
+../Core/shared/data/accumulator/acu_data.c:99:6:acu_data_set_imd_fault_status	1
+../Core/shared/data/accumulator/acu_data.c:104:6:acu_data_get_bms_fault_active	1
+../Core/shared/data/accumulator/acu_data.c:109:6:acu_data_get_imd_fault_active	1
