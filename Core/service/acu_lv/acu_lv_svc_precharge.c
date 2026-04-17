@@ -13,7 +13,6 @@
 #include "acu_lv_svc_accu.h"
 #include "acu_lv_svc_ts.h"
 
-static uint32_t precharge_start_time, current_time;
 uint8_t precharge_time;
 
 extern TIM_HandleTypeDef htim3;
@@ -38,14 +37,14 @@ bool acu_lv_svc_check_precharge_done()
     
 }
 
-status_t acu_lv_svc_check_precharge_timeout()
+bool acu_lv_svc_check_precharge_timeout()
 {
 //    current_time = osKernelGetTickCount();
     if(precharge_time == 1)
     {
-        return ERROR_GENERAL;
+        return true;
     }
-    return OK;
+    return false;
 }
 
 
@@ -58,4 +57,5 @@ void acu_lv_svc_start_precharge_timer()
 void acu_lv_svc_stop_precharge_timer()
 {
 	HAL_TIM_Base_Stop_IT(&htim3);
+    precharge_time = 0;
 }

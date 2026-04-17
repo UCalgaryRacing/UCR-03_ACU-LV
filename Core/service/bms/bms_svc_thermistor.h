@@ -6,6 +6,6 @@
 
 void bms_svc_acquire_thermistor_temps();
 void bms_svc_admbs_toggle_mux(adbms_gpo_pin_t pin);
-status_t bms_svc_check_temps();
+bool bms_svc_check_temps();
 
 #endif

@@ -8,20 +8,12 @@
 #include "cmsis_os2.h"
 #include "acu_lv_drv_adbms6830.h"
 #include "acu_lv_svc_adbms6830.h"
+#include "acu_data.h"
 
 /*============================================================================*/
 /* Voltage Sampling                                                           */
 /*============================================================================*/
-bms_voltage_stats_t voltage_stats = {
-        .cell_min_v     = 10.0f,    /* Start high (will be replaced by first valid reading) */
-        .cell_max_v     = 0.0f,     /* Start low (will be replaced by first valid reading) */
-        .cell_avg_v     = 0.0f,
-        .pack_v         = 0.0f,
-        .cell_min_slave = 0U,
-        .cell_min_idx   = 0U,
-        .cell_max_slave = 0U,
-        .cell_max_idx   = 0U,
-    };
+extern bms_voltage_stats_t voltage_stats;
 
 float voltages[ADBMS_NUM_SLAVES][ADBMS_CELLS_PER_IC];
 int voltage_acquisition_sample(void)

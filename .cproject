@@ -60,7 +60,6 @@
 									<listOptionValue builtIn="false" value="../Drivers/CMSIS/Device/ST/STM32H7xx/Include"/>
 									<listOptionValue builtIn="false" value="../Drivers/CMSIS/Include"/>
 									<listOptionValue builtIn="false" value="../Core/application"/>
-									<listOptionValue builtIn="false" value="../Core/data"/>
 									<listOptionValue builtIn="false" value="../Middlewares/Third_Party/FreeRTOS/Source/include"/>
 									<listOptionValue builtIn="false" value="../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2"/>
 									<listOptionValue builtIn="false" value="../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F"/>
@@ -69,8 +68,6 @@
 									<listOptionValue builtIn="false" value="../Core/config/can"/>
 									<listOptionValue builtIn="false" value="../Core/service/acu_lv"/>
 									<listOptionValue builtIn="false" value="../Core/driver/acu_lv"/>
-									<listOptionValue builtIn="false" value="../Core/service/can"/>
-									<listOptionValue builtIn="false" value="../Core/driver/can"/>
 									<listOptionValue builtIn="false" value="../Core/common"/>
 									<listOptionValue builtIn="false" value="../Core/service/bms"/>
 									<listOptionValue builtIn="false" value="../Core/shared/application/tasks"/>

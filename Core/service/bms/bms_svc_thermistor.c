@@ -3,6 +3,7 @@
 #include "acu_lv_svc_adbms6830.h"
 #include "acu_lv_drv_adbms6830_regs.h"
 #include "bms_svc_thermistor.h"
+#include "acu_data.h"
 // void bms_svc_admbs_toggle_mux(uint16_t gpio);
 
 /* Private Functions */
@@ -16,16 +17,7 @@ static float get_lowest_temp();
 static uint16_t raw_temps[ADBMS_NUM_SLAVES][ADBMS_THERMS_PER_IC];
 static float processed_temps[ADBMS_NUM_SLAVES][ADBMS_THERMS_PER_IC];
 
-bms_temp_stats_t temp_stats = 
-{
-    .temp_min_c = ACULV_CELL_MAX_TEMPERATURE,     
-    .temp_max_c = ACULV_CELL_MAX_TEMPERATURE,     
-    .temp_avg_c = 0.0f,
-    .temp_min_slave = 0,
-    .temp_min_idx = 0,
-    .temp_max_slave = 0,
-    .temp_max_idx = 0
-};
+extern bms_temp_stats_t temp_stats;
 
 static float calculate_thermistor_temperature(float adc_voltage)
 {
@@ -98,13 +90,13 @@ void bms_svc_acquire_thermistor_temps()
     // bms_svc_admbs_toggle_gpio(ADBMS_GPO_PIN_1);
 }
 
-status_t bms_svc_check_temps()
+bool bms_svc_check_temps()
 {
     if((get_lowest_temp() < ACULV_CELL_MIN_TEMPERATURE) || (get_highest_temp() > ACULV_CELL_MAX_TEMPERATURE))
     {
-        return ERROR_GENERAL;
+        return false;
     }
-    return OK;
+    return true;
 }
 
 static float get_highest_temp()

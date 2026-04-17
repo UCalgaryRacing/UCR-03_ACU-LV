@@ -44,7 +44,8 @@ Core/service/acu_lv/acu_lv_svc_cell_voltage.o: \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_tim_ex.h \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart.h \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart_ex.h \
- ../Core/driver/acu_lv/acu_lv_drv_adbms6830_types.h
+ ../Core/driver/acu_lv/acu_lv_drv_adbms6830_types.h \
+ ../Core/shared/data/accumulator/acu_data.h
 ../Core/service/acu_lv/acu_lv_svc_cell_voltage.h:
 ../Core/common/com_typ_common.h:
 ../Core/driver/acu_lv/acu_lv_drv_adbms6830.h:
@@ -90,3 +91,4 @@ Core/service/acu_lv/acu_lv_svc_cell_voltage.o: \
 ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart.h:
 ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart_ex.h:
 ../Core/driver/acu_lv/acu_lv_drv_adbms6830_types.h:
+../Core/shared/data/accumulator/acu_data.h:

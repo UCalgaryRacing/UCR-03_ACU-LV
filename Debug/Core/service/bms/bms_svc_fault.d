@@ -1,7 +1,6 @@
 Core/service/bms/bms_svc_fault.o: ../Core/service/bms/bms_svc_fault.c \
- ../Core/service/acu_lv/acu_lv_svc_cell_voltage.h \
- ../Core/common/com_typ_common.h \
- ../Core/driver/acu_lv/acu_lv_drv_adbms6830.h \
+ ../Core/shared/data/accumulator/acu_data.h \
+ ../Core/common/com_typ_common.h ../Core/service/bms/bms_svc_thermistor.h \
  ../Core/driver/acu_lv/acu_lv_drv_adbms6830_regs.h \
  ../Core/config/acu_lv/acu_lv_config.h \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h \
@@ -44,10 +43,16 @@ Core/service/bms/bms_svc_fault.o: ../Core/service/bms/bms_svc_fault.c \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart.h \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart_ex.h \
  ../Core/driver/acu_lv/acu_lv_drv_adbms6830_types.h \
- ../Core/shared/data/accumulator/acu_data.h
-../Core/service/acu_lv/acu_lv_svc_cell_voltage.h:
+ ../Core/service/acu_lv/acu_lv_svc_cell_voltage.h \
+ ../Core/driver/acu_lv/acu_lv_drv_adbms6830.h \
+ ../Core/driver/acu_lv/acu_lv_drv_adbms6830_regs.h \
+ ../Core/service/acu_lv/acu_lv_svc_precharge.h \
+ ../Core/service/acu_lv/acu_lv_svc_accu.h \
+ ../Core/service/acu_lv/acu_lv_svc_imd.h \
+ ../Core/driver/acu_lv/acu_lv_drv_imd.h
+../Core/shared/data/accumulator/acu_data.h:
 ../Core/common/com_typ_common.h:
-../Core/driver/acu_lv/acu_lv_drv_adbms6830.h:
+../Core/service/bms/bms_svc_thermistor.h:
 ../Core/driver/acu_lv/acu_lv_drv_adbms6830_regs.h:
 ../Core/config/acu_lv/acu_lv_config.h:
 ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:
@@ -90,4 +95,10 @@ Core/service/bms/bms_svc_fault.o: ../Core/service/bms/bms_svc_fault.c \
 ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart.h:
 ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart_ex.h:
 ../Core/driver/acu_lv/acu_lv_drv_adbms6830_types.h:
-../Core/shared/data/accumulator/acu_data.h:
+../Core/service/acu_lv/acu_lv_svc_cell_voltage.h:
+../Core/driver/acu_lv/acu_lv_drv_adbms6830.h:
+../Core/driver/acu_lv/acu_lv_drv_adbms6830_regs.h:
+../Core/service/acu_lv/acu_lv_svc_precharge.h:
+../Core/service/acu_lv/acu_lv_svc_accu.h:
+../Core/service/acu_lv/acu_lv_svc_imd.h:
+../Core/driver/acu_lv/acu_lv_drv_imd.h:
