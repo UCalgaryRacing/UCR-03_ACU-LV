@@ -106,10 +106,10 @@ void fast_task_loop()
 
     bms_svc_admbs_toggle_mux(ADBMS_GPO_PIN_1);
 
-    bms_svc_check_faults();
+    // bms_svc_check_faults();
 
     bms_svc_can_tx_acu_fault_data();
     bms_svc_can_tx_acu_data();
 
-    
+    acu_lv_drv_toggle_led(&blue_led);    
 }
