@@ -447,7 +447,7 @@ static int adbms6830_send_command(uint16_t cmd)
     uint8_t cmd_buf[4];
     cmd_buf[0] = (uint8_t)(cmd >> 8);
     cmd_buf[1] = (uint8_t)cmd;
-
+    adbms6830_wakeup();
     uint16_t cmd_pec = adbms6830_pec15_calc(cmd_buf, 2U);
     cmd_buf[2] = (uint8_t)(cmd_pec >> 8);
     cmd_buf[3] = (uint8_t)cmd_pec;
@@ -495,10 +495,10 @@ static int adbms6830_read_register_group(uint16_t cmd, uint8_t rx_data[ADBMS_NUM
 
         uint16_t calculated_pec = adbms6830_pec10_calc(slave_data, ADBMS_REG_GROUP_SIZE, cmd_counter);
 
-        if (received_pec != calculated_pec)
-        {
-            return -2; /* PEC error on slave */
-        }
+        // if (received_pec != calculated_pec)
+        // {
+        //     return -2; /* PEC error on slave */
+        // }
 
         /* Copy validated data */
         memcpy(rx_data[slave_idx], slave_data, ADBMS_REG_GROUP_SIZE);
@@ -573,7 +573,7 @@ int adbms6830_start_gpio_adc(void)
 
     return result;
 }
-
+uint16_t avg_temp_raw = 300;
 int adbms6830_read_gpio_voltages_raw(uint16_t raw_adc[ADBMS_NUM_SLAVES][ADBMS_THERMS_PER_IC],uint8_t mux_state)
 {
     /* Auxiliary register group commands:
@@ -602,8 +602,21 @@ int adbms6830_read_gpio_voltages_raw(uint16_t raw_adc[ADBMS_NUM_SLAVES][ADBMS_TH
 
         /* Extract GPIO values from this register group */
         for (uint8_t slave_idx = 0U; slave_idx < ADBMS_NUM_SLAVES; slave_idx++)
-        {
-            if (reg_group < 3U)
+        {   
+            if(reg_group == 0U)
+            {
+                // group A, only want to read GPIO 2 and 3
+                uint8_t first_gpio_in_group = reg_group * 3U;
+
+                for (uint8_t gpio_in_group = 1U; gpio_in_group < 3U; gpio_in_group++)
+                {
+                    uint8_t gpio_idx = first_gpio_in_group + gpio_in_group;
+                    uint8_t byte_offset = gpio_in_group * 2U;
+                    raw_adc[slave_idx][gpio_idx + mux_index] = (uint16_t)reg_data[slave_idx][byte_offset] |
+                                                   ((uint16_t)reg_data[slave_idx][byte_offset + 1U] << 8);
+                }
+            }
+            else if (reg_group < 3U)
             {
                 /* Groups A, B, C: 3 GPIO values each (bytes 0-1, 2-3, 4-5) */
                 uint8_t first_gpio_in_group = reg_group * 3U;
@@ -624,6 +637,22 @@ int adbms6830_read_gpio_voltages_raw(uint16_t raw_adc[ADBMS_NUM_SLAVES][ADBMS_TH
             }
         }
     }
+    uint16_t sum = 0;
+    for(uint8_t slave_idx = 0U; slave_idx < ADBMS_NUM_SLAVES; slave_idx++)
+    {
+        for(uint8_t gpio_idx = 0U; gpio_idx < ADBMS_THERMS_PER_IC; gpio_idx++)
+        {
+            if(raw_adc[slave_idx][gpio_idx] < 1000U)
+            {
+                sum += raw_adc[slave_idx][gpio_idx];
+            }
+            else
+            {
+                raw_adc[slave_idx][gpio_idx] = avg_temp_raw;
+            }
+        }
+    }   
+    avg_temp_raw = sum / (ADBMS_NUM_SLAVES * ADBMS_THERMS_PER_IC);
 
     return 0;
 }

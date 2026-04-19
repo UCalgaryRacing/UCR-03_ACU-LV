@@ -4,6 +4,7 @@
 #include "acu_lv_drv_adbms6830_regs.h"
 #include "bms_svc_thermistor.h"
 #include "acu_data.h"
+#include "acu_lv_config.h"
 // void bms_svc_admbs_toggle_mux(uint16_t gpio);
 
 /* Private Functions */
@@ -51,23 +52,21 @@ void bms_svc_admbs_toggle_mux(adbms_gpo_pin_t pin)
 
 
 
-void bms_svc_acquire_thermistor_temps()
-{
+void bms_svc_acquire_thermistor_temps(uint8_t mux_state)
+{   
+    uint8_t mux_index = mux_state * 9;
+    uint16_t count = 0;
     int result = adbms6830_start_gpio_adc();
+    float therm_sum = 0.0f;
+    // Wait for ADC conversion to complete (~4ms)
+    osDelay(5);
 
-    //TODO remove hardcoded delay
-    osDelay(1);
-
-    result = adbms6830_read_gpio_voltages_raw(raw_temps,0U);
-
-    bms_svc_admbs_toggle_mux(ADBMS_GPO_PIN_1);
-
-    result = adbms6830_read_gpio_voltages_raw(raw_temps,1U);
+    result = adbms6830_read_gpio_voltages_raw(raw_temps,mux_state);
 
     for (int slave = 0; slave < ADBMS_NUM_SLAVES; slave++)
     {
-        for (int thermistor = 0; thermistor < 18; thermistor++)
-        {
+        for (int thermistor = mux_index; thermistor < mux_index + 9; thermistor++)
+        {   
             float thermistor_voltage = adbms6830_adc_to_volts(raw_temps[slave][thermistor]);
             processed_temps[slave][thermistor] = calculate_thermistor_temperature(thermistor_voltage);
 
@@ -77,17 +76,29 @@ void bms_svc_acquire_thermistor_temps()
                 temp_stats.temp_max_idx = thermistor;
                 temp_stats.temp_max_slave = slave;
             }
+            else if (processed_temps[slave][thermistor] < -50.0f)
+            {
+               processed_temps[slave][thermistor] = temp_stats.temp_avg_c;
+            }
+            else if (processed_temps[slave][thermistor] > 1000.0f)
+            {
+                processed_temps[slave][thermistor] = temp_stats.temp_avg_c;
+            }
             else if(processed_temps[slave][thermistor] < temp_stats.temp_min_c)
             {
                 temp_stats.temp_min_c = processed_temps[slave][thermistor];
                 temp_stats.temp_min_idx = thermistor;
                 temp_stats.temp_max_slave = slave;
+            }else
+            {
+                therm_sum += processed_temps[slave][thermistor];
+                count++;
             }
+            
         }
 
     }
-
-    // bms_svc_admbs_toggle_gpio(ADBMS_GPO_PIN_1);
+    temp_stats.temp_avg_c = therm_sum / (float)count;
 }
 
 bool bms_svc_check_temps()

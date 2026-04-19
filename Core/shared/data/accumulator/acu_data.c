@@ -45,7 +45,7 @@ bms_temp_stats_t temp_stats =
 {
     .temp_min_c = ACULV_CELL_MAX_TEMPERATURE, 
     .temp_max_c = ACULV_CELL_MAX_TEMPERATURE,    
-    .temp_avg_c = 0.0f,
+    .temp_avg_c = ADBMS_AVERGAE_THERM_VOLTAGE,
     .temp_min_slave = 0,
     .temp_min_idx = 0,
     .temp_max_slave = 0,

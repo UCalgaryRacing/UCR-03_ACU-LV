@@ -54,8 +54,8 @@ Core/application/tasks/fast_task.o: ../Core/application/tasks/fast_task.c \
  ../Core/driver/acu_lv/acu_lv_drv_adbms6830_regs.h \
  ../Core/driver/acu_lv/acu_lv_drv_adbms6830_types.h \
  ../Core/driver/acu_lv/acu_lv_drv_adbms6830_types.h \
- ../Core/service/bms/bms_svc_thermistor.h \
  ../Core/driver/acu_lv/acu_lv_drv_adbms6830_regs.h \
+ ../Core/service/bms/bms_svc_thermistor.h \
  ../Core/service/bms/bms_svc_fault.h ../Core/service/bms/bms_svc_can.h \
  ../Core/shared/data/accumulator/acu_data.h \
  ../Core/shared/service/accumulator/acu_svc_can_route.h
@@ -115,8 +115,8 @@ Core/application/tasks/fast_task.o: ../Core/application/tasks/fast_task.c \
 ../Core/driver/acu_lv/acu_lv_drv_adbms6830_regs.h:
 ../Core/driver/acu_lv/acu_lv_drv_adbms6830_types.h:
 ../Core/driver/acu_lv/acu_lv_drv_adbms6830_types.h:
-../Core/service/bms/bms_svc_thermistor.h:
 ../Core/driver/acu_lv/acu_lv_drv_adbms6830_regs.h:
+../Core/service/bms/bms_svc_thermistor.h:
 ../Core/service/bms/bms_svc_fault.h:
 ../Core/service/bms/bms_svc_can.h:
 ../Core/shared/data/accumulator/acu_data.h:

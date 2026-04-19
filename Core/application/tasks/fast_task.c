@@ -22,6 +22,7 @@
 #include "acu_lv_drv_sdc.h"
 #include "acu_lv_drv_adbms6830.h"
 #include "acu_lv_drv_adbms6830_types.h"
+#include "acu_lv_drv_adbms6830_regs.h"
 
 #include "bms_svc_thermistor.h"
 #include "bms_svc_fault.h"
@@ -102,9 +103,11 @@ void fast_task_loop()
     
     voltage_acquisition_sample();
 
-    bms_svc_acquire_thermistor_temps();
-
+    bms_svc_acquire_thermistor_temps(0U);
     bms_svc_admbs_toggle_mux(ADBMS_GPO_PIN_1);
+    bms_svc_acquire_thermistor_temps(1U);
+    bms_svc_admbs_toggle_mux(ADBMS_GPO_PIN_1);
+
 
     // bms_svc_check_faults();
 

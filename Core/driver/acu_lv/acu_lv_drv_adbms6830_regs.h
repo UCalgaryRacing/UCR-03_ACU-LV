@@ -105,7 +105,7 @@
 #define CMD_ADAX_BASE       0x0410U
 #define CMD_ADAX_OW         (1U << 8)   /**< Enable open wire detection */
 #define CMD_ADAX_PUP        (1U << 7)   /**< Use pull-up for OW detection */
-
+#define CMD_ADAX2_BASE 0x0400U
 /** Read Auxiliary Register Group A (GPIO1, GPIO2, GPIO3). */
 #define CMD_RDAUXA          0x0019U
 
