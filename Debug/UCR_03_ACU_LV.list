@@ -6205,7 +6205,7 @@ void medium_task_loop()
 
 080027c8 <slow_task_init>:
 static uint32_t next_wake;
-
+static bool state;
 extern debug_led_t red_led;
 
 void slow_task_init()

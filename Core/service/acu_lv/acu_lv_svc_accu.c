@@ -8,6 +8,7 @@
 #include "acu_lv_config.h"
 #include "acu_lv_svc_accu.h"
 #include "acu_lv_drv_dfsdm.h"
+#include "acu_data.h"
 
 extern acu_lv_pack_measurement_t accu_voltage;
 
@@ -16,6 +17,7 @@ acu_lv_status_t acu_lv_svc_update_accu_voltage()
     if(accu_voltage.hw.dma_started == true)
     {
         *accu_voltage.data = ((float)(*accu_voltage.raw_data >> 8))* accu_voltage.settings.scaling_factor;
+        acu_data_set_aculv_battery_voltage(*accu_voltage.data);
     }
     else
     {

@@ -7,7 +7,7 @@
 
 #include "acu_lv_svc_cell_voltage.h"
 #include "acu_lv_config.h"
-
+#include "acu_data.h"
 
 extern bms_voltage_stats_t voltage_stats;
 
@@ -21,7 +21,7 @@ static float get_highest_cell_voltage()
    return voltage_stats.cell_max_v;
 }
 
-status_t acu_lv_svc_check_cell_voltage()
+bool acu_lv_svc_check_cell_voltage()
 {
     if((get_highest_cell_voltage() > ACU_LV_CELL_MAXIMUM_VOLTAGE) || (get_lowest_cell_voltage() < ACU_LV_CELL_MINIMUM_VOLTAGE))
     {

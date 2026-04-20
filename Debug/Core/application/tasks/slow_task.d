@@ -41,7 +41,9 @@ Core/application/tasks/slow_task.o: ../Core/application/tasks/slow_task.c \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_tim.h \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_tim_ex.h \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart.h \
- ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart_ex.h
+ ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart_ex.h \
+ ../Core/shared/data/accumulator/acu_data.h \
+ ../Core/common/com_typ_common.h
 ../Core/application/tasks/slow_task.h:
 ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h:
 ../Core/driver/acu_lv/acu_lv_drv_debug_led.h:
@@ -85,3 +87,5 @@ Core/application/tasks/slow_task.o: ../Core/application/tasks/slow_task.c \
 ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_tim_ex.h:
 ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart.h:
 ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart_ex.h:
+../Core/shared/data/accumulator/acu_data.h:
+../Core/common/com_typ_common.h:

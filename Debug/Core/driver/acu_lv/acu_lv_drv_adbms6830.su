@@ -25,4 +25,4 @@
 ../Core/driver/acu_lv/acu_lv_drv_adbms6830.c:510:5:adbms6830_start_cell_adc	24	static
 ../Core/driver/acu_lv/acu_lv_drv_adbms6830.c:523:5:adbms6830_read_cell_voltages_raw	88	static
 ../Core/driver/acu_lv/acu_lv_drv_adbms6830.c:570:5:adbms6830_start_gpio_adc	16	static
-../Core/driver/acu_lv/acu_lv_drv_adbms6830.c:577:5:adbms6830_read_gpio_voltages_raw	88	static
+../Core/driver/acu_lv/acu_lv_drv_adbms6830.c:577:5:adbms6830_read_gpio_voltages_raw	104	static

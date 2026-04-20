@@ -17,10 +17,13 @@
 #include "acu_lv_svc_ts.h"
 #include "acu_lv_svc_accu.h"
 #include "acu_lv_svc_shunt.h"
+#include "bms_svc_thermistor.h"
 
 #include "acu_lv_drv_air.h"
 #include "acu_lv_drv_imd.h"
 #include "acu_lv_drv_sdc.h"
+
+#include "acu_data.h"
 
 /* Private Prototypes*/
 static acu_lv_app_state_t handle_startup_state();
@@ -233,12 +236,12 @@ static void state_entry(acu_lv_app_state_t state)
         /* code */
         break;
     case ACU_LV_APP_STATE_PRECHARGE:
-        acu_lv_svc_start_precharge_timer();
         //close negative air when leaving idle
         acu_lv_drv_close_air_neg();
+        acu_lv_svc_start_precharge_timer();
         break;
     case ACU_LV_APP_STATE_ACTIVE:
-        // send TS active signal
+        acu_data_set_aculv_ts_active(true);
         break;
     case ACU_LV_APP_STATE_FAULT:
         // check what faulted and send tssi red signal
@@ -268,10 +271,11 @@ static void state_exit(acu_lv_app_state_t state)
         break;
     case ACU_LV_APP_STATE_PRECHARGE:
         //close positive air when leaving precharge
+        acu_lv_svc_stop_precharge_timer();
         acu_lv_drv_close_air_pos();
         break;
     case ACU_LV_APP_STATE_ACTIVE:
-        /* code */
+        acu_data_set_aculv_ts_active(false);
         break;
     case ACU_LV_APP_STATE_FAULT:
         break;

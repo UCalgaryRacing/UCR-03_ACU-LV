@@ -9,6 +9,7 @@
 #include "acu_lv_svc_ts.h"
 #include "acu_lv_drv_dfsdm.h"
 #include "acu_lv_svc_accu.h"
+#include "acu_data.h"
 
 extern acu_lv_pack_measurement_t ts_voltage;
 
@@ -17,6 +18,7 @@ acu_lv_status_t acu_lv_svc_update_ts_voltage()
     if(ts_voltage.hw.dma_started == true)
     {
         *ts_voltage.data = ((float)(*ts_voltage.raw_data >> 8))* ts_voltage.settings.scaling_factor;
+        acu_data_set_aculv_ts_voltage(*ts_voltage.data);
     }
     else
     {

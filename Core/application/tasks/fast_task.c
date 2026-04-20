@@ -22,6 +22,7 @@
 #include "acu_lv_drv_sdc.h"
 #include "acu_lv_drv_adbms6830.h"
 #include "acu_lv_drv_adbms6830_types.h"
+#include "acu_lv_drv_adbms6830_regs.h"
 
 #include "bms_svc_thermistor.h"
 #include "bms_svc_fault.h"
@@ -154,5 +155,5 @@ void fast_task_loop()
 
     // bms_svc_can_tx_acu_fault_data();
 
-    
+    acu_lv_drv_toggle_led(&blue_led);    
 }

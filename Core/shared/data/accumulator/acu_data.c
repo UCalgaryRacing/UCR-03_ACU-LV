@@ -1,5 +1,6 @@
 #include "acu_data.h"
 #include <string.h>
+#include "acu_lv_config.h"
 
 static bool g_initialized;
 
@@ -28,6 +29,29 @@ status_t acu_data_init(void)
     return OK;
 }
 
+bms_voltage_stats_t voltage_stats = 
+{
+    .cell_min_v     = ACU_LV_CELL_MAXIMUM_VOLTAGE,  
+    .cell_max_v     = ACU_LV_CELL_MINIMUM_VOLTAGE,   
+    .cell_avg_v     = 0.0f,
+    .pack_v         = 0.0f,
+    .cell_min_slave = 0U,
+    .cell_min_idx   = 0U,
+    .cell_max_slave = 0U,
+    .cell_max_idx   = 0U,
+};
+
+bms_temp_stats_t temp_stats =
+{
+    .temp_min_c = ACULV_CELL_MAX_TEMPERATURE, 
+    .temp_max_c = ACULV_CELL_MAX_TEMPERATURE,    
+    .temp_avg_c = ADBMS_AVERGAE_THERM_VOLTAGE,
+    .temp_min_slave = 0,
+    .temp_min_idx = 0,
+    .temp_max_slave = 0,
+    .temp_max_idx = 0,
+};
+
 /*============================================================================*/
 /* ACULV Data Access                                                          */
 /*============================================================================*/
@@ -43,6 +67,30 @@ status_t acu_data_set_aculv(const acu_aculv_data_t *aculv_data)
     g_aculv_data = *aculv_data;
 
     return OK;
+}
+void acu_data_set_aculv_battery_current(float current)
+{
+    g_aculv_data.battery_current = current;
+}
+
+void acu_data_set_aculv_battery_power(float power)
+{
+    g_aculv_data.battery_power = power;
+}
+
+void acu_data_set_aculv_battery_voltage(float voltage)
+{
+    g_aculv_data.battery_voltage = voltage;
+}
+
+void acu_data_set_aculv_ts_active(bool ts_active)
+{
+    g_aculv_data.ts_active = ts_active;
+}
+
+void acu_data_set_aculv_ts_voltage(float ts_voltage)
+{
+    g_aculv_data.ts_voltage = ts_voltage;
 }
 
 float acu_data_get_aculv_battery_voltage(void)

@@ -175,6 +175,8 @@
 /** Series resistor for thermistor voltage divider (ohms). */
 #define ADBMS_NTC_RSERIES_OHMS      10000.0f
 
+#define ADBMS_AVERGAE_THERM_VOLTAGE 20.215f
+
 /** Reference voltage for GPIO ADC (V). */
 #define ADBMS_GPIO_VREF             5.0f
 
