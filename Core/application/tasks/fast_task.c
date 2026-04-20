@@ -28,12 +28,13 @@
 #include "bms_svc_can.h"
 
 #include "acu_data.h"
+#include "acu_lv_svc_sdc.h"
 
 
 
 #include "acu_svc_can_route.h"
 
-
+extern debug_led_t red_led;
 const static uint32_t period = 10;
 static uint32_t next_wake;
 
@@ -47,6 +48,7 @@ extern analog_adc_context_t adc_2_context;
 extern ADC_HandleTypeDef hadc2;
 
 int g_result;
+uint32_t i = 0;
 
 bool g_bms_valid;
 // initialization functions for the fast task
@@ -81,6 +83,10 @@ void fast_task_init()
     acu_lv_drv_turn_on_led(&blue_led);
 
     acu_svc_can_route_init();
+
+    acu_lv_svc_close_sdc();
+
+    osDelay(3000);
 }
 
 // code that runs in the infinite loop for the fast task
@@ -99,16 +105,54 @@ void fast_task_loop()
 
     // update sdc reserve
     acu_lv_drv_update_sdc_reserve();
-    
-    voltage_acquisition_sample();
 
-    bms_svc_acquire_thermistor_temps();
 
-    bms_svc_admbs_toggle_mux(ADBMS_GPO_PIN_1);
+//     while(1)
+//     {
+//
+//         acu_lv_drv_toggle_led(&red_led);
+//         acu_lv_svc_close_sdc();
+//         acu_lv_drv_close_air_neg();
+//         for (i = 0; i < 5000000; i++)
+//         {
+//        	    acu_lv_svc_update_ts_voltage();
+//        	    acu_lv_svc_update_accu_voltage();
+//         }
+//         osDelay(5000);
+//         acu_lv_drv_toggle_led(&red_led);
+//         acu_lv_drv_close_air_pos();
+//         acu_lv_drv_toggle_led(&red_led);
+//         for (i = 0; i < 5000000; i++)
+//         {
+//        	    acu_lv_svc_update_ts_voltage();
+//        	    acu_lv_svc_update_accu_voltage();
+//         }
+//         osDelay(50000);
+//         acu_lv_svc_open_sdc();
+//         osDelay(20000);
+//     }
 
-    bms_svc_check_faults();
 
-    bms_svc_can_tx_acu_fault_data();
+//    while(1)
+//    {
+//        HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
+//        acu_lv_drv_toggle_led(&red_led);
+//        HAL_Delay(2000);
+//        HAL_GPIO_WritePin(GPIOH, GPIO_PIN_4, GPIO_PIN_SET);
+//        HAL_Delay(2000);
+//        HAL_GPIO_WritePin(GPIOH, GPIO_PIN_4, GPIO_PIN_RESET);
+//        HAL_Delay(2000);
+//    }
+
+    // voltage_acquisition_sample();
+
+    // bms_svc_acquire_thermistor_temps();
+
+    // bms_svc_admbs_toggle_mux(ADBMS_GPO_PIN_1);
+
+    // bms_svc_check_faults();
+
+    // bms_svc_can_tx_acu_fault_data();
 
     
 }

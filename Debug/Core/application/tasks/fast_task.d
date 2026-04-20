@@ -58,6 +58,7 @@ Core/application/tasks/fast_task.o: ../Core/application/tasks/fast_task.c \
  ../Core/driver/acu_lv/acu_lv_drv_adbms6830_regs.h \
  ../Core/service/bms/bms_svc_fault.h ../Core/service/bms/bms_svc_can.h \
  ../Core/shared/data/accumulator/acu_data.h \
+ ../Core/service/acu_lv/acu_lv_svc_sdc.h \
  ../Core/shared/service/accumulator/acu_svc_can_route.h
 ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h:
 ../Core/config/acu_lv/acu_lv_config.h:
@@ -120,4 +121,5 @@ Core/application/tasks/fast_task.o: ../Core/application/tasks/fast_task.c \
 ../Core/service/bms/bms_svc_fault.h:
 ../Core/service/bms/bms_svc_can.h:
 ../Core/shared/data/accumulator/acu_data.h:
+../Core/service/acu_lv/acu_lv_svc_sdc.h:
 ../Core/shared/service/accumulator/acu_svc_can_route.h:

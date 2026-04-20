@@ -22,5 +22,8 @@ void acu_lv_svc_close_sdc()
     acu_lv_drv_set_imd_latch();
     acu_lv_drv_set_ams_latch();
     acu_lv_drv_set_ams_ok();
+    osDelay(100);
+    acu_lv_drv_reset_imd_latch();
+    acu_lv_drv_reset_ams_latch();
     sdc.shutdown_closed = true;
 }

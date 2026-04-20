@@ -6,7 +6,7 @@
 ../Core/shared/data/accumulator/acu_data.c:63:7:acu_data_get_aculv_ts_voltage	4	static
 ../Core/shared/data/accumulator/acu_data.c:68:6:acu_data_get_aculv_ts_active	4	static
 ../Core/shared/data/accumulator/acu_data.c:76:10:acu_data_set_fault_status	16	static
-../Core/shared/data/accumulator/acu_data.c:88:10:acu_data_get_fault_status	16	static
+../Core/shared/data/accumulator/acu_data.c:88:11:acu_data_get_fault_status	16	static
 ../Core/shared/data/accumulator/acu_data.c:94:6:acu_data_set_bms_fault_status	16	static
 ../Core/shared/data/accumulator/acu_data.c:99:6:acu_data_set_imd_fault_status	16	static
 ../Core/shared/data/accumulator/acu_data.c:104:6:acu_data_get_bms_fault_active	4	static

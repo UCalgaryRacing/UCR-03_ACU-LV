@@ -85,11 +85,11 @@ status_t acu_data_set_fault_status(const acu_fault_t *acu_fault_status)
     return OK;
 }
 
-status_t acu_data_get_fault_status(acu_fault_t *acu_fault_status)
-{
-    *acu_fault_status = g_aculv_fault;
-    return OK;
-}
+	status_t acu_data_get_fault_status(acu_fault_t *acu_fault_status)
+	{
+		*acu_fault_status = g_aculv_fault;
+		return OK;
+	}
 
 void acu_data_set_bms_fault_status(bool fault_status)
 {

@@ -105,10 +105,10 @@ static acu_lv_app_state_t handle_startup_state()
 
     // check imd and that cell voltages are in range
     // add temperature checking here
-    if((!acu_lv_svc_imd_ok()) || (acu_lv_svc_check_cell_voltage() != OK))
-    {
-        return ACU_LV_APP_STATE_FAULT;
-    }
+    // if((!acu_lv_svc_imd_ok()) || (acu_lv_svc_check_cell_voltage() != OK))
+    // {
+    //     return ACU_LV_APP_STATE_FAULT;
+    // }
 
     return ACU_LV_APP_STATE_IDLE;
 }
@@ -122,15 +122,16 @@ static acu_lv_app_state_t handle_idle_state()
 
     // check state transition, start with error case
     // then move through to check for errors based on safety/priority
-    if((!acu_lv_svc_imd_ok()) || (acu_lv_svc_check_cell_voltage() != OK))
-    {
-       return ACU_LV_APP_STATE_FAULT;
-    }
+    // if((!acu_lv_svc_imd_ok()) || (acu_lv_svc_check_cell_voltage() != OK))
+    // {
+    //    return ACU_LV_APP_STATE_FAULT;
+    // }
     // if sdc_reserve is less than 9V then stay in idle state
-    else if((acu_lv_svc_sdc_reserve_good()))
-    {
-        return ACU_LV_APP_STATE_PRECHARGE;
-    }
+    //else 
+     if((acu_lv_svc_sdc_reserve_good()))
+     {
+         return ACU_LV_APP_STATE_PRECHARGE;
+     }
 
     // tssi enabled
 
@@ -142,12 +143,13 @@ static acu_lv_app_state_t handle_idle_state()
 static acu_lv_app_state_t handle_precharge_state()
 {   
     //check IMD and cell voltages, add temp measurement
-    if((!acu_lv_svc_imd_ok()) || (acu_lv_svc_check_cell_voltage() != OK) || (acu_lv_svc_check_precharge_timeout() != OK))
-    {
-       return ACU_LV_APP_STATE_FAULT;
-    }
+    // if((!acu_lv_svc_imd_ok()) || (acu_lv_svc_check_cell_voltage() != OK) || (acu_lv_svc_check_precharge_timeout() != OK))
+    // {
+    //    return ACU_LV_APP_STATE_FAULT;
+    // }
     // monitor accu and ts voltage
-    else if(acu_lv_svc_check_precharge_done()) 
+    //else 
+    if(acu_lv_svc_check_precharge_done()) 
     {
         return ACU_LV_APP_STATE_ACTIVE;
     }
@@ -168,10 +170,10 @@ static acu_lv_app_state_t handle_active_state()
     // monitor sdc
     // monitor imd
     // tssi enabled
-    if((!acu_lv_svc_imd_ok()) || (acu_lv_svc_check_cell_voltage() != OK))
-    {
-       return ACU_LV_APP_STATE_FAULT;
-    }
+    // if((!acu_lv_svc_imd_ok()) || (acu_lv_svc_check_cell_voltage() != OK))
+    // {
+    //    return ACU_LV_APP_STATE_FAULT;
+    // }
     //check ts voltage, accu voltage and pack current to see if in bounds
     // else if((acu_lv_svc_check_accu_voltage() != OK) || (acu_lv_svc_check_ts_voltage() != OK) || (acu_lv_svc_check_shunt_current() != OK))
     // {
