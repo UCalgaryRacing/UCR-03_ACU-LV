@@ -40,6 +40,7 @@
 "./Core/shared/service/accumulator/acu_svc_can_route.o"
 "./Core/shared/service/can/can_svc_can.o"
 "./Core/shared/service/can/ucr_03.o"
+"./Core/shared/service/rear_controller/rco_svc_can_route.o"
 "./Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal.o"
 "./Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_adc.o"
 "./Drivers/STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_adc_ex.o"

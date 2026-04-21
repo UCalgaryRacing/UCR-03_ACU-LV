@@ -77,7 +77,7 @@ void fast_task_init()
     acu_lv_drv_air_init();
 
     // initialize sdc
-    acu_lv_drv_sdc_init();
+  
 
     bms_manager_init();
 
@@ -85,7 +85,7 @@ void fast_task_init()
 
     acu_svc_can_route_init();
 
-    acu_lv_svc_close_sdc();
+
 
     osDelay(3000);
 }
@@ -145,15 +145,19 @@ void fast_task_loop()
 //        HAL_Delay(2000);
 //    }
 
-    // voltage_acquisition_sample();
+    voltage_acquisition_sample();
 
-    // bms_svc_acquire_thermistor_temps();
+    bms_svc_acquire_thermistor_temps(0U);
 
-    // bms_svc_admbs_toggle_mux(ADBMS_GPO_PIN_1);
+    bms_svc_admbs_toggle_mux(ADBMS_GPO_PIN_1);
 
-    // bms_svc_check_faults();
+    bms_svc_acquire_thermistor_temps(1U);
 
-    // bms_svc_can_tx_acu_fault_data();
+    bms_svc_admbs_toggle_mux(ADBMS_GPO_PIN_1);
+
+    bms_svc_check_faults();
+
+    bms_svc_can_tx_acu_fault_data();
 
     acu_lv_drv_toggle_led(&blue_led);    
 }

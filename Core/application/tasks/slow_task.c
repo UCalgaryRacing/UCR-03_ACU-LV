@@ -27,22 +27,6 @@ void slow_task_loop()
 {
     next_wake += period;
     osDelayUntil(next_wake);
-    acu_fault_t test_fault;
-    if(state)
-    {
-        test_fault.bms_fault = true;
-        test_fault.imd_fault = true;
-        state = false;
-    }
-    else
-    {
-        test_fault.bms_fault = false;
-        test_fault.imd_fault = false;
-        state = true;
-    }
-    
-    acu_data_set_fault_status(&test_fault);
-
 //    acu_lv_drv_toggle_led(&red_led);
 }
 

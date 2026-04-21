@@ -3083,7 +3083,7 @@ struct ucr_03_rear_control_t {
      * Scale: 1
      * Offset: 0
      */
-    uint8_t tssi;
+    uint8_t tssi_faulted;
 
     /**
      * Range: -
@@ -3098,6 +3098,13 @@ struct ucr_03_rear_control_t {
      * Offset: 0
      */
     uint8_t drs;
+
+    /**
+     * Range: -
+     * Scale: 1
+     * Offset: 0
+     */
+    uint8_t reset_button;
 };
 
 /**

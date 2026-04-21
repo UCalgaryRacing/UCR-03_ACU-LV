@@ -36,6 +36,7 @@ Core/shared/data/accumulator \
 Core/shared/driver/can \
 Core/shared/service/accumulator \
 Core/shared/service/can \
+Core/shared/service/rear_controller \
 Drivers/STM32H7xx_HAL_Driver/Src \
 Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 \
 Middlewares/Third_Party/FreeRTOS/Source \

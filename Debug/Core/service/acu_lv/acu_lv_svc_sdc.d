@@ -1,5 +1,6 @@
 Core/service/acu_lv/acu_lv_svc_sdc.o: \
  ../Core/service/acu_lv/acu_lv_svc_sdc.c \
+ ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h \
  ../Core/driver/acu_lv/acu_lv_drv_sdc.h \
  ../Core/config/acu_lv/acu_lv_config.h \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h \
@@ -42,6 +43,7 @@ Core/service/acu_lv/acu_lv_svc_sdc.o: \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart.h \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart_ex.h \
  ../Core/service/acu_lv/acu_lv_svc_sdc.h
+../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h:
 ../Core/driver/acu_lv/acu_lv_drv_sdc.h:
 ../Core/config/acu_lv/acu_lv_config.h:
 ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:

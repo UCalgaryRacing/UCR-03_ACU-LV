@@ -266,8 +266,7 @@ static void state_exit(acu_lv_app_state_t state)
         // send tssi good signal
         break;
     case ACU_LV_APP_STATE_IDLE:
-        // close shutdown
-        acu_lv_svc_close_sdc();        
+
         break;
     case ACU_LV_APP_STATE_PRECHARGE:
         //close positive air when leaving precharge

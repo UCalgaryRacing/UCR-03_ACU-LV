@@ -9286,23 +9286,23 @@ bool ucr_03_rear_cooling_control_accumulator_fan2_duty_cycle_is_in_range(float v
     return (true);
 }
 
-int ucr_03_rear_control_pack(
-    uint8_t *dst_p,
-    const struct ucr_03_rear_control_t *src_p,
-    size_t size)
-{
-    if (size < 1u) {
-        return (-EINVAL);
-    }
+// int ucr_03_rear_control_pack(
+//     uint8_t *dst_p,
+//     const struct ucr_03_rear_control_t *src_p,
+//     size_t size)
+// {
+//     if (size < 1u) {
+//         return (-EINVAL);
+//     }
 
-    memset(&dst_p[0], 0, 1);
+//     memset(&dst_p[0], 0, 1);
 
-    dst_p[0] |= pack_left_shift_u8(src_p->tssi, 0u, 0x01u);
-    dst_p[0] |= pack_left_shift_u8(src_p->brake_light, 1u, 0x02u);
-    dst_p[0] |= pack_left_shift_u8(src_p->drs, 2u, 0x04u);
+//     dst_p[0] |= pack_left_shift_u8(src_p->tssi, 0u, 0x01u);
+//     dst_p[0] |= pack_left_shift_u8(src_p->brake_light, 1u, 0x02u);
+//     dst_p[0] |= pack_left_shift_u8(src_p->drs, 2u, 0x04u);
 
-    return (1);
-}
+//     return (1);
+// }
 
 int ucr_03_rear_control_unpack(
     struct ucr_03_rear_control_t *dst_p,
@@ -9313,9 +9313,10 @@ int ucr_03_rear_control_unpack(
         return (-EINVAL);
     }
 
-    dst_p->tssi = unpack_right_shift_u8(src_p[0], 0u, 0x01u);
+    dst_p->tssi_faulted = unpack_right_shift_u8(src_p[0], 0u, 0x01u);
     dst_p->brake_light = unpack_right_shift_u8(src_p[0], 1u, 0x02u);
     dst_p->drs = unpack_right_shift_u8(src_p[0], 2u, 0x04u);
+    dst_p->reset_button = unpack_right_shift_u8(src_p[0], 3u, 0x08u);
 
     return (0);
 }
