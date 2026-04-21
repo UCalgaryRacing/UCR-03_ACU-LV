@@ -265,9 +265,11 @@ static void state_exit(acu_lv_app_state_t state)
     case ACU_LV_APP_STATE_STARTUP:
         acu_lv_svc_set_ams_ok();
         acu_lv_svc_reset_ams_latch();
+        acu_lv_svc_reset_imd_latch(); // new, try also resetting imd latch
         break;
     case ACU_LV_APP_STATE_IDLE:
-
+        acu_lv_svc_set_ams_ok(); // try doing in both active and idle?
+        acu_lv_svc_reset_ams_latch();
         break;
     case ACU_LV_APP_STATE_PRECHARGE:
         //close positive air when leaving precharge

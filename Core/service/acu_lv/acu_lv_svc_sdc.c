@@ -10,6 +10,13 @@
 
 extern acu_lv_sdc_t sdc;
 
+void acu_lv_svc_sdc_init()
+{
+    acu_lv_drv_set_ams_latch(false);
+    acu_lv_drv_set_imd_latch(false);
+    acu_lv_drv_set_ams_ok(false);
+}
+
 void acu_lv_svc_reset_imd_latch()
 {   
     acu_lv_drv_set_imd_latch(true);
