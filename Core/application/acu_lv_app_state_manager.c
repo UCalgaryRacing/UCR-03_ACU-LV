@@ -108,10 +108,10 @@ static acu_lv_app_state_t handle_startup_state()
 
     // check imd and that cell voltages are in range
     // add temperature checking here
-    // if((!acu_lv_svc_imd_ok()) || (acu_lv_svc_check_cell_voltage() != OK))
-    // {
-    //     return ACU_LV_APP_STATE_FAULT;
-    // }
+    if(acu_data_get_imd_fault_status())
+    {
+        return ACU_LV_APP_STATE_FAULT;
+    }
 
     return ACU_LV_APP_STATE_IDLE;
 }
@@ -173,16 +173,10 @@ static acu_lv_app_state_t handle_active_state()
     // monitor sdc
     // monitor imd
     // tssi enabled
-    // if((!acu_lv_svc_imd_ok()) || (acu_lv_svc_check_cell_voltage() != OK))
-    // {
-    //    return ACU_LV_APP_STATE_FAULT;
-    // }
-    //check ts voltage, accu voltage and pack current to see if in bounds
-    // else if((acu_lv_svc_check_accu_voltage() != OK) || (acu_lv_svc_check_ts_voltage() != OK) || (acu_lv_svc_check_shunt_current() != OK))
-    // {
-    //     // go to fault? should ts out of range go back to precharge depending on which way its out of bound?
-    //     return ACU_LV_APP_STATE_FAULT;
-    // }
+    if(!acu_lv_svc_sdc_reserve_good())
+    {
+        return ACU_LV_APP_STATE_IDLE;
+    }
 
     //transition to charge if charging message recieved
     //fault transition if imd fault, cell voltage or temp out of range
@@ -268,8 +262,8 @@ static void state_exit(acu_lv_app_state_t state)
         acu_lv_svc_reset_imd_latch(); // new, try also resetting imd latch
         break;
     case ACU_LV_APP_STATE_IDLE:
-        acu_lv_svc_set_ams_ok(); // try doing in both active and idle?
-        acu_lv_svc_reset_ams_latch();
+        // acu_lv_svc_set_ams_ok(); // try doing in both active and idle?
+        // acu_lv_svc_reset_ams_latch();
         break;
     case ACU_LV_APP_STATE_PRECHARGE:
         //close positive air when leaving precharge
@@ -278,6 +272,7 @@ static void state_exit(acu_lv_app_state_t state)
         break;
     case ACU_LV_APP_STATE_ACTIVE:
         acu_data_set_aculv_ts_active(false);
+        acu_lv_drv_open_air();
         break;
     case ACU_LV_APP_STATE_FAULT:
         break;

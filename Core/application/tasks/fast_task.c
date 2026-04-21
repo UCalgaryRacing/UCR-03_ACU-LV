@@ -154,7 +154,7 @@ void fast_task_loop()
 
     bms_svc_admbs_toggle_mux(ADBMS_GPO_PIN_1);
 
-    // bms_svc_check_faults();
+    bms_svc_check_faults();
 
     bms_svc_can_tx_acu_fault_data();
 

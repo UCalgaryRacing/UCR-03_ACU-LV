@@ -133,11 +133,11 @@ status_t acu_data_set_fault_status(const acu_fault_t *acu_fault_status)
     return OK;
 }
 
-	status_t acu_data_get_fault_status(acu_fault_t *acu_fault_status)
-	{
-		*acu_fault_status = g_aculv_fault;
-		return OK;
-	}
+status_t acu_data_get_fault_status(acu_fault_t *acu_fault_status)
+{
+	*acu_fault_status = g_aculv_fault;
+	return OK;
+}
 
 void acu_data_set_bms_fault_status(bool fault_status)
 {
@@ -149,12 +149,12 @@ void acu_data_set_imd_fault_status(bool fault_status)
     g_aculv_fault.imd_fault = fault_status;
 }
 
-bool acu_data_get_bms_fault_active(void)
+bool acu_data_get_bms_fault_status(void)
 {
     return g_aculv_fault.bms_fault;
 }
 
-bool acu_data_get_imd_fault_active(void)
+bool acu_data_get_imd_fault_status(void)
 {
     return g_aculv_fault.imd_fault;
 }

@@ -18,9 +18,6 @@ extern debug_led_t red_led;
 void slow_task_init()
 {
     next_wake = osKernelGetTickCount();
-
-    //acu_lv_drv_turn_on_led(&red_led);
-    state = true;
     acu_lv_drv_turn_off_led(&red_led);
 }
 void slow_task_loop()
