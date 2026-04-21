@@ -263,7 +263,8 @@ static void state_exit(acu_lv_app_state_t state)
     switch (state)
     {
     case ACU_LV_APP_STATE_STARTUP:
-        // send tssi good signal
+        acu_lv_svc_set_ams_ok();
+        acu_lv_svc_reset_ams_latch();
         break;
     case ACU_LV_APP_STATE_IDLE:
 

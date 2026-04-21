@@ -86,7 +86,6 @@ void fast_task_init()
     acu_svc_can_route_init();
 
 
-
     osDelay(3000);
 }
 
