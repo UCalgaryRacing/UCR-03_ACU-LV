@@ -180,6 +180,10 @@ static acu_lv_app_state_t handle_active_state()
     //     // go to fault? should ts out of range go back to precharge depending on which way its out of bound?
     //     return ACU_LV_APP_STATE_FAULT;
     // }
+    if(!acu_lv_svc_check_precharge_done())
+    {
+        return ACU_LV_APP_STATE_IDLE;
+    }
 
     //transition to charge if charging message recieved
     //fault transition if imd fault, cell voltage or temp out of range
@@ -272,6 +276,7 @@ static void state_exit(acu_lv_app_state_t state)
         break;
     case ACU_LV_APP_STATE_ACTIVE:
         /* code */
+        acu_lv_drv_open_air();
         break;
     case ACU_LV_APP_STATE_FAULT:
         break;

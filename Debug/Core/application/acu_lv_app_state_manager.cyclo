@@ -3,9 +3,9 @@
 ../Core/application/acu_lv_app_state_manager.c:100:27:handle_startup_state	1
 ../Core/application/acu_lv_app_state_manager.c:116:27:handle_idle_state	2
 ../Core/application/acu_lv_app_state_manager.c:143:27:handle_precharge_state	2
-../Core/application/acu_lv_app_state_manager.c:165:27:handle_active_state	1
-../Core/application/acu_lv_app_state_manager.c:189:27:handle_fault_state	1
-../Core/application/acu_lv_app_state_manager.c:201:27:handle_charging_state	1
-../Core/application/acu_lv_app_state_manager.c:214:27:handle_balencing_state	1
-../Core/application/acu_lv_app_state_manager.c:227:13:state_entry	3
-../Core/application/acu_lv_app_state_manager.c:258:13:state_exit	3
+../Core/application/acu_lv_app_state_manager.c:165:27:handle_active_state	2
+../Core/application/acu_lv_app_state_manager.c:193:27:handle_fault_state	1
+../Core/application/acu_lv_app_state_manager.c:205:27:handle_charging_state	1
+../Core/application/acu_lv_app_state_manager.c:218:27:handle_balencing_state	1
+../Core/application/acu_lv_app_state_manager.c:231:13:state_entry	3
+../Core/application/acu_lv_app_state_manager.c:262:13:state_exit	4
