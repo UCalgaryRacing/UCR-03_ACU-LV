@@ -75,9 +75,9 @@ static HAL_StatusTypeDef adbms_spi_send_cmd(const uint8_t cmd_frame[4])
     {
         temp_buffer[i] = cmd_frame[i];
     }
-    HAL_GPIO_WritePin(ADBMS_2_CSN_PORT, ADBMS_2_CSN_PIN, GPIO_PIN_RESET);
-    HAL_StatusTypeDef hal_status = HAL_SPI_Transmit(ADBMS_2_SPI_HANDLE, temp_buffer, 4U, HAL_MAX_DELAY);
-    HAL_GPIO_WritePin(ADBMS_2_CSN_PORT, ADBMS_2_CSN_PIN, GPIO_PIN_SET);
+    HAL_GPIO_WritePin(ADBMS_1_CSN_PORT, ADBMS_1_CSN_PIN, GPIO_PIN_RESET);
+    HAL_StatusTypeDef hal_status = HAL_SPI_Transmit(ADBMS_1_SPI_HANDLE, temp_buffer, 4U, HAL_MAX_DELAY);
+    HAL_GPIO_WritePin(ADBMS_1_CSN_PORT, ADBMS_1_CSN_PIN, GPIO_PIN_SET);
     return hal_status;
 }
 
@@ -103,9 +103,9 @@ static HAL_StatusTypeDef adbms_spi_read(const uint8_t cmd_frame[4], uint8_t *rx_
     memcpy(tx_buf, cmd_frame, 4U);
     memset(&tx_buf[4], 0x00, rx_len);
 
-    HAL_GPIO_WritePin(ADBMS_2_CSN_PORT, ADBMS_2_CSN_PIN, GPIO_PIN_RESET);
-    HAL_StatusTypeDef hal_status = HAL_SPI_TransmitReceive(ADBMS_2_SPI_HANDLE, tx_buf, rx_buf, total_len, HAL_MAX_DELAY);
-    HAL_GPIO_WritePin(ADBMS_2_CSN_PORT, ADBMS_2_CSN_PIN, GPIO_PIN_SET);
+    HAL_GPIO_WritePin(ADBMS_1_CSN_PORT, ADBMS_1_CSN_PIN, GPIO_PIN_RESET);
+    HAL_StatusTypeDef hal_status = HAL_SPI_TransmitReceive(ADBMS_1_SPI_HANDLE, tx_buf, rx_buf, total_len, HAL_MAX_DELAY);
+    HAL_GPIO_WritePin(ADBMS_1_CSN_PORT, ADBMS_1_CSN_PIN, GPIO_PIN_SET);
 
     /* Copy received data (skip first 4 bytes which are garbage during TX) */
     if (hal_status == HAL_OK)
@@ -134,14 +134,14 @@ static HAL_StatusTypeDef adbms_spi_write(const uint8_t cmd_frame[4], const uint8
     memcpy(tx_buf, cmd_frame, 4U);
     memcpy(&tx_buf[4], data, data_len);
 
-    HAL_GPIO_WritePin(ADBMS_2_CSN_PORT, ADBMS_2_CSN_PIN, GPIO_PIN_RESET);
+    HAL_GPIO_WritePin(ADBMS_1_CSN_PORT, ADBMS_1_CSN_PIN, GPIO_PIN_RESET);
     osDelay(1);
-    HAL_GPIO_WritePin(ADBMS_2_CSN_PORT, ADBMS_2_CSN_PIN, GPIO_PIN_SET);
+    HAL_GPIO_WritePin(ADBMS_1_CSN_PORT, ADBMS_1_CSN_PIN, GPIO_PIN_SET);
     osDelay(1);
 
-    HAL_GPIO_WritePin(ADBMS_2_CSN_PORT, ADBMS_2_CSN_PIN, GPIO_PIN_RESET);
-    HAL_StatusTypeDef hal_status = HAL_SPI_Transmit(ADBMS_2_SPI_HANDLE,tx_buf, 4U + data_len, HAL_MAX_DELAY);
-    HAL_GPIO_WritePin(ADBMS_2_CSN_PORT, ADBMS_2_CSN_PIN, GPIO_PIN_SET);
+    HAL_GPIO_WritePin(ADBMS_1_CSN_PORT, ADBMS_1_CSN_PIN, GPIO_PIN_RESET);
+    HAL_StatusTypeDef hal_status = HAL_SPI_Transmit(ADBMS_1_SPI_HANDLE,tx_buf, 4U + data_len, HAL_MAX_DELAY);
+    HAL_GPIO_WritePin(ADBMS_1_CSN_PORT, ADBMS_1_CSN_PIN, GPIO_PIN_SET);
     return hal_status;
 }
 
@@ -285,10 +285,11 @@ void adbms6830_wakeup_pulse(void)
 {
     /* Toggle CS low then high - minimum tDWELL (240ns) is satisfied
      * by GPIO switching time on most MCUs */
-    HAL_GPIO_WritePin(ADBMS_2_CSN_PORT, ADBMS_2_CSN_PIN, GPIO_PIN_RESET);
+    HAL_GPIO_WritePin(ADBMS_1_CSN_PORT, ADBMS_1_CSN_PIN, GPIO_PIN_RESET);
     /* Brief delay - GPIO switching + instruction time exceeds 240ns */
-    __NOP(); __NOP(); __NOP(); __NOP();
-    HAL_GPIO_WritePin(ADBMS_2_CSN_PORT, ADBMS_2_CSN_PIN, GPIO_PIN_SET);
+    osDelay(1U);
+    // __NOP(); __NOP(); __NOP(); __NOP(); // need to measure wakeup pulse. probably different for H7
+    HAL_GPIO_WritePin(ADBMS_1_CSN_PORT, ADBMS_1_CSN_PIN, GPIO_PIN_SET);
 }
 
 int adbms6830_wakeup(void)
@@ -297,7 +298,7 @@ int adbms6830_wakeup(void)
     /* Send one wake-up pulse per device in the daisy chain.
      * Each pulse wakes a device and allows it to propagate the next pulse.
      * Wait 1ms between pulses (> tREADY/tWAKE, < tIDLE). */
-    for (uint8_t device_idx = 0U; device_idx < (ADBMS_NUM_SLAVES + 5U); device_idx++)
+    for (uint8_t device_idx = 0U; device_idx < (ADBMS_NUM_SLAVES); device_idx++)
     {
         adbms6830_wakeup_pulse();
 
@@ -447,7 +448,9 @@ static int adbms6830_send_command(uint16_t cmd)
     uint8_t cmd_buf[4];
     cmd_buf[0] = (uint8_t)(cmd >> 8);
     cmd_buf[1] = (uint8_t)cmd;
+
     adbms6830_wakeup();
+
     uint16_t cmd_pec = adbms6830_pec15_calc(cmd_buf, 2U);
     cmd_buf[2] = (uint8_t)(cmd_pec >> 8);
     cmd_buf[3] = (uint8_t)cmd_pec;

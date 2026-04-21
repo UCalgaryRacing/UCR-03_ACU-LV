@@ -1,4 +1,4 @@
 ../Core/driver/acu_lv/acu_lv_drv_debug_led.h:13:20:acu_lv_drv_turn_on_led	16	static
 ../Core/driver/acu_lv/acu_lv_drv_debug_led.h:25:20:acu_lv_drv_toggle_led	16	static
-../Core/application/tasks/fast_task.c:56:6:fast_task_init	8	static
-../Core/application/tasks/fast_task.c:93:6:fast_task_loop	8	static
+../Core/application/tasks/fast_task.c:59:6:fast_task_init	8	static
+../Core/application/tasks/fast_task.c:96:6:fast_task_loop	8	static

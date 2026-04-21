@@ -272,7 +272,7 @@ static void state_exit(acu_lv_app_state_t state)
         break;
     case ACU_LV_APP_STATE_ACTIVE:
         acu_data_set_aculv_ts_active(false);
-        acu_lv_drv_open_air();
+        acu_lv_drv_open_air(); // may need to change once balancing and charging is added
         break;
     case ACU_LV_APP_STATE_FAULT:
         break;

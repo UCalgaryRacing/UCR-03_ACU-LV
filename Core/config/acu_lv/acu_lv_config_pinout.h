@@ -23,7 +23,7 @@
 extern SPI_HandleTypeDef hspi5;
 #define ADBMS_1_SPI_HANDLE (&hspi5)
 
-#define ADMBS_1_CSN_PORT GPIOD
+#define ADBMS_1_CSN_PORT GPIOD
 #define ADBMS_1_CSN_PIN GPIO_PIN_9
 
 #define ADBMS_1_WAKE_PORT GPIOD
@@ -38,17 +38,30 @@ extern SPI_HandleTypeDef hspi5;
 /*============================================================================*/
 
 extern SPI_HandleTypeDef hspi2;
-#define ADBMS_2_SPI_HANDLE (&hspi2)
+//debug
+// #define ADBMS_2_SPI_HANDLE (&hspi5)
 
-#define ADBMS_2_CSN_PORT GPIOD
-#define ADBMS_2_CSN_PIN GPIO_PIN_11
+// #define ADBMS_2_CSN_PORT GPIOD
+// #define ADBMS_2_CSN_PIN GPIO_PIN_9 
 
-#define ADBMS_2_WAKE_PORT GPIOD
-#define ADBMS_2_WAKE_PIN GPIO_PIN_8
+// #define ADBMS_2_WAKE_PORT GPIOD
+// #define ADBMS_2_WAKE_PIN GPIO_PIN_14
 
-#define ADMBS_2_INTR_PORT GPIOD
-#define ADBMS_2_INTR_PIN GPIO_PIN_10
+// #define ADMBS_2_INTR_PORT GPIOD
+// #define ADBMS_2_INTR_PIN GPIO_PIN_13
 
+// normal
+// extern SPI_HandleTypeDef hspi2;
+// #define ADBMS_2_SPI_HANDLE (&hspi2)
+
+// #define ADBMS_2_CSN_PORT GPIOD
+// #define ADBMS_2_CSN_PIN GPIO_PIN_11
+
+// #define ADBMS_2_WAKE_PORT GPIOD
+// #define ADBMS_2_WAKE_PIN GPIO_PIN_8
+
+// #define ADMBS_2_INTR_PORT GPIOD
+// #define ADBMS_2_INTR_PIN GPIO_PIN_10
 
 /*============================================================================*/
 /* ADC                                                                        */

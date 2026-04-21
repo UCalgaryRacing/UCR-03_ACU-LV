@@ -31,7 +31,8 @@
 #include "acu_data.h"
 #include "acu_lv_svc_sdc.h"
 
-
+#include "stm32h7xx_hal.h"
+#include "acu_lv_config_pinout.h"
 
 #include "acu_svc_can_route.h"
 
@@ -52,6 +53,8 @@ int g_result;
 uint32_t i = 0;
 
 bool g_bms_valid;
+
+GPIO_PinState g_wake_pin_state;
 // initialization functions for the fast task
 void fast_task_init()
 {   
@@ -92,10 +95,10 @@ void fast_task_init()
 // code that runs in the infinite loop for the fast task
 void fast_task_loop()
 {
-    next_wake += period;
-    osDelayUntil(next_wake);
+    // next_wake += period;
+    // osDelayUntil(next_wake);
     
-
+    g_wake_pin_state = HAL_GPIO_ReadPin(ADBMS_1_WAKE_PORT, ADBMS_1_WAKE_PIN);
     // update the values for tractive and accumulator voltage
     acu_lv_svc_update_ts_voltage();
     acu_lv_svc_update_accu_voltage();
@@ -157,6 +160,8 @@ void fast_task_loop()
     bms_svc_check_faults();
 
     bms_svc_can_tx_acu_fault_data();
+
+    bms_svc_can_tx_acu_data();
 
     acu_lv_drv_toggle_led(&blue_led);    
 }

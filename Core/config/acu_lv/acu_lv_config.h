@@ -106,7 +106,7 @@
 /* Battery Pack / Daisy Chain Topology                                        */
 
 /** Number of ADBMS6830B slave ICs in the daisy chain. */
-#define ADBMS_NUM_SLAVES            3U
+#define ADBMS_NUM_SLAVES           7U
 
 /** Number of cells monitored per slave IC (max 16). */
 #define ADBMS_CELLS_PER_IC          13U
