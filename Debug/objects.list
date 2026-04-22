@@ -36,6 +36,7 @@
 "./Core/shared/application/tasks/task_can_rx.o"
 "./Core/shared/application/tasks/task_can_tx.o"
 "./Core/shared/data/accumulator/acu_data.o"
+"./Core/shared/data/rco/rco_data.o"
 "./Core/shared/driver/can/can_drv_can.o"
 "./Core/shared/service/accumulator/acu_svc_can_route.o"
 "./Core/shared/service/can/can_svc_can.o"

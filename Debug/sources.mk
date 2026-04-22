@@ -33,6 +33,7 @@ Core/service/acu_lv \
 Core/service/bms \
 Core/shared/application/tasks \
 Core/shared/data/accumulator \
+Core/shared/data/rco \
 Core/shared/driver/can \
 Core/shared/service/accumulator \
 Core/shared/service/can \

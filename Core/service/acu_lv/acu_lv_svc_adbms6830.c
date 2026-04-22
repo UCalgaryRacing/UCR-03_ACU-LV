@@ -73,7 +73,10 @@ int voltage_acquisition_sample(void)
             /* Update voltage statistics */
             voltage_sum += voltages[slave_idx][cell_idx];
             cell_count++;
-
+            if (voltages[slave_idx][cell_idx] < ACU_LV_CELL_MINIMUM_VOLTAGE || voltages[slave_idx][cell_idx] > ACU_LV_CELL_MAXIMUM_VOLTAGE)
+            {
+                voltages[slave_idx][cell_idx] = voltage_stats.cell_avg_v;
+            }
             if (voltages[slave_idx][cell_idx] < voltage_stats.cell_min_v)
             {
                 voltage_stats.cell_min_v = voltages[slave_idx][cell_idx];
@@ -86,6 +89,7 @@ int voltage_acquisition_sample(void)
                 voltage_stats.cell_max_slave = slave_idx;
                 voltage_stats.cell_max_idx = cell_idx;
             }
+            
         }
 
         /* Store converted voltages for this slave */
@@ -95,7 +99,7 @@ int voltage_acquisition_sample(void)
     /*------------------------------------------------------------------*/
     /* Step 5: Compute and store voltage statistics                     */
     /*------------------------------------------------------------------*/
-    voltage_stats.pack_v = voltage_sum;
+    // voltage_stats.pack_v = voltage_sum;
     voltage_stats.cell_avg_v = voltage_sum / (float)cell_count;
 
     // bms_data_set_voltage_stats(&voltage_stats);

@@ -33,7 +33,7 @@ bms_voltage_stats_t voltage_stats =
 {
     .cell_min_v     = ACU_LV_CELL_MAXIMUM_VOLTAGE,  
     .cell_max_v     = ACU_LV_CELL_MINIMUM_VOLTAGE,   
-    .cell_avg_v     = 0.0f,
+    .cell_avg_v     = 3.6f,
     .pack_v         = 0.0f,
     .cell_min_slave = 0U,
     .cell_min_idx   = 0U,

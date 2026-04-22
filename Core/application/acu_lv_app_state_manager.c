@@ -24,6 +24,7 @@
 #include "acu_lv_drv_sdc.h"
 
 #include "acu_data.h"
+#include "rco_data.h"
 
 /* Private Prototypes*/
 static acu_lv_app_state_t handle_startup_state();
@@ -156,6 +157,10 @@ static acu_lv_app_state_t handle_precharge_state()
     {
         return ACU_LV_APP_STATE_ACTIVE;
     }
+    if(rco_data_get_reset_button() == 1)
+    {
+        return ACU_LV_APP_STATE_IDLE;
+    }
     // monitor pack current
     // monitor sdc
     // tssi enabled
@@ -174,6 +179,11 @@ static acu_lv_app_state_t handle_active_state()
     // monitor imd
     // tssi enabled
     if(!acu_lv_svc_sdc_reserve_good())
+    {
+        return ACU_LV_APP_STATE_IDLE;
+    }
+
+    if(rco_data_get_reset_button() == 1)
     {
         return ACU_LV_APP_STATE_IDLE;
     }
@@ -227,7 +237,7 @@ static void state_entry(acu_lv_app_state_t state)
     switch (state)
     {
     case ACU_LV_APP_STATE_IDLE:
-        /* code */
+        acu_lv_drv_open_air();
         break;
     case ACU_LV_APP_STATE_PRECHARGE:
         //close negative air when leaving idle

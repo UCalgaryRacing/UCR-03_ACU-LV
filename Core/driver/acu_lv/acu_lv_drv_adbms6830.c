@@ -523,6 +523,8 @@ int adbms6830_start_cell_adc(bool discharge_permitted)
     return result;
 }
 
+static uint16_t avg_voltage_raw = 1000;
+
 int adbms6830_read_cell_voltages_raw(uint16_t raw_adc[ADBMS_NUM_SLAVES][ADBMS_CELLS_PER_IC])
 {
     /* Cell voltage register group commands (each group contains 3 cells) */
@@ -562,6 +564,22 @@ int adbms6830_read_cell_voltages_raw(uint16_t raw_adc[ADBMS_NUM_SLAVES][ADBMS_CE
             }
         }
     }
+    // uint16_t sum = 0;
+    // for(uint8_t slave_idx = 0U; slave_idx < ADBMS_NUM_SLAVES; slave_idx++)
+    // {
+    //     for(uint8_t gpio_idx = 0U; gpio_idx < ADBMS_THERMS_PER_IC; gpio_idx++)
+    //     {
+    //         if(raw_adc[slave_idx][gpio_idx] < 1000U)
+    //         {
+    //             sum += raw_adc[slave_idx][gpio_idx];
+    //         }
+    //         else
+    //         {
+    //             raw_adc[slave_idx][gpio_idx] = avg_voltage_raw;
+    //         }
+    //     }
+    // }   
+    // avg_voltage_raw = sum / (ADBMS_NUM_SLAVES * ADBMS_THERMS_PER_IC);
 
     return 0;
 }
@@ -576,7 +594,8 @@ int adbms6830_start_gpio_adc(void)
 
     return result;
 }
-uint16_t avg_temp_raw = 300;
+static uint16_t avg_temp_raw = 300;
+
 int adbms6830_read_gpio_voltages_raw(uint16_t raw_adc[ADBMS_NUM_SLAVES][ADBMS_THERMS_PER_IC],uint8_t mux_state)
 {
     /* Auxiliary register group commands:

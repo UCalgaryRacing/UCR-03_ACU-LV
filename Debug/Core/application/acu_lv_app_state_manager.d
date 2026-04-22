@@ -58,7 +58,8 @@ Core/application/acu_lv_app_state_manager.o: \
  ../Core/driver/acu_lv/acu_lv_drv_adbms6830_regs.h \
  ../Core/driver/acu_lv/acu_lv_drv_air.h \
  ../Core/driver/acu_lv/acu_lv_drv_sdc.h \
- ../Core/shared/data/accumulator/acu_data.h
+ ../Core/shared/data/accumulator/acu_data.h \
+ ../Core/shared/data/rco/rco_data.h
 ../Core/application/acu_lv_app_state_manager.h:
 ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h:
 ../Core/service/acu_lv/acu_lv_svc_imd.h:
@@ -119,3 +120,4 @@ Core/application/acu_lv_app_state_manager.o: \
 ../Core/driver/acu_lv/acu_lv_drv_air.h:
 ../Core/driver/acu_lv/acu_lv_drv_sdc.h:
 ../Core/shared/data/accumulator/acu_data.h:
+../Core/shared/data/rco/rco_data.h:

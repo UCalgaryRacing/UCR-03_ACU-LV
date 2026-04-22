@@ -56,7 +56,7 @@ Core/shared/service/rear_controller/rco_svc_can_route.o: \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/task.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/list.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h \
- ../Core/shared/data/accumulator/acu_data.h \
+ ../Core/shared/data/rco/rco_data.h \
  ../Core/shared/service/rear_controller/rco_svc_can_route.h
 ../Core/shared/config/can/can_config.h:
 ../Core/config/can/can_config_pinout.h:
@@ -115,5 +115,5 @@ Core/shared/service/rear_controller/rco_svc_can_route.o: \
 ../Middlewares/Third_Party/FreeRTOS/Source/include/task.h:
 ../Middlewares/Third_Party/FreeRTOS/Source/include/list.h:
 ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h:
-../Core/shared/data/accumulator/acu_data.h:
+../Core/shared/data/rco/rco_data.h:
 ../Core/shared/service/rear_controller/rco_svc_can_route.h:

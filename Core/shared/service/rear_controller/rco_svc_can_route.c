@@ -3,7 +3,7 @@
 #include "ucr_03.h"
 #include "can_typ_common.h"
 #include "can_svc_can.h"
-#include "acu_data.h"
+#include "rco_data.h"
 #include "rco_svc_can_route.h"
 
 static bool g_initialized = false;
@@ -25,5 +25,5 @@ void rco_svc_can_rx_rear_controller_data(can_msg_t *msg)
     ucr_03_rear_control_unpack(&rear_control_can_msg, msg->data, msg->dlc);
 
     //We only care about reset button
-    acu_data_set_reset_button_status(rear_control_can_msg.reset_button);
+    rco_data_set_reset_button(rear_control_can_msg.reset_button);
 }
