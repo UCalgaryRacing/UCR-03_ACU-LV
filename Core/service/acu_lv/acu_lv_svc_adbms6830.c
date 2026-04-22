@@ -9,6 +9,8 @@
 #include "acu_lv_drv_adbms6830.h"
 #include "acu_lv_svc_adbms6830.h"
 #include "acu_data.h"
+#include <stdlib.h>
+#include "acu_lv_svc_accu.h"
 
 /*============================================================================*/
 /* Voltage Sampling                                                           */
@@ -263,4 +265,19 @@ void bms_manager_shadow_unlock(void)
 adbms6830_shadow_t *bms_manager_get_shadow(void)
 {
     return &g_shadow;
+}
+
+
+void vw_voltages()
+{
+    float pack_voltage = acu_lv_svc_get_accu_voltage();
+    float avg_cell_voltage = pack_voltage / (float)(ADBMS_NUM_SLAVES * ADBMS_CELLS_PER_IC);
+
+    for(uint8_t slave_idx = 0U; slave_idx < ADBMS_NUM_SLAVES; slave_idx++)
+    {
+        for (uint8_t cell_idx = 0U; cell_idx < ADBMS_CELLS_PER_IC; cell_idx++)
+        {
+            voltages[slave_idx][cell_idx] = avg_cell_voltage + ((float)rand()/(float)(RAND_MAX)) * 0.1f - 0.05f; // Add random noise of +/- 50mV
+        }
+    }
 }
