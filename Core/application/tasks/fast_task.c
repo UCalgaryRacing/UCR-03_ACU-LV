@@ -89,14 +89,14 @@ void fast_task_init()
     acu_svc_can_route_init();
 
 
-    osDelay(3000);
+    osDelay(5000);
 }
 
 // code that runs in the infinite loop for the fast task
 void fast_task_loop()
 {
-    // next_wake += period;
-    // osDelayUntil(next_wake);
+     next_wake += period;
+     osDelayUntil(next_wake);
     
     g_wake_pin_state = HAL_GPIO_ReadPin(ADBMS_1_WAKE_PORT, ADBMS_1_WAKE_PIN);
     // update the values for tractive and accumulator voltage

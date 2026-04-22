@@ -55,6 +55,14 @@ int voltage_acquisition_sample(void)
     /*------------------------------------------------------------------*/
     /* Step 4: Convert and store per-slave data                         */
     /*------------------------------------------------------------------*/
+    voltage_stats.cell_min_v = 100.0f;
+    voltage_stats.cell_min_slave = 0;
+    voltage_stats.cell_min_idx = 0;
+
+    voltage_stats.cell_max_v = 0.0f;
+    voltage_stats.cell_max_slave = 0;
+    voltage_stats.cell_max_idx = 0;
+
     for (uint8_t slave_idx = 0U; slave_idx < ADBMS_NUM_SLAVES; slave_idx++)
     {
         /* Convert raw ADC to volts */
