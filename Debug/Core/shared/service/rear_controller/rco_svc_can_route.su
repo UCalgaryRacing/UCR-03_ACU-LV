@@ -1,2 +1,0 @@
-../Core/shared/service/rear_controller/rco_svc_can_route.c:13:10:rco_svc_can_route_init	8	static
-../Core/shared/service/rear_controller/rco_svc_can_route.c:21:6:rco_svc_can_rx_rear_controller_data	24	static

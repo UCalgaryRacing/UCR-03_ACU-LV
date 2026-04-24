@@ -1,4 +1,0 @@
-../Core/service/acu_lv/acu_lv_svc_precharge.c:20:6:acu_lv_svc_check_precharge_done	16	static
-../Core/service/acu_lv/acu_lv_svc_precharge.c:40:6:acu_lv_svc_check_precharge_timeout	4	static
-../Core/service/acu_lv/acu_lv_svc_precharge.c:51:6:acu_lv_svc_start_precharge_timer	8	static
-../Core/service/acu_lv/acu_lv_svc_precharge.c:57:6:acu_lv_svc_stop_precharge_timer	8	static

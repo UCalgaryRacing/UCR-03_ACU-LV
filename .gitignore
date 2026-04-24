@@ -1,5 +1,82 @@
+# Local History for VS Code
+.history/
 
+# VS Code specific files
+.vscode/*
+
+# Except for these files, which are useful for sharing project settings
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/*.code-snippets
+
+# Built VS Code Extensions
+*.vsix
+
+# Operating System generated files
+.DS_Store
+Thumbs.db
+
+# Dependency directories (example for Node.js projects)
+/node_modules
+
+
+# STM32CubeIDE specific files and folders
+#.mxproject
+.settings/
+*.launch
+*.log
+
+# Build output folders
+Debug/
+Release/
+build/
+Binary/
+
+# Object files, executables, and libraries
+*.d
 *.o
+*.ko
+*.obj
+*.elf
+*.ilk
+*.map
+*.exp
+*.gch
+*.pch
+*.lib
+*.a
+*.la
+*.lo
+*.dll
+*.so
+*.so.*
+*.dylib
+*.exe
+*.out
+*.app
+*.i*86
+*.x86_64
+*.hex
+
+# Debug files
+*.dSYM/
+*.su
+*.idb
+*.pdb
+
+# CubeMX temporary files (optional, if generated outside project root)
+# .stm32cubeide_config.yaml 
+
+# Other potential IDE or OS generated files
+.project
+.cproject
+.externalToolBuilders/
+.core/
+.metadata/
+.toolchains/
+xcuserdata/
+
 *.list
 *.map
-.vscode

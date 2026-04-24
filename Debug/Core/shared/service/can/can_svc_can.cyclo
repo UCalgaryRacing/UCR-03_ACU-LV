@@ -1,4 +1,0 @@
-../Core/shared/service/can/can_svc_can.c:7:10:com_svc_can_init	1
-../Core/shared/service/can/can_svc_can.c:14:10:com_svc_can_transmit	6
-../Core/shared/service/can/can_svc_can.c:46:10:com_svc_can_register	2
-../Core/shared/service/can/can_svc_can.c:58:6:com_svc_can_route	3
