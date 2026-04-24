@@ -1,2 +1,0 @@
-../Core/service/bms/bms_svc_can.c:5:6:bms_svc_can_tx_acu_fault_data	1
-../Core/service/bms/bms_svc_can.c:23:6:bms_svc_can_tx_acu_data	1

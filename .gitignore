@@ -1,5 +1,11 @@
+# Operating System generated files
+.DS_Store
+Thumbs.db
 
-*.o
-*.list
-*.map
-.vscode
+.settings/
+
+# Build output folders
+Debug/
+Release/
+FrontController/
+RearController/

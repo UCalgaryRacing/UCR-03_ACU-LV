@@ -1,2 +1,0 @@
-../Core/driver/acu_lv/acu_lv_drv_analog.c:10:17:acu_lv_drv_adc_init	16	static
-../Core/driver/acu_lv/acu_lv_drv_analog.c:28:17:acu_lv_drv_adc_start_dma	16	static
