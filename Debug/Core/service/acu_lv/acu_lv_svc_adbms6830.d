@@ -46,7 +46,7 @@ Core/service/acu_lv/acu_lv_svc_adbms6830.o: \
  ../Core/driver/acu_lv/acu_lv_drv_adbms6830_types.h \
  ../Core/service/acu_lv/acu_lv_svc_adbms6830.h \
  ../Core/shared/data/accumulator/acu_data.h \
- ../Core/common/com_typ_common.h
+ ../Core/common/com_typ_common.h ../Core/service/acu_lv/acu_lv_svc_accu.h
 ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h:
 ../Core/driver/acu_lv/acu_lv_drv_adbms6830.h:
 ../Core/driver/acu_lv/acu_lv_drv_adbms6830_regs.h:
@@ -94,3 +94,4 @@ Core/service/acu_lv/acu_lv_svc_adbms6830.o: \
 ../Core/service/acu_lv/acu_lv_svc_adbms6830.h:
 ../Core/shared/data/accumulator/acu_data.h:
 ../Core/common/com_typ_common.h:
+../Core/service/acu_lv/acu_lv_svc_accu.h:

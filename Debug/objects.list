@@ -21,6 +21,7 @@
 "./Core/driver/acu_lv/acu_lv_drv_dfsdm.o"
 "./Core/driver/acu_lv/acu_lv_drv_imd.o"
 "./Core/driver/acu_lv/acu_lv_drv_sdc.o"
+"./Core/driver/acu_lv/aculv_drv_ds18b20.o"
 "./Core/service/acu_lv/acu_lv_svc_accu.o"
 "./Core/service/acu_lv/acu_lv_svc_adbms6830.o"
 "./Core/service/acu_lv/acu_lv_svc_air.o"

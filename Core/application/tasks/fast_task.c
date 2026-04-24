@@ -23,7 +23,9 @@
 #include "acu_lv_drv_adbms6830.h"
 #include "acu_lv_drv_adbms6830_types.h"
 #include "acu_lv_drv_adbms6830_regs.h"
+#include "aculv_drv_ds18b20.h"
 
+#include "acu_lv_svc_adbms6830.h"
 #include "bms_svc_thermistor.h"
 #include "bms_svc_fault.h"
 #include "bms_svc_can.h"
@@ -88,6 +90,9 @@ void fast_task_init()
 
     acu_svc_can_route_init();
 
+    // uses russian init code, victor says it works but that was on G4
+    // some parts were changes to work for H7 and uses UART instead of USART, hopefully it works
+    aculv_drv_ds18b20_init();
 
     osDelay(5000);
 }
@@ -147,15 +152,16 @@ void fast_task_loop()
 //        HAL_Delay(2000);
 //    }
 
-    voltage_acquisition_sample();
+    //6830 cell voltage acquisition
+    // voltage_acquisition_sample();
+    vw_voltages();
 
-    bms_svc_acquire_thermistor_temps(0U);
-
-    bms_svc_admbs_toggle_mux(ADBMS_GPO_PIN_1);
-
-    bms_svc_acquire_thermistor_temps(1U);
-
-    bms_svc_admbs_toggle_mux(ADBMS_GPO_PIN_1);
+    // adbms 6830 thermistor
+    // bms_svc_acquire_thermistor_temps(0U);
+    // bms_svc_admbs_toggle_mux(ADBMS_GPO_PIN_1);
+    // bms_svc_acquire_thermistor_temps(1U);
+    // bms_svc_admbs_toggle_mux(ADBMS_GPO_PIN_1);
+    get_Temperature(); // russian get temperature code from victor, if it works then we can start VWing
 
     bms_svc_check_faults();
 

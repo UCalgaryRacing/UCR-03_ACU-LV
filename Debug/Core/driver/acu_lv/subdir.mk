@@ -11,7 +11,8 @@ C_SRCS += \
 ../Core/driver/acu_lv/acu_lv_drv_debug_led.c \
 ../Core/driver/acu_lv/acu_lv_drv_dfsdm.c \
 ../Core/driver/acu_lv/acu_lv_drv_imd.c \
-../Core/driver/acu_lv/acu_lv_drv_sdc.c 
+../Core/driver/acu_lv/acu_lv_drv_sdc.c \
+../Core/driver/acu_lv/aculv_drv_ds18b20.c 
 
 OBJS += \
 ./Core/driver/acu_lv/acu_lv_drv_adbms6830.o \
@@ -20,7 +21,8 @@ OBJS += \
 ./Core/driver/acu_lv/acu_lv_drv_debug_led.o \
 ./Core/driver/acu_lv/acu_lv_drv_dfsdm.o \
 ./Core/driver/acu_lv/acu_lv_drv_imd.o \
-./Core/driver/acu_lv/acu_lv_drv_sdc.o 
+./Core/driver/acu_lv/acu_lv_drv_sdc.o \
+./Core/driver/acu_lv/aculv_drv_ds18b20.o 
 
 C_DEPS += \
 ./Core/driver/acu_lv/acu_lv_drv_adbms6830.d \
@@ -29,7 +31,8 @@ C_DEPS += \
 ./Core/driver/acu_lv/acu_lv_drv_debug_led.d \
 ./Core/driver/acu_lv/acu_lv_drv_dfsdm.d \
 ./Core/driver/acu_lv/acu_lv_drv_imd.d \
-./Core/driver/acu_lv/acu_lv_drv_sdc.d 
+./Core/driver/acu_lv/acu_lv_drv_sdc.d \
+./Core/driver/acu_lv/aculv_drv_ds18b20.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes
@@ -39,7 +42,7 @@ Core/driver/acu_lv/%.o Core/driver/acu_lv/%.su Core/driver/acu_lv/%.cyclo: ../Co
 clean: clean-Core-2f-driver-2f-acu_lv
 
 clean-Core-2f-driver-2f-acu_lv:
-	-$(RM) ./Core/driver/acu_lv/acu_lv_drv_adbms6830.cyclo ./Core/driver/acu_lv/acu_lv_drv_adbms6830.d ./Core/driver/acu_lv/acu_lv_drv_adbms6830.o ./Core/driver/acu_lv/acu_lv_drv_adbms6830.su ./Core/driver/acu_lv/acu_lv_drv_air.cyclo ./Core/driver/acu_lv/acu_lv_drv_air.d ./Core/driver/acu_lv/acu_lv_drv_air.o ./Core/driver/acu_lv/acu_lv_drv_air.su ./Core/driver/acu_lv/acu_lv_drv_analog.cyclo ./Core/driver/acu_lv/acu_lv_drv_analog.d ./Core/driver/acu_lv/acu_lv_drv_analog.o ./Core/driver/acu_lv/acu_lv_drv_analog.su ./Core/driver/acu_lv/acu_lv_drv_debug_led.cyclo ./Core/driver/acu_lv/acu_lv_drv_debug_led.d ./Core/driver/acu_lv/acu_lv_drv_debug_led.o ./Core/driver/acu_lv/acu_lv_drv_debug_led.su ./Core/driver/acu_lv/acu_lv_drv_dfsdm.cyclo ./Core/driver/acu_lv/acu_lv_drv_dfsdm.d ./Core/driver/acu_lv/acu_lv_drv_dfsdm.o ./Core/driver/acu_lv/acu_lv_drv_dfsdm.su ./Core/driver/acu_lv/acu_lv_drv_imd.cyclo ./Core/driver/acu_lv/acu_lv_drv_imd.d ./Core/driver/acu_lv/acu_lv_drv_imd.o ./Core/driver/acu_lv/acu_lv_drv_imd.su ./Core/driver/acu_lv/acu_lv_drv_sdc.cyclo ./Core/driver/acu_lv/acu_lv_drv_sdc.d ./Core/driver/acu_lv/acu_lv_drv_sdc.o ./Core/driver/acu_lv/acu_lv_drv_sdc.su
+	-$(RM) ./Core/driver/acu_lv/acu_lv_drv_adbms6830.cyclo ./Core/driver/acu_lv/acu_lv_drv_adbms6830.d ./Core/driver/acu_lv/acu_lv_drv_adbms6830.o ./Core/driver/acu_lv/acu_lv_drv_adbms6830.su ./Core/driver/acu_lv/acu_lv_drv_air.cyclo ./Core/driver/acu_lv/acu_lv_drv_air.d ./Core/driver/acu_lv/acu_lv_drv_air.o ./Core/driver/acu_lv/acu_lv_drv_air.su ./Core/driver/acu_lv/acu_lv_drv_analog.cyclo ./Core/driver/acu_lv/acu_lv_drv_analog.d ./Core/driver/acu_lv/acu_lv_drv_analog.o ./Core/driver/acu_lv/acu_lv_drv_analog.su ./Core/driver/acu_lv/acu_lv_drv_debug_led.cyclo ./Core/driver/acu_lv/acu_lv_drv_debug_led.d ./Core/driver/acu_lv/acu_lv_drv_debug_led.o ./Core/driver/acu_lv/acu_lv_drv_debug_led.su ./Core/driver/acu_lv/acu_lv_drv_dfsdm.cyclo ./Core/driver/acu_lv/acu_lv_drv_dfsdm.d ./Core/driver/acu_lv/acu_lv_drv_dfsdm.o ./Core/driver/acu_lv/acu_lv_drv_dfsdm.su ./Core/driver/acu_lv/acu_lv_drv_imd.cyclo ./Core/driver/acu_lv/acu_lv_drv_imd.d ./Core/driver/acu_lv/acu_lv_drv_imd.o ./Core/driver/acu_lv/acu_lv_drv_imd.su ./Core/driver/acu_lv/acu_lv_drv_sdc.cyclo ./Core/driver/acu_lv/acu_lv_drv_sdc.d ./Core/driver/acu_lv/acu_lv_drv_sdc.o ./Core/driver/acu_lv/acu_lv_drv_sdc.su ./Core/driver/acu_lv/aculv_drv_ds18b20.cyclo ./Core/driver/acu_lv/aculv_drv_ds18b20.d ./Core/driver/acu_lv/aculv_drv_ds18b20.o ./Core/driver/acu_lv/aculv_drv_ds18b20.su
 
 .PHONY: clean-Core-2f-driver-2f-acu_lv
 

@@ -12,7 +12,7 @@
 
 const static uint32_t period = 5000;
 static uint32_t next_wake;
-static bool state;
+
 extern debug_led_t red_led;
 
 void slow_task_init()

@@ -87,4 +87,6 @@ void bms_manager_shadow_unlock(void);
  */
 adbms6830_shadow_t *bms_manager_get_shadow(void);
 
+
+void vw_voltages();
 #endif /* SERVICE_ACU_LV_ACU_LV_SVC_ADBMS6830_H_ */
