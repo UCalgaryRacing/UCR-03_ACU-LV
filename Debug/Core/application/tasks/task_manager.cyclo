@@ -1,0 +1,2 @@
+../Core/application/tasks/task_manager.c:15:6:task_manager_init	1
+../Core/application/tasks/task_manager.c:20:6:task_manager_loop	1

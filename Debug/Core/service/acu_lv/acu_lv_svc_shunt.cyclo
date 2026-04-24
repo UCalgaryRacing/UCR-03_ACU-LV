@@ -1,0 +1,5 @@
+../Core/service/acu_lv/acu_lv_svc_shunt.c:14:17:acu_lv_svc_update_shunt	2
+../Core/service/acu_lv/acu_lv_svc_shunt.c:27:7:acu_lv_svc_get_shunt_current	1
+../Core/service/acu_lv/acu_lv_svc_shunt.c:32:17:acu_lv_svc_start_shunt_filter	2
+../Core/service/acu_lv/acu_lv_svc_shunt.c:43:17:acu_lv_svc_stop_shunt_filter	2
+../Core/service/acu_lv/acu_lv_svc_shunt.c:54:10:acu_lv_svc_check_shunt_current	2

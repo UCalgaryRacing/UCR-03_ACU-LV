@@ -1,0 +1,5 @@
+../Core/driver/acu_lv/acu_lv_drv_air.c:14:6:acu_lv_drv_air_init	1
+../Core/driver/acu_lv/acu_lv_drv_air.c:26:17:acu_lv_drv_update_sdc_reserve	2
+../Core/driver/acu_lv/acu_lv_drv_air.c:39:6:acu_lv_drv_open_air	1
+../Core/driver/acu_lv/acu_lv_drv_air.c:51:6:acu_lv_drv_close_air_pos	1
+../Core/driver/acu_lv/acu_lv_drv_air.c:67:6:acu_lv_drv_close_air_neg	1

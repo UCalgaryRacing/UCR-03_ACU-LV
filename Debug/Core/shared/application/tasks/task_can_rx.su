@@ -1,0 +1,2 @@
+../Core/shared/application/tasks/task_can_rx.c:13:6:task_can_rx_init	4	static
+../Core/shared/application/tasks/task_can_rx.c:19:6:task_can_rx_loop	88	static

@@ -1,0 +1,2 @@
+../Core/shared/data/rco/rco_data.c:13:6:rco_data_set_reset_button	1
+../Core/shared/data/rco/rco_data.c:18:9:rco_data_get_reset_button	1

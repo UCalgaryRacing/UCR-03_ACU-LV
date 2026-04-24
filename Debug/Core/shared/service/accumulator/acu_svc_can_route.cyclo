@@ -1,0 +1,3 @@
+../Core/shared/service/accumulator/acu_svc_can_route.c:15:10:acu_svc_can_route_init	1
+../Core/shared/service/accumulator/acu_svc_can_route.c:25:6:acu_svc_can_rx_accumulator_data	1
+../Core/shared/service/accumulator/acu_svc_can_route.c:43:13:acu_svc_can_rx_accumulator_fault_data	1

@@ -1,0 +1,5 @@
+../Core/service/acu_lv/acu_lv_svc_ts.c:16:17:acu_lv_svc_update_ts_voltage	2
+../Core/service/acu_lv/acu_lv_svc_ts.c:30:7:acu_lv_svc_get_ts_voltage	1
+../Core/service/acu_lv/acu_lv_svc_ts.c:35:17:acu_lv_svc_start_ts_filter	2
+../Core/service/acu_lv/acu_lv_svc_ts.c:46:17:acu_lv_svc_stop_ts_filter	2
+../Core/service/acu_lv/acu_lv_svc_ts.c:57:10:acu_lv_svc_check_ts_voltage	3
