@@ -3,7 +3,7 @@
 ../Core/application/acu_lv_app_state_manager.c:104:27:handle_startup_state	2
 ../Core/application/acu_lv_app_state_manager.c:120:27:handle_idle_state	2
 ../Core/application/acu_lv_app_state_manager.c:147:27:handle_precharge_state	3
-../Core/application/acu_lv_app_state_manager.c:173:27:handle_active_state	3
+../Core/application/acu_lv_app_state_manager.c:173:27:handle_active_state	2
 ../Core/application/acu_lv_app_state_manager.c:196:27:handle_fault_state	1
 ../Core/application/acu_lv_app_state_manager.c:208:27:handle_charging_state	1
 ../Core/application/acu_lv_app_state_manager.c:221:27:handle_balencing_state	1

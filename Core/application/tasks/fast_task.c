@@ -30,6 +30,7 @@
 #include "bms_svc_fault.h"
 #include "bms_svc_can.h"
 
+#include "rco_data.h"
 #include "acu_data.h"
 #include "acu_lv_svc_sdc.h"
 
@@ -168,6 +169,13 @@ void fast_task_loop()
     bms_svc_can_tx_acu_fault_data();
 
     bms_svc_can_tx_acu_data();
+
+    // code to reset imd and ams latch based on message from rear controller (rco), shouldn't need because it is handled in hardware
+    // if(rco_data_get_reset_button() == 1)
+    // {
+    //     acu_lv_svc_reset_ams_latch();
+    //     acu_lv_svc_reset_imd_latch();
+    // }
 
     acu_lv_drv_toggle_led(&blue_led);    
 }

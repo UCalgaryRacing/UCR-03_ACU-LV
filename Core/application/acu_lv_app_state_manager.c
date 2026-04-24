@@ -182,11 +182,11 @@ static acu_lv_app_state_t handle_active_state()
     {
         return ACU_LV_APP_STATE_IDLE;
     }
-
-    if(rco_data_get_reset_button() == 1)
-    {
-        return ACU_LV_APP_STATE_IDLE;
-    }
+    // potentially get rid of this, if reset button is held it should drop sdc reserve and transition to idle without needing to check the button state here
+    // if(rco_data_get_reset_button() == 1)
+    // {
+    //     return ACU_LV_APP_STATE_IDLE;
+    // }
 
     //transition to charge if charging message recieved
     //fault transition if imd fault, cell voltage or temp out of range

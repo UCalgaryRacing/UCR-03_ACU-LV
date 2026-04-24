@@ -58,6 +58,7 @@ Core/application/tasks/fast_task.o: ../Core/application/tasks/fast_task.c \
  ../Core/driver/acu_lv/aculv_drv_ds18b20.h \
  ../Core/service/bms/bms_svc_thermistor.h \
  ../Core/service/bms/bms_svc_fault.h ../Core/service/bms/bms_svc_can.h \
+ ../Core/shared/data/rco/rco_data.h \
  ../Core/shared/data/accumulator/acu_data.h \
  ../Core/service/acu_lv/acu_lv_svc_sdc.h \
  ../Core/config/acu_lv/acu_lv_config_pinout.h \
@@ -123,6 +124,7 @@ Core/application/tasks/fast_task.o: ../Core/application/tasks/fast_task.c \
 ../Core/service/bms/bms_svc_thermistor.h:
 ../Core/service/bms/bms_svc_fault.h:
 ../Core/service/bms/bms_svc_can.h:
+../Core/shared/data/rco/rco_data.h:
 ../Core/shared/data/accumulator/acu_data.h:
 ../Core/service/acu_lv/acu_lv_svc_sdc.h:
 ../Core/config/acu_lv/acu_lv_config_pinout.h:
