@@ -127,8 +127,9 @@ void owInit(OneWire *ow)
 
 }
 
+//USART interrupt handler
 void owReadHandler()
-{ //USART interrupt handler
+{
   uint8_t index = getUsartIndex();
 
   // --- ADD THIS BLOCK FOR STM32G4 ---
@@ -484,7 +485,7 @@ int get_ROMid (void)
 
 				if (crc != r->crc) {
 					devInfo.device = i;
-					sprintf (devInfo.info,"\n can't read cause CNC error");
+					sprintf (devInfo.info,"\n can't read cause CRC error");
 				}
 			}
 
