@@ -38,7 +38,7 @@
 
 // Scaling factor for tractive and accumulator
 // determined by using a known voltage and averaging the raw values
-#define ACU_LV_ACCU_SCALING_FACTOR 0.0003274401616938253f
+#define ACU_LV_ACCU_SCALING_FACTOR 0.00000126344f
 #define ACU_LV_TS_SCALING_FACTOR 0.00032845893948625697f
 
 // Precharge completion threshold (TS voltage must be >= this fraction of pack)

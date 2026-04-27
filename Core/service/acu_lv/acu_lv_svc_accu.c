@@ -16,8 +16,9 @@ acu_lv_status_t acu_lv_svc_update_accu_voltage()
 {
     if(accu_voltage.hw.dma_started == true)
     {
-        *accu_voltage.data = ((float)(*accu_voltage.raw_data >> 8))* accu_voltage.settings.scaling_factor;
-        acu_data_set_aculv_battery_voltage(*accu_voltage.data);
+        //*accu_voltage.data = ((float)(*accu_voltage.raw_data >> 8))* accu_voltage.settings.scaling_factor;
+    	*accu_voltage.data = ((*accu_voltage.raw_data))* accu_voltage.settings.scaling_factor;
+    	acu_data_set_aculv_battery_voltage(*accu_voltage.data);
     }
     else
     {
