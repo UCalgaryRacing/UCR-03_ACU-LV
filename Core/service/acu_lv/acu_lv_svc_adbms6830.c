@@ -271,13 +271,28 @@ adbms6830_shadow_t *bms_manager_get_shadow(void)
 void vw_voltages()
 {
     float pack_voltage = acu_lv_svc_get_accu_voltage();
+    voltage_stats.pack_v = pack_voltage;
     float avg_cell_voltage = pack_voltage / (float)(ADBMS_NUM_SLAVES * ADBMS_CELLS_PER_IC);
+    voltage_stats.cell_min_v = avg_cell_voltage;
+    voltage_stats.cell_max_v = avg_cell_voltage;
 
     for(uint8_t slave_idx = 0U; slave_idx < ADBMS_NUM_SLAVES; slave_idx++)
     {
         for (uint8_t cell_idx = 0U; cell_idx < ADBMS_CELLS_PER_IC; cell_idx++)
         {
-            voltages[slave_idx][cell_idx] = avg_cell_voltage + ((float)rand()/(float)(RAND_MAX)) * 0.1f - 0.05f; // Add random noise of +/- 50mV
+            voltages[slave_idx][cell_idx] = avg_cell_voltage + ((float)rand()/(float)(RAND_MAX)) * 0.025f - 0.0125f; // Add random noise of +/- 50mV
+            if (voltages[slave_idx][cell_idx] < voltage_stats.cell_min_v)
+            {
+                voltage_stats.cell_min_v = voltages[slave_idx][cell_idx];
+                voltage_stats.cell_min_slave = slave_idx;
+                voltage_stats.cell_min_idx = cell_idx;
+            }
+            if (voltages[slave_idx][cell_idx] > voltage_stats.cell_max_v)
+            {
+                voltage_stats.cell_max_v = voltages[slave_idx][cell_idx];
+                voltage_stats.cell_max_slave = slave_idx;
+                voltage_stats.cell_max_idx = cell_idx;
+            }
         }
     }
 }

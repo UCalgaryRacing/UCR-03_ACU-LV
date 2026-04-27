@@ -29,7 +29,7 @@ volatile uint16_t rc_buffer[5];
 /*********************************************************************************************/
 volatile float ds18b20_temp[MAXDEVICES_ON_THE_BUS];
 
-uint8_t devices;
+uint8_t devices = 15;
 OneWire ow;
 uint32_t pDelay = 300;
 uint8_t sensor;
@@ -52,7 +52,7 @@ void aculv_drv_ds18b20_init()
 
         //if no energy meter, weak pullup must also be high
         // might not work cause pin is open drain
-        HAL_GPIO_WritePin(DS18B20_WEAK_PULL_UP_PORT, DS18B20_WEAK_PULL_UP_PIN, GPIO_PIN_SET);
+        HAL_GPIO_WritePin(DS18B20_WEAK_PULL_UP_PORT, DS18B20_WEAK_PULL_UP_PIN, GPIO_PIN_RESET);
     #else
     // if energy meter present, VDD enable pin must be low
         HAL_GPIO_WritePin(DS18B20_VDD_EN_PORT, DS18B20_VDD_EN_PIN, GPIO_PIN_RESET);
@@ -435,39 +435,40 @@ void owRecallE2Cmd(OneWire *ow, RomCode *rom) {
 
 
 int get_ROMid (void){
+	int i =0;
 	if (owResetCmd() != ONEWIRE_NOBODY) {    // is anybody on the bus?
-		devices = owSearchCmd(&ow);        // получить ROMid в�?ех у�?трой�?т на шине или вернуть код ошибки
-		// if (devices <= 0) {
-		// 	while (1){
-		// 		// pDelay = 1000000;
-		// 		// for (i = 0; i < pDelay * 1; i++)    /* Wait a bit. */
-		// 		// 	__asm__("nop");
-		// 	}
+			devices = owSearchCmd(&ow);        // получить ROMid в�?ех у�?трой�?т на шине или вернуть код ошибки
+			if (devices <= 0) {
+				while (1){
+					pDelay = 1000000;
+					for (; i < pDelay * 1; i++)    /* Wait a bit. */
+						__asm__("nop");
+				}
 
-		// }
-		// i = 0;
-		// for (; i < devices; i++) {//выводим в кон�?оль в�?е найденные ROM
-		// 	RomCode *r = &ow.ids[i];
-		// 	uint8_t crc = owCRC8(r);
-		// 	crcOK = (crc == r->crc)?"CRC OK":"CRC ERROR!";
-		// 	devInfo.device = i;
+			}
+			i = 0;
+			for (; i < devices; i++) {//выводим в кон�?оль в�?е найденные ROM
+				RomCode *r = &ow.ids[i];
+				uint8_t crc = owCRC8(r);
+				crcOK = (crc == r->crc)?"CRC OK":"CRC ERROR!";
+				devInfo.device = i;
 
-		// 	sprintf(devInfo.info, "SN: %02X/%02X%02X%02X%02X%02X%02X/%02X", r->family, r->code[5], r->code[4], r->code[3],
-		// 			r->code[2], r->code[1], r->code[0], r->crc);
+				sprintf(devInfo.info, "SN: %02X/%02X%02X%02X%02X%02X%02X/%02X", r->family, r->code[5], r->code[4], r->code[3],
+						r->code[2], r->code[1], r->code[0], r->crc);
 
-		// 	if (crc != r->crc) {
-		// 		devInfo.device = i;
-		// 		sprintf (devInfo.info,"\n can't read cause CNC error");
-		// 	}
-		// }
+				if (crc != r->crc) {
+					devInfo.device = i;
+					sprintf (devInfo.info,"\n can't read cause CNC error");
+				}
+			}
 
-	}
-	// pDelay = 1000000;
-	// for (i = 0; i < pDelay * 1; i++)
-	// 	__asm__("nop");
+		}
+		pDelay = 1000000;
+		for (i = 0; i < pDelay * 1; i++)
+			__asm__("nop");
 
-	// if (strcmp(crcOK,"CRC OK") == 0) return 0;
-	return 0;
+		if (strcmp(crcOK,"CRC OK") == 0) return 0;
+		else return -1;
 }
 
 void get_Temperature (void)
