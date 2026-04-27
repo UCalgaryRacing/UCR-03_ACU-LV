@@ -1,24 +1,24 @@
 /**
     @author Stanislav Lakhtin
     @date   11.07.2016
-    @brief  Реализация протокола 1wire на базе библиотеки libopencm3 для микроконтроллера STM32F103
-            Возможно, библиотека будет корректно работать и на других uK (требуется проверка).
-            Общая идея заключается в использовании аппаратного USART uK для иммитации работы 1wire.
-            Подключение устройств осуществляется на выбранный USART к TX пину, который должен быть подтянут к линии питания сопротивлением 4.7К.
-            Реализация библиотеки осуществляет замыкание RX на TX внутри uK, оставляя ножку RX доступной для использования в других задачах.
+    @brief  Implementation of the 1-Wire protocol based on the libopencm3 library for the STM32F103 microcontroller.
+            The library may also function correctly on other microcontrollers (verification required).
+            The general concept involves utilizing the microcontroller's hardware USART peripheral to emulate 1-Wire operation.
+            Devices are connected to the selected USART via its TX pin, which must be pulled up to the power supply line using a 4.7 kΩ resistor.
+            The library implementation internally loops the RX pin back to the TX pin within the microcontroller, thereby leaving the RX pin available for use in other tasks.
  */
 
 #ifndef STM32_DS18X20_ONEWIRE_H
 #define STM32_DS18X20_ONEWIRE_H
 #include <stdint.h>
-#define ONEWIRE_NOBODY 0xF0 //команда поиска ROM
-#define ONEWIRE_SEARCH 0xF0 //команда поиска ROM
-#define ONEWIRE_SKIP_ROM 0xCC  //команда пропуска ROM
+#define ONEWIRE_NOBODY 0xF0 //ROM Search Command
+#define ONEWIRE_SEARCH 0xF0 //ROM search command
+#define ONEWIRE_SKIP_ROM 0xCC  //ROM skip command
 #define ONEWIRE_READ_ROM 0x33  
-#define ONEWIRE_MATCH_ROM 0x55 //команда совпадение ROM позволяет мастеру обращаться к конкретному  ведомому устройству
+#define ONEWIRE_MATCH_ROM 0x55 //ROM match command allows master to address specific slave device
 #define ONEWIRE_CONVERT_TEMPERATURE 0x44
-#define ONEWIRE_READ_SCRATCHPAD 0xBE    //команда для чтения памяти датчика
-#define ONEWIRE_WRITE_SCRATCHPAD 0x4E   //команда запись в память дтачика
+#define ONEWIRE_READ_SCRATCHPAD 0xBE    //command to read sensor memory
+#define ONEWIRE_WRITE_SCRATCHPAD 0x4E   //command to write to sensor memory
 #define ONEWIRE_COPY_SCRATCHPAD 0x48
 #define ONEWIRE_RECALL_E2 0xB8
 
@@ -26,11 +26,11 @@
 #define MAXDEVICES_ON_THE_BUS 15  // 3 devices per segment with five segments
 
 
-#define DS18B20 0x28  //код семейсва датчика 
-#define DS18S20 0x10  //код семейсва датчика 
+#define DS18B20 0x28  //sensor family code
+#define DS18S20 0x10  //sensor family code 
 
 #define WIRE_0    0x00 // 0x00 --default
-#define WIRE_1    0xff //ответ
+#define WIRE_1    0xff //response
 #define OW_READ   0xff
 
 typedef struct {
@@ -66,9 +66,9 @@ typedef struct {
 } Scratchpad_DS18S20;//
 
 typedef struct {
-  RomCode ids[MAXDEVICES_ON_THE_BUS];//для всех ромов наших датчиков
+  RomCode ids[MAXDEVICES_ON_THE_BUS]; //for all ROMs of our sensors
   int lastDiscrepancy;
-  uint8_t lastROM[8];//последний считанный ROM для поиска всех ROM
+  uint8_t lastROM[8]; //last read ROM for searching all ROMs
 } OneWire;
 
 typedef struct {

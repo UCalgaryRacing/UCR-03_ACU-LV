@@ -8,18 +8,15 @@ volatile uint16_t rc_buffer[5];
 /**
     @author Stanislav Lakhtin
     @date   11.07.2016
-    @brief  Реализация протокола 1wire на базе библиотеки libopencm3 для микроконтроллера STM32F103
-            Возможно, библиотека будет корректно работать и на других uK (требуется проверка).
-            Проверка необходима, чтобы убедиться в корректности настройки UART/USART для работы
-            в полудуплексном режиме
-            Общая идея заключается в использовании аппаратного USART uK для иммитации работы 1wire.
-            Подключение устройств осуществляется на выбранный USART к TX пину, который должен быть подтянут к линии питания сопротивлением 4.7К.
-            Реализация библиотеки осуществляет замыкание RX на TX внутри uK, оставляя ножку RX доступной для использования в других задачах.
-            Реализация библиотеки предполагает возможную одновременную работу как с независимыми шинами сразу со всеми
-            возможными UART/USART в микроконтроллере. При этом все шины (до 5 штук) будут адресоваться и опрашиваться индивидуально
+    @brief  Implementation of 1-wire protocol based on libopencm3 library for STM32F103 microcontroller
+            The library may also function correctly on other microcontrollers (verification required).
+            Verification is necessary to ensure correct UART/USART configuration for half-duplex operation.
+            The general concept involves using the hardware USART of the microcontroller to emulate 1-wire operation.
+            Devices are connected to the selected USART via its TX pin, which must be pulled to the power supply line with a 4.7K resistor.
+            The library implementation performs loopback of RX to TX inside the microcontroller, leaving the RX pin available for use in other tasks.
+            The library implementation assumes possible simultaneous operation with independent buses for all
+            possible UART/USART in the microcontroller. In this case, all buses (up to 5) will be addressed and polled individually.
  */
-
-
 
 #define ow_uart DS18B20_UART_HANDLE
 #define OW_USART UART4
@@ -89,7 +86,8 @@ void USART_SendData(USART_TypeDef* USARTx, uint16_t Data)
 
 uint8_t getUsartIndex(void);
 
-void usart_setup(uint32_t baud) {
+void usart_setup(uint32_t baud)
+{
     // 1. STM32G4 REQUIREMENT: De-init the UART before changing speeds
     HAL_UART_DeInit(ow_uart);
 
@@ -113,7 +111,8 @@ void usart_setup(uint32_t baud) {
     __HAL_UART_ENABLE_IT(ow_uart, UART_IT_RXNE);
 }
 
-void owInit(OneWire *ow) {
+void owInit(OneWire *ow)
+{
   int i=0, k = 0;
   for (; i < MAXDEVICES_ON_THE_BUS; i++) {
    uint8_t *r = (uint8_t *)&ow->ids[i];      
@@ -128,43 +127,47 @@ void owInit(OneWire *ow) {
 
 }
 
-void owReadHandler() { //обработчик прерыания USART
+void owReadHandler()
+{ //USART interrupt handler
   uint8_t index = getUsartIndex();
 
   // --- ADD THIS BLOCK FOR STM32G4 ---
-//    if (__HAL_UART_GET_FLAG(ow_uart, UART_FLAG_ORE)) {
-//         __HAL_UART_CLEAR_OREFLAG(ow_uart);
-//    }
+    if (__HAL_UART_GET_FLAG(ow_uart, UART_FLAG_ORE)) {
+         __HAL_UART_CLEAR_OREFLAG(ow_uart);
+    }
     // ----------------------------------
-  /* Проверяем, что мы вызвали прерывание из-за RXNE. */
+  /* Check if interrupt was caused by RXNE. */
   if (((OW_USART->ISR & UART_FLAG_RXNE) != (uint16_t)RESET)) {
 
-    /* Получаем данные из периферии и сбрасываем флаг*/
+    /* Get data from peripheral and clear flag */
 		while ((OW_USART->ISR & UART_FLAG_RXNE) == (uint16_t)RESET){;}
     rc_buffer[index] = USART_ReceiveData(OW_USART);              
-    recvFlag &= ~(1 << index);//сбрасываем флаг ответ получен после 
+    recvFlag &= ~(1 << index);//clear flag - response received 
   }
 }
 
-/** Реализация RESET на шине 1wire
+/** Implementation of RESET on 1-wire bus
  *
- * @param N usart -- выбранный для реализации 1wire usart
- * @return Возвращает 1 если на шине кто-то есть и 0 в противном случае
+ * @param N usart -- USART selected for 1-wire implementation
+ * @return Returns 1 if something is on the bus, 0 otherwise
  */
 
-  uint16_t owResetCmd() {
+uint16_t owResetCmd()
+{
 	uint16_t owPresence;
 	
 	usart_setup(9600);
 
-  owSend(0xF0); // Send RESET отправляем импуль сброса
-  owPresence = owEchoRead(); // Ждём PRESENCE на шине и вовзращаем, что есть
+  owSend(0xF0); // Send RESET pulse
+  owPresence = owEchoRead(); // Wait for PRESENCE on bus and return it
 
-	usart_setup(115200);// перенастраиваем скорость UART
+	usart_setup(115200);// reconfigure UART speed
   return owPresence;
 }
 
-uint8_t getUsartIndex() {// смотрит по номеру UART c каким будет идти работа
+// checks which UART will be used
+uint8_t getUsartIndex()
+{
 //	uint8_t result;
 //	if(OW_USART==USART1)result = 0;
 //	else if (OW_USART==USART2)result = 1;
@@ -172,85 +175,95 @@ uint8_t getUsartIndex() {// смотрит по номеру UART c каким �
 	return 0;
 }
 
-void owSend(uint16_t data) {
-  recvFlag |= (1 << getUsartIndex());//устанавливаем флаг если попадем в обработчик прерывания там он сбросится
-  USART_SendData(OW_USART, data);//отправляем данные
-	while(__HAL_UART_GET_FLAG(ow_uart, UART_FLAG_TC) == RESET);//ждем пока передача закончится
+void owSend(uint16_t data)
+{
+  recvFlag |= (1 << getUsartIndex());//set flag if we enter interrupt handler, it will be cleared there
+  USART_SendData(OW_USART, data);//send data
+	while(__HAL_UART_GET_FLAG(ow_uart, UART_FLAG_TC) == RESET);//wait for transmission to complete
 }
 
-uint8_t owReadSlot(uint16_t data) {//читаем у нас пришла единица или ноль в ответ
-  return (data == OW_READ) ? 1 : 0; //если пришло 0xFF, то бит = 1, что то другое бит = 0
+//read whether we received a 1 or 0 in response
+uint8_t owReadSlot(uint16_t data)
+{
+  return (data == OW_READ) ? 1 : 0; //if 0xFF was received, bit = 1, otherwise bit = 0
 }
 
-uint16_t owEchoRead() {//
-  uint8_t i = getUsartIndex();//получаем номер USART
+uint16_t owEchoRead()
+{
+  uint8_t i = getUsartIndex();//get USART number
   uint16_t pause = 1000;
-  while (recvFlag & (1 << i) && pause--);// ждем пока кто-то не ответит но не больше паузы
-  return rc_buffer[i];//в зависимости от используемого номера UART 
+  while (recvFlag & (1 << i) && pause--);// wait for response but not more than pause
+  return rc_buffer[i];//depending on the USART number used 
 }
 
-uint8_t *byteToBits(uint8_t ow_byte, uint8_t *bits) {//разлагаем 1 байт на 8 байт ,кодируем так скасказать в посылку для 1wire
+//decompose 1 byte into 8 bytes, encode them into 1-wire packets
+uint8_t *byteToBits(uint8_t ow_byte, uint8_t *bits)
+{
   uint8_t i;
   for (i = 0; i < 8; i++) {
-    if (ow_byte & 0x01) {//если текущий бит в байте ==1 то
-      *bits = WIRE_1; //заменяем на число которое при передаче по USART для 1wire будет единцией t.e 0xFF
+    if (ow_byte & 0x01) {//if current bit in byte is 1
+      *bits = WIRE_1; //replace with value that will be 1 when transmitted over USART for 1-wire, i.e. 0xFF
     } else {
-      *bits = WIRE_0;// тоже самое только для 0
+      *bits = WIRE_0;// same but for 0
     }
     bits++;
-    ow_byte = ow_byte >> 1; //сдвигаем обработанный бит
+    ow_byte = ow_byte >> 1; //shift processed bit
   }
-  return bits; //возвращае массив для передачи 
+  return bits; //return array for transmission 
 }
 
 /**
- * Метод пересылает последовательно 8 байт по одному на каждый бит в data
- * @param usart -- выбранный для эмуляции 1wire UART
- * @param d -- данные
+ * Method sends 8 bytes sequentially, one for each bit in data
+ * @param usart -- UART selected for 1-wire emulation
+ * @param d -- data
  */
-void owSendByte(uint8_t d) {
+void owSendByte(uint8_t d)
+{
   uint8_t data[8];
 	int i;
-  byteToBits(d, data);//преобразовываем байт в биты "массив байт для  передачи UART и эмуляции 1WIRE"
+  byteToBits(d, data);//convert byte to bits, array of bytes for UART transmission and 1-wire emulation
   for (i = 0; i < 8; ++i) {
     owSend(data[i]);
   }
 }
 
-
-uint8_t bitsToByte(uint8_t *bits) {//принимает "кодированый" массив байт полученный по UART и делает из него байт))
+//takes encoded byte array received over UART and converts it back to a byte
+uint8_t bitsToByte(uint8_t *bits)
+{
   uint8_t target_byte, i;
   target_byte = 0;
   for (i = 0; i < 8; i++) {
     target_byte = target_byte >> 1;
-    if (*bits == WIRE_1) {//если пришло  по USART 0xFF то это у нас пришла 1ца
-      target_byte |= 0x80;//устанавливаем в 1 старший бит
+    if (*bits == WIRE_1) {//if 0xFF was received over USART, then we received a 1
+      target_byte |= 0x80;//set most significant bit to 1
     }
-    bits++;//передвигаемся к следующему байту который является либо 0=0x00 или 1=0xFF
+    bits++;//move to next byte which is either 0=0x00 or 1=0xFF
   }
-  return target_byte; //возвращаем полученный байт
+  return target_byte; //return the received byte
 }
 
-/* Подсчет CRC8 массива mas длиной Len */
-uint8_t owCRC(uint8_t *mas, uint8_t Len) {
+/* Calculate CRC8 of array mas with length Len */
+uint8_t owCRC(uint8_t *mas, uint8_t Len)
+{
   uint8_t i, dat, crc, fb, st_byt;
   st_byt = 0;
   crc = 0;
   do {
     dat = mas[st_byt];
-    for (i = 0; i < 8; i++) {  // счетчик битов в байте
+    for (i = 0; i < 8; i++) {  // bit counter in byte
       fb = crc ^ dat;
       fb &= 1;
       crc >>= 1;
       dat >>= 1;
-      if (fb == 1) crc ^= 0x8c; // полином
+      if (fb == 1) crc ^= 0x8c; // polynomial
     }
     st_byt++;
-  } while (st_byt < Len); // счетчик байтов в массиве
+  } while (st_byt < Len); // byte counter in array
   return crc;
 }
 
-uint8_t owCRC8(RomCode *rom){
+uint8_t owCRC8(RomCode *rom)
+{
   return owCRC((uint8_t*)rom, 7);                        
 }
 
@@ -259,13 +272,14 @@ uint8_t owCRC8(RomCode *rom){
  * return 0 if hasn't
  * return -1 if error reading happened
  *
- * переделать на функции обратного вызова для реакции на ошибки
+ * refactor to use callback functions for error handling
  */
-int hasNextRom(OneWire *ow, uint8_t *ROM) {//
+int hasNextRom(OneWire *ow, uint8_t *ROM)
+{
 	uint8_t ui32BitNumber = 0;
   int zeroFork = -1;
 	uint8_t i = 0;
-  if (owResetCmd() == ONEWIRE_NOBODY) { //есть ли кто на шине
+  if (owResetCmd() == ONEWIRE_NOBODY) { //is there anybody on the bus?
     return 0;
   }
   owSendByte(ONEWIRE_SEARCH);//
@@ -274,69 +288,75 @@ int hasNextRom(OneWire *ow, uint8_t *ROM) {//
     int byteNum = ui32BitNumber / 8;
     uint8_t *current = (ROM) + byteNum;
     uint8_t cB, cmp_cB, searchDirection = 0;
-    owSend(OW_READ); // чтение прямого бита
-    cB = owReadSlot(owEchoRead());//ответ от датчика
-    owSend(OW_READ); // чтение инверсного бита
-    cmp_cB = owReadSlot(owEchoRead());//ответ от датчика
-    if (cB == cmp_cB && cB == 1)//сравниваем два ответа
-      return -1;//ошибка никто не ответил 
-    if (cB != cmp_cB) { //нормальная ситуация пришло либо 10 либо 01
-      searchDirection = cB;//выбираем в каком направлении будем двигатся дальше
-			} else {//колизия пришло 00 т.е текущий бит у ROM-ов разный
-				if (ui32BitNumber == ow->lastDiscrepancy)//если текущая позиция колизии равна прошлой
-        searchDirection = 1;//выбираем в каком направлении будем двигатся дальше
+    owSend(OW_READ); // read straight bit
+    cB = owReadSlot(owEchoRead());//response from sensor
+    owSend(OW_READ); // read inverse bit
+    cmp_cB = owReadSlot(owEchoRead());//response from sensor
+    if (cB == cmp_cB && cB == 1)//compare two responses
+      return -1;//error - nobody responded
+    if (cB != cmp_cB) { //normal situation - received either 10 or 01
+      searchDirection = cB;//choose direction to move forward
+			} else {//collision - received 00, i.e., current bit in ROMs is different
+				if (ui32BitNumber == ow->lastDiscrepancy)//if current collision position equals previous one
+        searchDirection = 1;//choose direction to move forward
       else {
-        if (ui32BitNumber > ow->lastDiscrepancy) {//если мы зашили дальше
-          searchDirection = 0;//выбираем в каком направлении будем двигатся дальше 
+        if (ui32BitNumber > ow->lastDiscrepancy) {//if we went further
+          searchDirection = 0;//choose direction to move forward
         } else {
           searchDirection = (uint8_t) ((ow->lastROM[byteNum] >> ui32BitNumber % 8) & 0x01);
         }
         if (searchDirection == 0)
-          zeroFork = ui32BitNumber;//запоминаем развилку
+          zeroFork = ui32BitNumber;//remember fork
       }
     }
-    // сохраняем бит
+    // save bit
     if (searchDirection)
-      *(current) |= 1 << ui32BitNumber % 8;//выставляем бит в текущем байте байте
-    answerBit = (uint8_t) ((searchDirection == 0) ? WIRE_0 : WIRE_1);// решаем кого отключить
-    owSend(answerBit);//вырубаем "мешающие" устройсва
-    ui32BitNumber++;//ищем следующий бит
-		} while (ui32BitNumber < 64);//пока не найден весь ROM все биты
-  ow->lastDiscrepancy = zeroFork;//запоминаем развилку
+      *(current) |= 1 << ui32BitNumber % 8;//set bit in current byte
+    answerBit = (uint8_t) ((searchDirection == 0) ? WIRE_0 : WIRE_1);// decide which device to disconnect
+    owSend(answerBit);//disable conflicting devices
+    ui32BitNumber++;//search for next bit
+		} while (ui32BitNumber < 64);//until entire ROM found - all bits
+  ow->lastDiscrepancy = zeroFork;//remember fork
   for (; i < 7; i++)
-    ow->lastROM[i] = ROM[i];//запоминаем последний ROM
+    ow->lastROM[i] = ROM[i];//remember last ROM
   return ow->lastDiscrepancy > 0;
 }
 
-// Возвращает количество устройств на шине или код ошибки, если значение меньше 0
-int owSearchCmd(OneWire *ow) {
+// Returns number of devices on bus or error code if value is less than 0
+int owSearchCmd(OneWire *ow)
+{
   int device = 0, nextROM;
   owInit(ow);
   do {
-    nextROM = hasNextRom(ow, (uint8_t*)(&ow->ids[device])); //передаем указатель на структуру куда положить след.ROM
+    nextROM = hasNextRom(ow, (uint8_t*)(&ow->ids[device])); //pass pointer to structure for next ROM
     if (nextROM<0)
       return -1;
     device++;
-		} while (nextROM && device < MAXDEVICES_ON_THE_BUS);//ищем пока кто-то есть и этих кто-то не больше дефайна
-		return device;//возвращаем порядковый номер датчика (устройства) на шине
+		} while (nextROM && device < MAXDEVICES_ON_THE_BUS);//search while something exists and not more than define
+		return device;//return sensor (device) index on bus
 }
 
-void owSkipRomCmd(OneWire *ow) {//отправляет команду пропуска ROM после этого следующая команда будет
-  owResetCmd();                 //для всех устройств на шине
+//sends ROM skip command, after which the next command will apply
+void owSkipRomCmd(OneWire *ow)
+{
+  owResetCmd();                 //to all devices on bus
   owSendByte(ONEWIRE_SKIP_ROM);
 }
 
-void owMatchRomCmd(RomCode *rom) {//позволяет мастеру обращаться к конкретному  ведомому устройству
+//allows master to address specific slave device
+void owMatchRomCmd(RomCode *rom)
+{
 	int i = 0;
   owResetCmd();
-  owSendByte(ONEWIRE_MATCH_ROM);//обращаемся к конкретному устройсву
+  owSendByte(ONEWIRE_MATCH_ROM);//address specific device
   for (; i < 8; i++)
-	owSendByte(*(((uint8_t *) rom) + i));//"перебираемся по структуре как по массиву" первой звездочкой получаем i тый байт из структуры
+	owSendByte(*(((uint8_t *) rom) + i));//traverse structure as array, first dereference gets i-th byte from structure
 }
 
-void owConvertTemperatureCmd(OneWire *ow, RomCode *rom) {
-  owMatchRomCmd(rom);//позволяет мастеру обращаться к конкретному  ведомому устройству
-  owSendByte(ONEWIRE_CONVERT_TEMPERATURE);//говорим датчику пора бы преобразовать температуру
+void owConvertTemperatureCmd(OneWire *ow, RomCode *rom)
+{
+  owMatchRomCmd(rom);//allows master to address specific slave device
+  owSendByte(ONEWIRE_CONVERT_TEMPERATURE);//tell sensor to convert temperature
 }
 
 /**
@@ -348,39 +368,41 @@ void owConvertTemperatureCmd(OneWire *ow, RomCode *rom) {
  * @param data -- buffer for data
  * @return data
  */
-uint8_t *owReadScratchpadCmd(OneWire *ow, RomCode *rom, uint8_t *data) {//читаем память датчика
+uint8_t *owReadScratchpadCmd(OneWire *ow, RomCode *rom, uint8_t *data) //read sensor memory
+{
   uint16_t b = 0, p;
   switch (rom->family) {
     case DS18B20:
     case DS18S20:
-      p = 72;  //9*8 =72 == равняется 9 байт данных
+      p = 72;  //9*8 = 72, equals 9 bytes of data
       break;
     default:
       return data;
 
   }
   owMatchRomCmd(rom);
-  owSendByte(ONEWIRE_READ_SCRATCHPAD);//отправляем команду на чтение памяти
-  while (b < p) {// пока мы не обработали 9 байт 
-    uint8_t pos = (uint8_t) ((p - 8) / 8 - (b / 8)); //позиция обрабатываемого байта
+  owSendByte(ONEWIRE_READ_SCRATCHPAD);//send command to read memory
+  while (b < p) {// while we haven't processed 9 bytes
+    uint8_t pos = (uint8_t) ((p - 8) / 8 - (b / 8)); //position of byte being processed
     uint8_t bt; 
 		owSend(OW_READ);
-    bt = owReadSlot(owEchoRead());//читаем данные 
+    bt = owReadSlot(owEchoRead());//read data
     if (bt == 1)
-      data[pos] |= 1 << b % 8;//выставляем бит в нужной позиции
+      data[pos] |= 1 << b % 8;//set bit at required position
     else
-      data[pos] &= ~(1 << b % 8);//сбрасываем бит в нужной позиции
-    b++;//следующий бит
+      data[pos] &= ~(1 << b % 8);//clear bit at required position
+    b++;//next bit
   }
   return data;
 }
 
-void owWriteDS18B20Scratchpad(OneWire *ow, RomCode *rom, uint8_t th, uint8_t tl, uint8_t conf) {
+void owWriteDS18B20Scratchpad(OneWire *ow, RomCode *rom, uint8_t th, uint8_t tl, uint8_t conf)
+{
   if (rom->family != DS18B20)
     return;
-  owMatchRomCmd(rom);//обращаемся к конкретному устройству
-  owSendByte(ONEWIRE_WRITE_SCRATCHPAD);//будем записывать в память
-  owSendByte(th);//пороги для температур
+  owMatchRomCmd(rom);//address specific device
+  owSendByte(ONEWIRE_WRITE_SCRATCHPAD);//we will write to memory
+  owSendByte(th);//temperature thresholds
   owSendByte(tl);
   owSendByte(conf);
 }
@@ -394,7 +416,8 @@ void owWriteDS18B20Scratchpad(OneWire *ow, RomCode *rom, uint8_t th, uint8_t tl,
  * @param reSense -- do you want resense temp for next time?
  * @return struct with data
  */
-Temperature readTemperature(OneWire *ow, RomCode *rom, uint8_t reSense) {
+Temperature readTemperature(OneWire *ow, RomCode *rom, uint8_t reSense)
+{
 	Scratchpad_DS18B20 *sp;
 	Scratchpad_DS18S20 *spP;
   Temperature t;
@@ -405,12 +428,12 @@ Temperature readTemperature(OneWire *ow, RomCode *rom, uint8_t reSense) {
   spP = (Scratchpad_DS18S20 *) &pad;
   switch (rom->family) {
     case DS18B20:
-      owReadScratchpadCmd(ow, rom, pad);//читаем память  для DS18B20
-      t.inCelsus = (int8_t) (sp->temp_msb << 4) | (sp->temp_lsb >> 4);//целая часть
-      t.frac = (uint8_t) ((((sp->temp_lsb & 0x0F)) * 10) >> 4);//дробная
+      owReadScratchpadCmd(ow, rom, pad);//read memory for DS18B20
+      t.inCelsus = (int8_t) (sp->temp_msb << 4) | (sp->temp_lsb >> 4);//integer part
+      t.frac = (uint8_t) ((((sp->temp_lsb & 0x0F)) * 10) >> 4);//fractional part
       break;
     case DS18S20:
-      owReadScratchpadCmd(ow, rom, pad);//читаем память  для DS18S20
+      owReadScratchpadCmd(ow, rom, pad);//read memory for DS18S20
       t.inCelsus = spP->temp_lsb >> 1;
       t.frac = (uint8_t) 5 * (spP->temp_lsb & 0x01);
       break;
@@ -418,25 +441,28 @@ Temperature readTemperature(OneWire *ow, RomCode *rom, uint8_t reSense) {
       return t;
   }
   if (reSense) {
-    owConvertTemperatureCmd(ow, rom);//можно сразу после как забрали данные отдаем датчику команду на преобразования температуры
+    owConvertTemperatureCmd(ow, rom);//can immediately after reading data give sensor command to convert temperature
   }
   return t;
 }
 
-void owCopyScratchpadCmd(OneWire *ow, RomCode *rom) {
+void owCopyScratchpadCmd(OneWire *ow, RomCode *rom)
+{
   owMatchRomCmd(rom);
   owSendByte(ONEWIRE_COPY_SCRATCHPAD);
 }
 
-void owRecallE2Cmd(OneWire *ow, RomCode *rom) {
+void owRecallE2Cmd(OneWire *ow, RomCode *rom)
+{
   owMatchRomCmd(rom);
   owSendByte(ONEWIRE_RECALL_E2);
 }
 
 
-int get_ROMid (void){
+int get_ROMid (void)
+{
 	if (owResetCmd() != ONEWIRE_NOBODY) {    // is anybody on the bus?
-		devices = owSearchCmd(&ow);        // получить ROMid в�?ех у�?трой�?т на шине или вернуть код ошибки
+		devices = owSearchCmd(&ow);        // get ROM IDs of all devices on bus or return error code
 		// if (devices <= 0) {
 		// 	while (1){
 		// 		// pDelay = 1000000;
@@ -446,7 +472,7 @@ int get_ROMid (void){
 
 		// }
 		// i = 0;
-		// for (; i < devices; i++) {//выводим в кон�?оль в�?е найденные ROM
+		// for (; i < devices; i++) {//output all found ROMs to console
 		// 	RomCode *r = &ow.ids[i];
 		// 	uint8_t crc = owCRC8(r);
 		// 	crcOK = (crc == r->crc)?"CRC OK":"CRC ERROR!";
@@ -474,9 +500,9 @@ void get_Temperature (void)
 {
 	uint8_t i=0;
 	for (; i < devices; i++) {
-		switch ((ow.ids[i]).family) {//че у нас за датчик
+		switch ((ow.ids[i]).family) {//what sensor do we have
 		case DS18B20:
-			// будет возвращено значение предыдущего измерения!
+			// will return value of previous measurement!
 			t = readTemperature(&ow, &ow.ids[i], 1);
 			ds18b20_temp[i] = (float)(t.inCelsus*10+t.frac)/10.0;
 			break;
