@@ -5,6 +5,7 @@
 #include "bms_svc_thermistor.h"
 #include "acu_data.h"
 #include "acu_lv_config.h"
+#include <stdlib.h>
 // void bms_svc_admbs_toggle_mux(uint16_t gpio);
 
 /* Private Functions */
@@ -99,6 +100,31 @@ void bms_svc_acquire_thermistor_temps(uint8_t mux_state)
 
     }
     temp_stats.temp_avg_c = therm_sum / (float)count;
+}
+
+void vw_temps()
+{
+    float vw_temp = 25f;
+
+    temp_stats.temp_min_c = vw_temp;
+    temp_stats.temp_max_c = vw_temp;
+
+    for(uint8_t slave_idx = 0U; slave_idx < ADBMS_NUM_SLAVES; slave_idx++)
+    {
+        for (uint8_t therm_idx = 0U; therm_idx < ADBMS_THERMS_PER_IC; therm_idx++)
+        {
+            processed_temps[slave_idx][therm_idx] = vw_temp + ((float)rand()/(float)(RAND_MAX)) * 0.25f - 0.125f; // Add random noise of +/- 0.5C
+            if (processed_temps[slave_idx][therm_idx] < temp_stats.temp_min_c)
+            {
+                temp_stats.temp_min_c = processed_temps[slave_idx][therm_idx];
+            }
+            if (processed_temps[slave_idx][therm_idx] > temp_stats.temp_max_c)
+            {
+                temp_stats.temp_max_c = processed_temps[slave_idx][therm_idx];
+            }
+        }
+    }
+
 }
 
 bool bms_svc_check_temps()

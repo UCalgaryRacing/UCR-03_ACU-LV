@@ -7,5 +7,6 @@
 void bms_svc_acquire_thermistor_temps(uint8_t mux_state);
 void bms_svc_admbs_toggle_mux(adbms_gpo_pin_t pin);
 bool bms_svc_check_temps();
+void vw_temps();
 
 #endif

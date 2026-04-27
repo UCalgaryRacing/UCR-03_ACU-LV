@@ -162,7 +162,7 @@ void fast_task_loop()
     // bms_svc_admbs_toggle_mux(ADBMS_GPO_PIN_1);
     // bms_svc_acquire_thermistor_temps(1U);
     // bms_svc_admbs_toggle_mux(ADBMS_GPO_PIN_1);
-    get_Temperature(); // russian get temperature code from victor, if it works then we can start VWing
+    vw_temps();
 
     bms_svc_check_faults();
 
