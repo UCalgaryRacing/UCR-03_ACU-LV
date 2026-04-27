@@ -11,6 +11,7 @@
 #ifndef STM32_DS18X20_ONEWIRE_H
 #define STM32_DS18X20_ONEWIRE_H
 #include <stdint.h>
+#include <string.h>
 #define ONEWIRE_NOBODY 0xF0 //ROM Search Command
 #define ONEWIRE_SEARCH 0xF0 //ROM search command
 #define ONEWIRE_SKIP_ROM 0xCC  //ROM skip command

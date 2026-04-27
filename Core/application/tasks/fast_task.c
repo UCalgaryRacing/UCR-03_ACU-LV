@@ -154,14 +154,14 @@ void fast_task_loop()
 //    }
 
     //6830 cell voltage acquisition
-    // voltage_acquisition_sample();
+    //voltage_acquisition_sample();
     vw_voltages();
 
     // adbms 6830 thermistor
-    // bms_svc_acquire_thermistor_temps(0U);
-    // bms_svc_admbs_toggle_mux(ADBMS_GPO_PIN_1);
-    // bms_svc_acquire_thermistor_temps(1U);
-    // bms_svc_admbs_toggle_mux(ADBMS_GPO_PIN_1);
+    //bms_svc_acquire_thermistor_temps(0U);
+    //bms_svc_admbs_toggle_mux(ADBMS_GPO_PIN_1);
+    //bms_svc_acquire_thermistor_temps(1U);
+    //bms_svc_admbs_toggle_mux(ADBMS_GPO_PIN_1);
     vw_temps();
 
     bms_svc_check_faults();

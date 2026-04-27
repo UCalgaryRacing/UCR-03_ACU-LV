@@ -21,7 +21,7 @@ volatile uint16_t rc_buffer[5];
 #define ow_uart DS18B20_UART_HANDLE
 #define OW_USART UART4
 
-#define NO_ENERGY_METER
+//#define NO_ENERGY_METER
 
 /*********************************************************************************************/
 volatile float ds18b20_temp[MAXDEVICES_ON_THE_BUS];
@@ -43,20 +43,17 @@ void aculv_drv_ds18b20_init()
     //enable power for ds18b20
     //Two configurations available depeding if we have energy meter or not
     #ifdef NO_ENERGY_METER
-    // this is according to ryland notes in LV altium sheet
         // if no energy meter, VDD enable pin must be high
         HAL_GPIO_WritePin(DS18B20_VDD_EN_PORT, DS18B20_VDD_EN_PIN, GPIO_PIN_SET);
 
-        //if no energy meter, weak pullup must also be high
-        // might not work cause pin is open drain
+        //if no energy meter, weak pullup pin must be low (to enable pull-up)
         HAL_GPIO_WritePin(DS18B20_WEAK_PULL_UP_PORT, DS18B20_WEAK_PULL_UP_PIN, GPIO_PIN_RESET);
     #else
     // if energy meter present, VDD enable pin must be low
         HAL_GPIO_WritePin(DS18B20_VDD_EN_PORT, DS18B20_VDD_EN_PIN, GPIO_PIN_RESET);
 
-        //if energy meter, weak pullup must be low
-        // might not work cause pin is open drain
-        HAL_GPIO_WritePin(DS18B20_WEAK_PULL_UP_PORT, DS18B20_WEAK_PULL_UP_PIN, GPIO_PIN_RESET);
+        //if energy meter, weak pullup pin must be high (to disable pull-up)
+        HAL_GPIO_WritePin(DS18B20_WEAK_PULL_UP_PORT, DS18B20_WEAK_PULL_UP_PIN, GPIO_PIN_SET);
     #endif
 
     get_ROMid();
@@ -480,12 +477,12 @@ int get_ROMid (void)
 				crcOK = (crc == r->crc)?"CRC OK":"CRC ERROR!";
 				devInfo.device = i;
 
-				sprintf(devInfo.info, "SN: %02X/%02X%02X%02X%02X%02X%02X/%02X", r->family, r->code[5], r->code[4], r->code[3],
-						r->code[2], r->code[1], r->code[0], r->crc);
+				//sprintf(devInfo.info, "SN: %02X/%02X%02X%02X%02X%02X%02X/%02X", r->family, r->code[5], r->code[4], r->code[3],
+				//		r->code[2], r->code[1], r->code[0], r->crc);
 
 				if (crc != r->crc) {
 					devInfo.device = i;
-					sprintf (devInfo.info,"\n can't read cause CRC error");
+					//sprintf (devInfo.info,"\n can't read cause CRC error");
 				}
 			}
 

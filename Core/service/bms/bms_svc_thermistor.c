@@ -104,7 +104,7 @@ void bms_svc_acquire_thermistor_temps(uint8_t mux_state)
 
 void vw_temps()
 {
-    float vw_temp = 25f;
+    float vw_temp = 23.0f;
 
     temp_stats.temp_min_c = vw_temp;
     temp_stats.temp_max_c = vw_temp;
