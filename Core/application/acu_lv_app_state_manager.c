@@ -139,6 +139,11 @@ static acu_lv_app_state_t handle_idle_state()
 
     // tssi enabled
 
+    if(acu_data_get_bms_fault_status())
+    {
+        return ACU_LV_APP_STATE_FAULT;
+    }
+
     // transition to precharge once sdc reserve is 9V
     // fault transition if imd fault, cell voltage or temp out of range
     return ACU_LV_APP_STATE_IDLE;
@@ -165,6 +170,11 @@ static acu_lv_app_state_t handle_precharge_state()
     // monitor sdc
     // tssi enabled
 
+    if(acu_data_get_bms_fault_status())
+    {
+        return ACU_LV_APP_STATE_FAULT;
+    }
+
     //transition to active when ts and accu reach 90%
     //transition to fault if watchdog timeout
     return ACU_LV_APP_STATE_PRECHARGE;
@@ -188,6 +198,11 @@ static acu_lv_app_state_t handle_active_state()
     //     return ACU_LV_APP_STATE_IDLE;
     // }
 
+    if(acu_data_get_bms_fault_status())
+    {
+        return ACU_LV_APP_STATE_FAULT;
+    }
+
     //transition to charge if charging message recieved
     //fault transition if imd fault, cell voltage or temp out of range
     return ACU_LV_APP_STATE_ACTIVE;
@@ -199,6 +214,11 @@ static acu_lv_app_state_t handle_fault_state()
     // monitor temps and voltage
     // monitor imd
     // disable logging
+
+    if(rco_data_get_reset_button() == 1)
+    {
+        return ACU_LV_APP_STATE_IDLE;
+    }
 
     // check for imd reset button to reset the latches and exit fault state
     // tssi enabled/ flash red
@@ -213,6 +233,11 @@ static acu_lv_app_state_t handle_charging_state()
     // imd monitoring
     // current measurement disabled
 
+    if(acu_data_get_bms_fault_status())
+    {
+        return ACU_LV_APP_STATE_FAULT;
+    }
+
     //transition to fault if voltage or temp out of range, charger comm lost,charger fault
     // transition to balance if balance command rx or any cell reaches max voltage
     return ACU_LV_APP_STATE_FAULT;
@@ -225,6 +250,11 @@ static acu_lv_app_state_t handle_balencing_state()
     //disabled ts current monitor
     // imd monitor
     //charging disabled
+
+    if(acu_data_get_bms_fault_status())
+    {
+        return ACU_LV_APP_STATE_FAULT;
+    }
 
     //transition to fault if imd fault, voltage or temp out of range, charger fault
     //transition to charge once cells are within 10mV
