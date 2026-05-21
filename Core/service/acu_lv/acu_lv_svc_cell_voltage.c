@@ -23,7 +23,7 @@ static float get_highest_cell_voltage()
 
 bool acu_lv_svc_check_cell_voltage()
 {
-    if((get_highest_cell_voltage() > ACU_LV_CELL_MAXIMUM_VOLTAGE) || (get_lowest_cell_voltage() < ACU_LV_CELL_MINIMUM_VOLTAGE))
+    if((get_highest_cell_voltage() > CELL_MAX_VOLTAGE) || (get_lowest_cell_voltage() < CELL_MIN_VOLTAGE))
     {
         return ERROR_GENERAL;
     }

@@ -1,6 +1,7 @@
 #include "acu_data.h"
 #include <string.h>
 #include "acu_lv_config.h"
+#include "bms_config.h"
 
 static bool g_initialized;
 
@@ -31,8 +32,8 @@ status_t acu_data_init(void)
 
 bms_voltage_stats_t voltage_stats = 
 {
-    .cell_min_v     = ACU_LV_CELL_MAXIMUM_VOLTAGE,  
-    .cell_max_v     = ACU_LV_CELL_MINIMUM_VOLTAGE,   
+    .cell_min_v     = CELL_MAX_VOLTAGE,  
+    .cell_max_v     = CELL_MIN_VOLTAGE,   
     .cell_avg_v     = 3.6f,
     .pack_v         = 0.0f,
     .cell_min_slave = 0U,
@@ -43,8 +44,8 @@ bms_voltage_stats_t voltage_stats =
 
 bms_temp_stats_t temp_stats =
 {
-    .temp_min_c = ACULV_CELL_MAX_TEMPERATURE, 
-    .temp_max_c = ACULV_CELL_MAX_TEMPERATURE,    
+    .temp_min_c = CELL_MAX_TEMPERATURE, 
+    .temp_max_c = CELL_MAX_TEMPERATURE,    
     .temp_avg_c = ADBMS_AVERGAE_THERM_VOLTAGE,
     .temp_min_slave = 0,
     .temp_min_idx = 0,
