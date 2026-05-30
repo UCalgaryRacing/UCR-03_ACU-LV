@@ -1,18 +1,44 @@
-/*
- * rco_data.h
- *
- *  Created on: Apr 21, 2026
- *      Author: clayd
- */
+#ifndef RCO_DATA_H_
+#define RCO_DATA_H_
 
-#ifndef SHARED_DATA_RCO_RCO_DATA_H_
-#define SHARED_DATA_RCO_RCO_DATA_H_
-
-#include <stdbool.h>
 #include <stdint.h>
+#include <stdbool.h>
+#include "com_typ_common.h"
 
-void rco_data_set_reset_button(uint8_t status);
-uint8_t rco_data_get_reset_button();
+/*============================================================================*/
+/* Initialization                                                             */
+/*============================================================================*/
+
+status_t rco_data_init(void);
+
+/*============================================================================*/
+/* RCO Data Struct                                                            */
+/*============================================================================*/
+
+typedef struct
+{
+    bool tssi_faulted;
+    bool brake_light_on;
+    bool drs_active;
+    bool reset_pressed;
+} rco_data_t;
+
+/*============================================================================*/
+/* Setters                                                                    */
+/*============================================================================*/
+
+void rco_data_set_reset_pressed(bool reset_pressed);
+void rco_data_set_brake_light(bool brake_light_on);
+void rco_data_set_tssi_faulted(bool tssi_faulted);
+status_t rco_data_set_data(rco_data_t *rco_data);
 
 
-#endif /* SHARED_DATA_RCO_RCO_DATA_H_ */
+/*============================================================================*/
+/* Getters                                                                    */
+/*============================================================================*/
+
+status_t rco_data_get_data(rco_data_t *rco_data);
+bool rco_data_get_reset_pressed(void);
+
+
+#endif /* RCO_DATA_H_ */

@@ -27,4 +27,4 @@ status_t com_svc_can_register(uint32_t id, can_rx_handler_t handler);
 
 
 
-#endif
+#endif /*CAN_SVC_CAN_H_*/

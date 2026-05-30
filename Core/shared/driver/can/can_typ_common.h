@@ -20,4 +20,4 @@ typedef struct
 
 } can_msg_t;
 
-#endif
+#endif /*CAN_TYPE_COMMON_H*/

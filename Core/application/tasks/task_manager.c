@@ -1,26 +1,27 @@
-/*
- * task_manager.c
- *
- *  Created on: Apr 7, 2026
- *      Author: clayd
- */
-
-
-#include "acu_lv_app_state_manager.h"
+#include "task_manager.h"
+#include "acu_app_state_manager.h"
 #include "cmsis_os2.h"
 
-const static uint32_t period = 10;
-static uint32_t next_wake;
+#include "acu_data.h"
+#include "acu_svc_logging.h"
 
-void task_manager_init()
+static const uint32_t period = 10;
+static uint32_t nextWakeTime;
+
+void task_manager_init(void)
 {
-    next_wake = osKernelGetTickCount();
-    //acu_lv_app_state_machine_init();
+    nextWakeTime = osKernelGetTickCount();
+    acu_app_state_machine_init();
 }
+
 void task_manager_loop()
 {
-    next_wake += period;
-    osDelayUntil(next_wake);
+    nextWakeTime += period;
+    osDelayUntil(nextWakeTime);
 
-    acu_lv_app_state_machine_step();
+    acu_app_state_machine_step();
+
+    // update state
+    acu_app_state_machine_update_state();
+    acu_svc_can_tx_ts_state_update();
 }

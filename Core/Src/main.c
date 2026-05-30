@@ -22,13 +22,17 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "fast_task.h"
-#include "medium_task.h"
-#include "slow_task.h"
+
+#include "task_fast.h"
+#include "task_medium.h"
+#include "task_slow.h"
 #include "task_manager.h"
-#include "task_can_tx.h"
+
 #include "task_can_rx.h"
+#include "task_can_tx.h"
+
 #include "can_typ_common.h"
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -115,9 +119,6 @@ const osThreadAttr_t CanRx_attributes = {
   .priority = (osPriority_t) osPriorityBelowNormal1,
 };
 /* USER CODE BEGIN PV */
-
-extern uint8_t precharge_time;
-
 
 osMessageQueueId_t Can1TxQueueHandle;
 const osMessageQueueAttr_t Can1TxQueue_attributes = {
@@ -1175,11 +1176,11 @@ void startTaskManager(void *argument)
 void StartFastTask(void *argument)
 {
   /* USER CODE BEGIN StartFastTask */
-  fast_task_init();
+  task_fast_init();
   /* Infinite loop */
   for(;;)
   {
-    fast_task_loop();
+    task_fast_loop();
   }
   /* USER CODE END StartFastTask */
 }
@@ -1194,11 +1195,11 @@ void StartFastTask(void *argument)
 void StartMediumTask(void *argument)
 {
   /* USER CODE BEGIN StartMediumTask */
-  medium_task_init();
+  task_medium_init();
   /* Infinite loop */
   for(;;)
   {
-    medium_task_loop();
+    task_medium_loop();
   }
   /* USER CODE END StartMediumTask */
 }
@@ -1213,11 +1214,11 @@ void StartMediumTask(void *argument)
 void StartSlowTask(void *argument)
 {
   /* USER CODE BEGIN StartSlowTask */
-  slow_task_init();
+  task_slow_init();
   /* Infinite loop */
   for(;;)
   {
-    slow_task_loop();
+    task_slow_loop();
   }
   /* USER CODE END StartSlowTask */
 }
@@ -1309,7 +1310,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
   /* USER CODE BEGIN Callback 1 */
   if (htim->Instance == TIM3)
     {
-      precharge_time = 1;
+	  // precharge_time = 1; // TODO: check if we need this? not using timer
     }
   /* USER CODE END Callback 1 */
 }
