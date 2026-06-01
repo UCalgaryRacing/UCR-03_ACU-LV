@@ -85,6 +85,16 @@ void acu_data_set_acu_ts_voltage(float ts_voltage)
     g_acu_data.ts_voltage = ts_voltage;
 }
 
+void acu_data_set_acu_bms_stats(float soc_percent,float soe_percent, float energy_wh, float charge_ah){
+
+    g_acu_data.soc = soc_percent;
+    g_acu_data.soe = soe_percent;
+    g_acu_data.energy_wh = energy_wh;
+    g_acu_data.capacity_ah = charge_ah;
+
+
+}
+
 /*============================================================================*/
 /* Accumulator Data Getters                                                   */
 /*============================================================================*/
@@ -113,6 +123,16 @@ float acu_data_get_acu_battery_power(void)
 float acu_data_get_acu_ts_voltage(void)
 {
     return g_acu_data.ts_voltage;
+}
+
+float acu_data_get_acu_charge_Ah(void)
+{
+    return g_acu_data.capacity_ah;
+}
+
+float acu_data_get_acu_energy_Wh(void)
+{
+    return g_acu_data.energy_wh;
 }
 
 bool acu_data_get_acu_ts_active(void)

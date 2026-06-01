@@ -9,6 +9,7 @@
 #include "acuhv_svc_batt_current.h"
 #include "acuhv_svc_ts.h"
 #include "acuhv_svc_air.h"
+#include "acu_svc_soh.h"
 
 #include "aculv_svc_sdc.h"
 
@@ -28,6 +29,7 @@ void task_fast_init(void)
     mcu_svc_dfsdm_start(TS_VOLTAGE);
     mcu_svc_dfsdm_start(BATT_VOLTAGE);
     mcu_svc_dfsdm_start(BATT_CURRENT);
+    acu_svc_init_bms_stats(); 
 
     //---------------- MCU ADC ----------------//
     mcu_svc_analog_init();
@@ -54,6 +56,7 @@ void task_fast_loop(void){
 
     // update imd 
     // update battery power
+    acu_svc_update_bms_stats();
 
     //---------------- SDC ----------------//
     aculv_svc_update_sdc_voltages();

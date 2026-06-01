@@ -17,6 +17,10 @@ typedef struct
     float battery_voltage;
     float battery_power;
     float ts_voltage;
+    float soc;
+    float soe;
+    float energy_wh;
+    float capacity_ah;
     bool ts_active;
 } acu_data_t;
 
@@ -27,6 +31,8 @@ typedef struct
 
     bool precharge_timeout;
 } acu_fault_t;
+
+
 
 /*============================================================================*/
 /* Initialization                                                             */
@@ -47,6 +53,7 @@ void acu_data_set_acu_battery_power(float power);
 void acu_data_set_acu_battery_voltage(float voltage);
 void acu_data_set_acu_ts_active(bool ts_active);
 void acu_data_set_acu_ts_voltage(float ts_voltage);
+void acu_data_set_acu_bms_stats(float soc_percent,float soe_percent, float energy_wh, float charge_ah);
 
 void acu_data_set_bms_fault_status(bool fault_status);
 void acu_data_set_imd_fault_status(bool fault_status);
@@ -64,7 +71,10 @@ float acu_data_get_acu_battery_voltage(void);
 float acu_data_get_acu_battery_current(void);
 float acu_data_get_acu_battery_power(void);
 float acu_data_get_acu_ts_voltage(void);
+float acu_data_get_acu_charge_Ah(void);
+float acu_data_get_acu_energy_Wh(void);
 bool acu_data_get_acu_ts_active(void);
+
 
 bool acu_data_get_bms_fault_status(void);
 bool acu_data_get_imd_fault_status(void);
