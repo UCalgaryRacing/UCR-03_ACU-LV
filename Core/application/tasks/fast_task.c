@@ -85,7 +85,7 @@ void fast_task_init()
     // initialize sdc
     acu_lv_svc_sdc_init();
 
-    bms_manager_init();
+    //bms_manager_init();
 
     acu_lv_drv_turn_on_led(&blue_led);
 
@@ -93,7 +93,7 @@ void fast_task_init()
 
     // uses russian init code, victor says it works but that was on G4
     // some parts were changes to work for H7 and uses UART instead of USART, hopefully it works
-    aculv_drv_ds18b20_init();
+    //aculv_drv_ds18b20_init();
 
     osDelay(5000);
 }
@@ -102,9 +102,9 @@ void fast_task_init()
 void fast_task_loop()
 {
      next_wake += period;
-     osDelayUntil(next_wake);
+
     
-    g_wake_pin_state = HAL_GPIO_ReadPin(ADBMS_1_WAKE_PORT, ADBMS_1_WAKE_PIN);
+    //g_wake_pin_state = HAL_GPIO_ReadPin(ADBMS_1_WAKE_PORT, ADBMS_1_WAKE_PIN);
     // update the values for tractive and accumulator voltage
     acu_lv_svc_update_ts_voltage();
     acu_lv_svc_update_accu_voltage();
@@ -116,59 +116,17 @@ void fast_task_loop()
     acu_lv_drv_update_sdc_reserve();
 
 
-//     while(1)
-//     {
-//
-//         acu_lv_drv_toggle_led(&red_led);
-//         acu_lv_svc_close_sdc();
-//         acu_lv_drv_close_air_neg();
-//         for (i = 0; i < 5000000; i++)
-//         {
-//        	    acu_lv_svc_update_ts_voltage();
-//        	    acu_lv_svc_update_accu_voltage();
-//         }
-//         osDelay(5000);
-//         acu_lv_drv_toggle_led(&red_led);
-//         acu_lv_drv_close_air_pos();
-//         acu_lv_drv_toggle_led(&red_led);
-//         for (i = 0; i < 5000000; i++)
-//         {
-//        	    acu_lv_svc_update_ts_voltage();
-//        	    acu_lv_svc_update_accu_voltage();
-//         }
-//         osDelay(50000);
-//         acu_lv_svc_open_sdc();
-//         osDelay(20000);
-//     }
-
-
-//    while(1)
-//    {
-//        HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
-//        acu_lv_drv_toggle_led(&red_led);
-//        HAL_Delay(2000);
-//        HAL_GPIO_WritePin(GPIOH, GPIO_PIN_4, GPIO_PIN_SET);
-//        HAL_Delay(2000);
-//        HAL_GPIO_WritePin(GPIOH, GPIO_PIN_4, GPIO_PIN_RESET);
-//        HAL_Delay(2000);
-//    }
 
     //6830 cell voltage acquisition
-    //voltage_acquisition_sample();
     vw_voltages();
 
-    // adbms 6830 thermistor
-    //bms_svc_acquire_thermistor_temps(0U);
-    //bms_svc_admbs_toggle_mux(ADBMS_GPO_PIN_1);
-    //bms_svc_acquire_thermistor_temps(1U);
-    //bms_svc_admbs_toggle_mux(ADBMS_GPO_PIN_1);
     vw_temps();
 
-    bms_svc_check_faults();
+//    bms_svc_check_faults();
 
     bms_svc_can_tx_acu_fault_data();
 
-    bms_svc_can_tx_acu_data();
+//    bms_svc_can_tx_acu_data();
 
     // code to reset imd and ams latch based on message from rear controller (rco), shouldn't need because it is handled in hardware
     // if(rco_data_get_reset_button() == 1)
@@ -177,5 +135,5 @@ void fast_task_loop()
     //     acu_lv_svc_reset_imd_latch();
     // }
 
-    acu_lv_drv_toggle_led(&blue_led);    
+    osDelayUntil(next_wake);
 }

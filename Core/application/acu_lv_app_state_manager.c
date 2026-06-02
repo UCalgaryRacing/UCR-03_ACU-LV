@@ -272,14 +272,16 @@ static void state_entry(acu_lv_app_state_t state)
     case ACU_LV_APP_STATE_PRECHARGE:
         //close negative air when leaving idle
         acu_lv_drv_close_air_neg();
-        acu_lv_svc_start_precharge_timer();
+        osDelay(3000);
+        //acu_lv_svc_start_precharge_timer();
         break;
     case ACU_LV_APP_STATE_ACTIVE:
+    	acu_lv_drv_close_air_pos();
         acu_data_set_aculv_ts_active(true);
         break;
     case ACU_LV_APP_STATE_FAULT:
         // check what faulted and send tssi red signal
-        acu_lv_drv_open_air();
+        //acu_lv_drv_open_air();
         break;
     case ACU_LV_APP_STATE_CHARGING:
         /* code */
@@ -307,8 +309,7 @@ static void state_exit(acu_lv_app_state_t state)
         break;
     case ACU_LV_APP_STATE_PRECHARGE:
         //close positive air when leaving precharge
-        acu_lv_svc_stop_precharge_timer();
-        acu_lv_drv_close_air_pos();
+        //acu_lv_svc_stop_precharge_timer();
         break;
     case ACU_LV_APP_STATE_ACTIVE:
         acu_data_set_aculv_ts_active(false);
