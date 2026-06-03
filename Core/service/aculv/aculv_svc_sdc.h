@@ -7,9 +7,9 @@
 // initialization
 status_t aculv_svc_sdc_init();
 
-// imd/bms status
+// bms status
 void aculv_svc_set_bms_ok(bool enable);
-void aculv_svc_set_imd_ok(bool enable);
+void aculv_svc_update_sdc_bms_ok();
 
 // update latch based on reset button
 void aculv_svc_update_sdc_latches();

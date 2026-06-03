@@ -1,4 +1,5 @@
 #include "sdc_data.h"
+#include <string.h>
 
 static sdc_data_t g_sdc_data;
 static bool g_initialized;

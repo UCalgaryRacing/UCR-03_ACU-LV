@@ -4,6 +4,7 @@
 
 #include "sdc_data.h"
 #include "rco_data.h"
+#include "acu_data.h"
 
 #include "cmsis_os2.h"
 
@@ -52,7 +53,6 @@ status_t aculv_svc_sdc_init()
     aculv_svc_set_bms_ok(true);
     aculv_svc_set_bms_latch_en(false);
 
-    aculv_svc_set_imd_ok(true);
     aculv_svc_set_imd_latch_en(false);
 
     g_initialized = true;
@@ -61,16 +61,25 @@ status_t aculv_svc_sdc_init()
 // reset button (hardware toggle latches) on startup
 
 /*============================================================================*/
-/* IMD/BMS Status                                                              */
+/* BMS Status                                                              */
 /*============================================================================*/
 void aculv_svc_set_bms_ok(bool enable)
 {
     aculv_drv_set_bms_ok(enable);
 }
 
-void aculv_svc_set_imd_ok(bool enable)
+
+void aculv_svc_update_sdc_bms_ok()
 {
-    aculv_drv_set_imd_latch_en(enable);
+    if (acu_data_get_bms_fault_status())
+    {
+        aculv_svc_set_bms_ok(false);
+    }
+
+    else
+    {
+        aculv_svc_set_bms_ok(true);
+    }
 }
 
 /*============================================================================*/
@@ -81,14 +90,14 @@ void aculv_svc_update_sdc_latches()
 {
     if (rco_data_get_reset_pressed())
     {
-    aculv_svc_set_imd_latch_en(true);
-    aculv_svc_set_bms_latch_en(true);
+        aculv_svc_set_imd_latch_en(true);
+        aculv_svc_set_bms_latch_en(true);
     }
 
     else
     {
-    aculv_svc_set_imd_latch_en(false);
-    aculv_svc_set_bms_latch_en(false);
+        aculv_svc_set_imd_latch_en(false);
+        aculv_svc_set_bms_latch_en(false);
     }
 }
 

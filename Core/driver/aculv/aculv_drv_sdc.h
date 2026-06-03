@@ -5,7 +5,6 @@
 
 // IMD
 void aculv_drv_set_imd_latch_en(bool enable);
-void aculv_drv_set_imd_ok(bool enable);
 
 // BMS
 void aculv_drv_set_bms_latch_en(bool enable);

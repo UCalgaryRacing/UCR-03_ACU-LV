@@ -22,8 +22,8 @@ void task_can_tx_init()
 
 void task_can_tx_loop()
 {
-    nextWakeTime += period;
-    osDelayUntil(nextWakeTime);
+    //nextWakeTime += period;
+    //osDelayUntil(nextWakeTime);
 
     can_msg_t msg;
 

@@ -1,18 +1,12 @@
-
-
 #include "acu_svc_soh.h"
 #include "acuhv_svc_batt_voltage.h"
 #include "acu_data.h"
 
+#include "stm32h7xx_hal.h"
 
-#define ACU_CELL_CAPACITY_AH                        3.0f
-#define ACU_PACK_SERIES_CELL_COUNT                  (26.0f * 5.0f) // 5 segments of 26 series cells each.
-#define ACU_PACK_PARALLEL_CELL_COUNT                5.0f
-#define ACU_PACK_VOLTAGE_FULLY_CHARGED_V            4.2f*(ACU_PACK_SERIES_CELL_COUNT)
-#define ACU_PACK_VOLTAGE_EMPTY_V                    2.5f*(ACU_PACK_SERIES_CELL_COUNT)
-#define ACU_PACK_CAPACITY_AH                        (ACU_CELL_CAPACITY_AH * ACU_PACK_PARALLEL_CELL_COUNT)
-#define ACU_PACK_ENERGY_WH                          (ACU_PACK_CAPACITY_AH * ACU_PACK_VOLTAGE_FULLY_CHARGED_V)
-
+/*============================================================================*/
+/* Private Variables                                                          */
+/*============================================================================*/
 static float initial_soc = 100.0f; // Start at 100% SOC, will be updated on first run of task_fast
 static float initial_soe = 100.0f; // Start at 100% SOE, will be updated on first run of task_fast
 static float initial_energy_wh = ACU_PACK_ENERGY_WH;
@@ -36,7 +30,7 @@ static uint32_t time_delta_ms;
 /*                                                  INITIALIZE SOC                                      */
 /* function needs to grab the voltage of the acu bus and calculate the state of charge                  */
 /* this function should be called during the 1st initialization function, so propably fast task init    */
-void acu_svc_init_bms_stats(void){
+void acu_svc_init_acu_energy_state(void){
 
 	float acu_bus_voltage;
     acuhv_svc_update_batt_voltage();
@@ -55,7 +49,7 @@ void acu_svc_init_bms_stats(void){
     initial_energy_wh = Energy_Wh;
     initial_capacity_ah = Capacity_Ah;
 
-    acu_data_set_acu_bms_stats(soc, soe, Energy_Wh, Capacity_Ah);
+    acu_data_set_acu_energy_states(soc, soe, Energy_Wh, Capacity_Ah);
 
 }
 
@@ -63,7 +57,7 @@ void acu_svc_init_bms_stats(void){
 /*                                                  UPDATE SOC                                                                   */
 /* function reads the values for the accumelated charge and energy spent form the INA229 and subtracts it from the initial values*/
 /* function then updates the data layer                                                                                          */
-void acu_svc_update_bms_stats(void){
+void acu_svc_update_acu_energy_state(void){
     if (completion_time_of_last_update == 0.0f)
     {
         // This is the first update, so we just set the completion time and return without updating SOC
@@ -98,6 +92,6 @@ void acu_svc_update_bms_stats(void){
     float current_soe = (current_acu_energy_Wh / ACU_PACK_ENERGY_WH) * 100.0f;
 
     
-    acu_data_set_acu_bms_stats(current_soc, current_soe, current_acu_energy_Wh, current_acu_capacity_Ah);
+    acu_data_set_acu_energy_states(current_soc, current_soe, current_acu_energy_Wh, current_acu_capacity_Ah);
 
 }

@@ -42,19 +42,6 @@ extern DFSDM_Filter_HandleTypeDef hdfsdm1_filter2;
 #define BATT_CURRENT_STATUS_PIN GPIO_PIN_0
 
 /*============================================================================*/
-/* IMD                                                                        */
-/*============================================================================*/
-
-#define IMD_OK_PORT GPIOJ
-#define IMD_OK_PIN GPIO_PIN_2
-
-#define IMD_M_PORT GPIOA
-#define IMD_M_PIN GPIO_PIN_3
-
-#define IMD_LATCH_EN_PORT GPIOH
-#define IMD_LATCH_EN_PIN GPIO_PIN_3
-
-/*============================================================================*/
 /* AIR                                                                        */
 /*============================================================================*/
 
