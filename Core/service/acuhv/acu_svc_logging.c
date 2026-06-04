@@ -22,6 +22,9 @@ void acu_svc_can_tx_acu_measurements()
     accumulator_measurements_can_msg.ts_active =            acu_measurements.ts_active;
     accumulator_measurements_can_msg.ts_voltage =           acu_measurements.ts_voltage;
     
+    accumulator_measurements_can_msg.air_neg_closed =       acu_measurements.air_neg_closed;
+    accumulator_measurements_can_msg.air_pos_closed =       acu_measurements.air_pos_closed;
+    
     ucr_03_accumulator_measurements_pack(msg.data, &accumulator_measurements_can_msg, msg.dlc);
 
     com_svc_can_transmit(&msg);

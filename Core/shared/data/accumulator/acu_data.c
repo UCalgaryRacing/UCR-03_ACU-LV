@@ -23,6 +23,9 @@ status_t acu_data_init(void)
     g_acu_measurements.ts_voltage = 0.0f;
     g_acu_measurements.ts_active = false;
 
+    g_acu_measurements.air_neg_closed = false;
+    g_acu_measurements.air_pos_closed = false;
+
     memset(&g_acu_fault, 0, sizeof(g_acu_fault));
     g_acu_fault.bms_fault = false;
     g_acu_fault.imd_fault = false;
@@ -39,7 +42,7 @@ status_t acu_data_init(void)
     return OK;
 }
 /*============================================================================*/
-/* Accumulator Data Setters                                                   */
+/* Accumulator Measurement Data Setters                                                   */
 /*============================================================================*/
 
 //TODO: add mutex protection for these data accesses
@@ -80,8 +83,18 @@ void acu_data_set_acu_ts_voltage(float ts_voltage)
     g_acu_measurements.ts_voltage = ts_voltage;
 }
 
+void acu_data_set_air_neg_is_closed(bool state_closed)
+{
+    g_acu_measurements.air_neg_closed = state_closed;
+}
+
+void acu_data_set_air_pos_is_closed(bool state_closed)
+{
+    g_acu_measurements.air_pos_closed = state_closed;
+}
+
 /*============================================================================*/
-/* Accumulator Data Getters                                                   */
+/* Accumulator Measurement Data Getters                                                   */
 /*============================================================================*/
 
 status_t acu_data_get_acu_measurements(acu_measurements_t *acu_data)
@@ -114,6 +127,18 @@ bool acu_data_get_acu_ts_active(void)
 {
     return g_acu_measurements.ts_active;
 }
+
+bool acu_data_get_air_neg_is_closed(bool state_closed)
+{
+    return g_acu_measurements.air_neg_closed;
+}
+
+bool acu_data_get_air_pos_is_closed(bool state_closed)
+{
+    return g_acu_measurements.air_pos_closed;
+}
+
+
 
 /*============================================================================*/
 /* Accumulator Fault Status Setters                                           */

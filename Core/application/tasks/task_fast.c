@@ -17,6 +17,7 @@
 
 #include "acu_svc_logging.h"
 #include "rco_svc_can_route.h"
+#include "aculv_svc_sdc_logging.h"
 
 static const uint32_t period = 10;
 static uint32_t nextWakeTime;
@@ -71,6 +72,7 @@ void task_fast_loop(void){
     //---------------- CAN ----------------//
     acu_svc_can_tx_acu_measurements();
     acu_svc_can_tx_acu_energy_state();
+    aculv_svc_can_tx_sdc_voltages();
 
     osDelayUntil(nextWakeTime);
 

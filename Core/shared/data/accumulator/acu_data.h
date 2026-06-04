@@ -18,6 +18,9 @@ typedef struct
     float battery_power;
     float ts_voltage;
     bool ts_active;
+
+    bool air_neg_closed;
+    bool air_pos_closed;
 } acu_measurements_t;
 
 typedef struct 
@@ -56,6 +59,9 @@ void acu_data_set_acu_battery_voltage(float voltage);
 void acu_data_set_acu_ts_active(bool ts_active);
 void acu_data_set_acu_ts_voltage(float ts_voltage);
 
+void acu_data_set_air_neg_is_closed(bool state_closed);
+void acu_data_set_air_pos_is_closed(bool state_closed);
+
 // energy states
 void acu_data_set_acu_energy_states(float soc_percent,float soe_percent, float energy_wh, float charge_ah);
 
@@ -75,6 +81,9 @@ float acu_data_get_acu_battery_current(void);
 float acu_data_get_acu_battery_power(void);
 float acu_data_get_acu_ts_voltage(void);
 bool acu_data_get_acu_ts_active(void);
+
+bool acu_data_get_air_neg_is_closed(bool state_closed);
+bool acu_data_get_air_pos_is_closed(bool state_closed);
 
 // energy states
 status_t acu_data_get_acu_energy_states(acu_energy_state_t *acu_energy_state);
