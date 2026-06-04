@@ -131,6 +131,7 @@ static void on_state_entry(acu_app_state_t state)
         // close air if precharge --> active state
         acuhv_svc_air_close_air_neg(true);    
         acuhv_svc_air_close_air_pos(true);
+        break;
     
     case ACU_APP_STATE_FAULT:
         acuhv_svc_air_close_air_neg(false);

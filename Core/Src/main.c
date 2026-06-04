@@ -33,6 +33,7 @@
 
 #include "can_typ_common.h"
 
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -244,6 +245,19 @@ int main(void)
 //  {
 //	  HAL_FDCAN_AddMessageToTxFifoQ(&hfdcan2, &tx_header, (uint8_t *)test);
 //	  HAL_Delay(100);
+//  }
+
+//  aculv_svc_set_bms_ok(true);
+//  while (1)
+//  {
+//	  acuhv_svc_air_close_air_neg(false);
+//	  acuhv_svc_air_close_air_pos(false);
+//
+//	  HAL_Delay(5000);
+//
+//	  acuhv_svc_air_close_air_neg(true);
+//	  acuhv_svc_air_close_air_pos(true);
+//	  HAL_Delay(5000);
 //  }
 
 
