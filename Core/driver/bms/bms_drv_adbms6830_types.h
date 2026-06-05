@@ -13,7 +13,7 @@
 
 #include <stdint.h>
 #include <stdbool.h>
-#include "bms_config.h"
+#include "acu_lv_config.h"
 
 /*============================================================================*/
 /* Slave-Level Data (one ADBMS6830B IC)                                       */
@@ -27,8 +27,8 @@
  */
 typedef struct
 {
-    float cell_v[ADBMS_CELLS_PER_SLAVE];       /**< Cell voltages in V */
-    float temp_c[ADBMS_THERMS_PER_SLAVE];      /**< Temperatures in °C */
+    float cell_v[ADBMS_CELLS_PER_IC];       /**< Cell voltages in V */
+    float temp_c[ADBMS_THERMS_PER_IC];      /**< Temperatures in °C */
 } bms_slave_data_t;
 
 /*============================================================================*/

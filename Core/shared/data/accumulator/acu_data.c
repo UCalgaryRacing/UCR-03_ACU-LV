@@ -174,6 +174,7 @@ bool acu_data_get_precharge_timeout_fault_status(void)
     return g_acu_fault.precharge_timeout;
 }
 
+
 /*============================================================================*/
 /* Accumulator State                                                          */
 /*============================================================================*/

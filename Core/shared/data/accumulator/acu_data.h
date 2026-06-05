@@ -52,7 +52,6 @@ void acu_data_set_bms_fault_status(bool fault_status);
 void acu_data_set_imd_fault_status(bool fault_status);
 
 void acu_data_set_precharge_timeout_fault_status(bool fault_status);
-
 /*============================================================================*/
 /* Getters                                                                    */
 /*============================================================================*/

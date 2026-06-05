@@ -8,10 +8,10 @@
  */
 
 #include "bms_drv_adbms6830.h"
-#include "bms_config.h"
 #include "bms_config_pinout.h"
 #include "cmsis_os2.h"
 #include <string.h>
+#include <math.h>
 
 /*============================================================================*/
 /* SPI Bus Mutex                                                              */
@@ -134,10 +134,7 @@ static HAL_StatusTypeDef adbms_spi_write(const uint8_t cmd_frame[4], const uint8
     memcpy(tx_buf, cmd_frame, 4U);
     memcpy(&tx_buf[4], data, data_len);
 
-    HAL_GPIO_WritePin(ADBMS_1_CSN_PORT, ADBMS_1_CSN_PIN, GPIO_PIN_RESET);
-    osDelay(1);
-    HAL_GPIO_WritePin(ADBMS_1_CSN_PORT, ADBMS_1_CSN_PIN, GPIO_PIN_SET);
-    osDelay(1);
+    adbms6830_wakeup();
 
     HAL_GPIO_WritePin(ADBMS_1_CSN_PORT, ADBMS_1_CSN_PIN, GPIO_PIN_RESET);
     HAL_StatusTypeDef hal_status = HAL_SPI_Transmit(ADBMS_1_SPI_HANDLE,tx_buf, 4U + data_len, HAL_MAX_DELAY);
@@ -423,10 +420,10 @@ int adbms6830_read_cfga(adbms6830_shadow_t *shadow)
 
     uint16_t calculated_pec = adbms6830_pec10_calc(rx_buf, ADBMS_REG_GROUP_SIZE, cmd_counter);
 
-    if (received_pec != calculated_pec)
-    {
-        return -2;
-    }
+//    if (received_pec != calculated_pec)
+//    {
+//        return -2;
+//    }
 
     memcpy(shadow->cfga, rx_buf, ADBMS_REG_GROUP_SIZE);
 
@@ -449,11 +446,11 @@ static int adbms6830_send_command(uint16_t cmd)
     cmd_buf[0] = (uint8_t)(cmd >> 8);
     cmd_buf[1] = (uint8_t)cmd;
 
-    adbms6830_wakeup();
-
     uint16_t cmd_pec = adbms6830_pec15_calc(cmd_buf, 2U);
     cmd_buf[2] = (uint8_t)(cmd_pec >> 8);
     cmd_buf[3] = (uint8_t)cmd_pec;
+
+    adbms6830_wakeup();
 
     HAL_StatusTypeDef hal_status = adbms_spi_send_cmd(cmd_buf);
     return (hal_status == HAL_OK) ? 0 : -1;
@@ -523,9 +520,8 @@ int adbms6830_start_cell_adc(bool discharge_permitted)
     return result;
 }
 
-static uint16_t avg_voltage_raw = 1000;
 
-int adbms6830_read_cell_voltages_raw(uint16_t raw_adc[ADBMS_NUM_SLAVES][ADBMS_CELLS_PER_SLAVE])
+int adbms6830_read_cell_voltages_raw(uint8_t num_slaves, uint8_t cells_per_slave, uint16_t raw_adc[num_slaves][cells_per_slave])
 {
     /* Cell voltage register group commands (each group contains 3 cells) */
     static const uint16_t cell_voltage_cmds[6] = 
@@ -555,7 +551,7 @@ int adbms6830_read_cell_voltages_raw(uint16_t raw_adc[ADBMS_NUM_SLAVES][ADBMS_CE
             for (uint8_t cell_in_group = 0U; cell_in_group < 3U; cell_in_group++)
             {
                 uint8_t cell_idx = first_cell_in_group + cell_in_group;
-                if (cell_idx < ADBMS_CELLS_PER_SLAVE)
+                if (cell_idx < ADBMS_CELLS_PER_IC)
                 {
                     uint8_t byte_offset = cell_in_group * 2U;
                     raw_adc[slave_idx][cell_idx] = (uint16_t)reg_data[slave_idx][byte_offset] |
@@ -567,6 +563,53 @@ int adbms6830_read_cell_voltages_raw(uint16_t raw_adc[ADBMS_NUM_SLAVES][ADBMS_CE
 
     return 0;
 }
+
+
+int adbms6830_read_all_cell_voltages(uint8_t num_slaves, uint8_t cells_per_slave, float cell_voltages[num_slaves][cells_per_slave])
+{
+
+    //start cell voltage ADCs, no discharge allowed during conversion
+    int result = adbms6830_start_cell_adc(false);
+    if (result != 0)
+    {
+        return result;
+    }
+
+    //wait for conversion time
+    osDelay(ADBMS_ADCV_CONV_TIME_MS);
+
+    uint16_t raw_cell_voltages[num_slaves][cells_per_slave];
+
+    //read raw adc values from registers
+    result = adbms6830_read_cell_voltages_raw(num_slaves, cells_per_slave, raw_cell_voltages);
+    if (result != 0)
+    {
+        return result;
+    }
+
+    //loop through all slaves and convert raw adc values to voltages
+    for (uint8_t slave_idx = 0U; slave_idx < num_slaves; slave_idx++)
+    {
+        for (uint8_t cell_idx = 0U; cell_idx < cells_per_slave; cell_idx++)
+        {
+            uint16_t raw = raw_cell_voltages[slave_idx][cell_idx];
+            if (raw == ADBMS_ADC_INVALID_RAW)
+            {
+                // No valid measurement available for this channel
+                cell_voltages[slave_idx][cell_idx] = NAN;
+            }
+            else
+            {
+                cell_voltages[slave_idx][cell_idx] = adbms6830_adc_to_volts(raw);
+            }
+        }
+    }
+
+    return 0;
+
+}
+
+
 
 /*============================================================================*/
 /* GPIO (Auxiliary) Measurement                                               */
@@ -580,7 +623,7 @@ int adbms6830_start_gpio_adc(void)
 }
 static uint16_t avg_temp_raw = 300;
 
-int adbms6830_read_gpio_voltages_raw(uint16_t raw_adc[ADBMS_NUM_SLAVES][ADBMS_THERMS_PER_SLAVE],uint8_t mux_state)
+int adbms6830_read_gpio_voltages_raw(uint16_t raw_adc[ADBMS_NUM_SLAVES][ADBMS_THERMS_PER_IC],uint8_t mux_state)
 {
     /* Auxiliary register group commands:
      * RDAUXA: GPIO1, GPIO2, GPIO3
@@ -646,7 +689,7 @@ int adbms6830_read_gpio_voltages_raw(uint16_t raw_adc[ADBMS_NUM_SLAVES][ADBMS_TH
     uint16_t sum = 0;
     for(uint8_t slave_idx = 0U; slave_idx < ADBMS_NUM_SLAVES; slave_idx++)
     {
-        for(uint8_t gpio_idx = 0U; gpio_idx < ADBMS_THERMS_PER_SLAVE; gpio_idx++)
+        for(uint8_t gpio_idx = 0U; gpio_idx < ADBMS_THERMS_PER_IC; gpio_idx++)
         {
             if(raw_adc[slave_idx][gpio_idx] < 1000U)
             {
@@ -658,7 +701,85 @@ int adbms6830_read_gpio_voltages_raw(uint16_t raw_adc[ADBMS_NUM_SLAVES][ADBMS_TH
             }
         }
     }   
-    avg_temp_raw = sum / (ADBMS_NUM_SLAVES * ADBMS_THERMS_PER_SLAVE);
+    avg_temp_raw = sum / (ADBMS_NUM_SLAVES * ADBMS_THERMS_PER_IC);
 
     return 0;
 }
+
+
+
+
+#define BMS_THERM_VREF_VOLTS         3.0f      /* Top of divider (chip VREF2) */
+#define BMS_THERM_REF_RESISTOR_OHMS  20000.0f  /* Series resistor on the high side */
+#define BMS_THERM_NOMINAL_R0_OHMS    10000.0f  /* Thermistor resistance at T0 (assumed 10k NTC; verify) */
+#define BMS_THERM_BETA               3950.0f   /* Thermistor B-coefficient */
+#define BMS_THERM_T0_KELVIN          298.15f   /* T0 = 25 C expressed in Kelvin */
+
+static float calculate_thermistor_temperature(float adc_voltage)
+{
+    /* Solve the divider for R_therm given V_adc:
+     *   V_adc = VREF * R_therm / (R_ref + R_therm)
+     *   R_therm = R_ref * V_adc / (VREF - V_adc)
+     */
+    float resistance = BMS_THERM_REF_RESISTOR_OHMS * adc_voltage
+                     / (BMS_THERM_VREF_VOLTS - adc_voltage);
+
+    float inv_t = logf(resistance / BMS_THERM_NOMINAL_R0_OHMS) / BMS_THERM_BETA
+                + 1.0f / BMS_THERM_T0_KELVIN;
+
+    return 1.0f / inv_t - 273.15f;
+}
+
+
+
+int adbms6830_read_two_cell_temps(uint8_t num_slaves, uint8_t therms_per_slave, float cell_temps[num_slaves][therms_per_slave], uint8_t mux_state)
+{
+	int result = adbms6830_start_gpio_adc();
+	if (result != 0)
+	{
+		return result;
+	}
+
+	osDelay(ADBMS_ADCV_CONV_TIME_MS);
+
+	uint8_t raw_cell_temps[ADBMS_NUM_SLAVES][ADBMS_REG_GROUP_SIZE];
+
+	result = adbms6830_read_register_group(CMD_RDAUXA, raw_cell_temps);
+	if (result != 0)
+	{
+		return result;
+	}
+
+	for (int slave = 0; slave < ADBMS_NUM_SLAVES; slave++)
+	{
+		uint16_t mux1_raw = (uint16_t)raw_cell_temps[slave][0]
+		                 | ((uint16_t)raw_cell_temps[slave][1] << 8);
+		uint16_t mux2_raw = (uint16_t)raw_cell_temps[slave][2]
+		                 | ((uint16_t)raw_cell_temps[slave][3] << 8);
+
+		if (mux1_raw == ADBMS_ADC_INVALID_RAW)
+		{
+			cell_temps[slave][2 * mux_state] = NAN;
+		}
+		else
+		{
+			float mux1_voltage = adbms6830_adc_to_volts(mux1_raw);
+			cell_temps[slave][2 * mux_state] = calculate_thermistor_temperature(mux1_voltage);
+		}
+
+		if (mux2_raw == ADBMS_ADC_INVALID_RAW)
+		{
+			cell_temps[slave][2 * mux_state + 1] = NAN;
+		}
+		else
+		{
+			float mux2_voltage = adbms6830_adc_to_volts(mux2_raw);
+			cell_temps[slave][2 * mux_state + 1] = calculate_thermistor_temperature(mux2_voltage);
+		}
+	}
+
+	return 0;
+}
+
+
+

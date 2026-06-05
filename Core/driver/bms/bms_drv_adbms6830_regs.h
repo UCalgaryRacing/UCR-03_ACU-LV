@@ -23,7 +23,6 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include "bms_config.h"
-#include "bms_drv_adbms6830_types.h"
 
 /*============================================================================*/
 /* Command codes (SPI)                                                        */
@@ -146,8 +145,7 @@
 #define ADBMS_CELL_ADC_LSB_UV   150U
 #define ADBMS_CELL_ADC_LSB_V    0.000150f
 
-/** Conversion time for single-shot ADCV (typical, worst case ~2.2ms). */
-#define ADBMS_ADCV_CONV_TIME_MS 3U
+
 
 /**
  * GPIO ADC LSB value.

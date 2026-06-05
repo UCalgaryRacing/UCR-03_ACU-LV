@@ -41,6 +41,7 @@
 									<listOptionValue builtIn="false" value="../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F"/>
 									<listOptionValue builtIn="false" value="../Drivers/CMSIS/Device/ST/STM32H7xx/Include"/>
 									<listOptionValue builtIn="false" value="../Drivers/CMSIS/Include"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Core/service/bms}&quot;"/>
 								</option>
 								<inputType id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.assembler.input.1566129795" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.assembler.input"/>
 							</tool>
@@ -87,6 +88,7 @@
 									<listOptionValue builtIn="false" value="../Core/service/aculv"/>
 									<listOptionValue builtIn="false" value="../Core/shared/data/rco"/>
 									<listOptionValue builtIn="false" value="../Core/shared/data/sdc"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Core/service/bms}&quot;"/>
 								</option>
 								<inputType id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.input.c.1950292894" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.input.c"/>
 							</tool>
@@ -158,6 +160,7 @@
 									<listOptionValue builtIn="false" value="../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F"/>
 									<listOptionValue builtIn="false" value="../Drivers/CMSIS/Device/ST/STM32H7xx/Include"/>
 									<listOptionValue builtIn="false" value="../Drivers/CMSIS/Include"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Core/service/bms}&quot;"/>
 								</option>
 								<inputType id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.assembler.input.1470898023" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.assembler.input"/>
 							</tool>
@@ -178,6 +181,7 @@
 									<listOptionValue builtIn="false" value="../Middlewares/Third_Party/FreeRTOS/Source/include"/>
 									<listOptionValue builtIn="false" value="../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2"/>
 									<listOptionValue builtIn="false" value="../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Core/service/bms}&quot;"/>
 								</option>
 								<inputType id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.input.c.1497239893" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.input.c"/>
 							</tool>

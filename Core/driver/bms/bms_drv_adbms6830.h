@@ -1,5 +1,5 @@
 /*
- * acu_lv_drv_adbms6830.h
+ * bms_drv_adbms6830.h
  *
  * ADBMS6830B Battery Stack Monitor Driver - Public API
  *
@@ -25,8 +25,17 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include "bms_drv_adbms6830_regs.h"
-#include "bms_config.h"
 
+/** Conversion time for single-shot ADCV (typical, worst case ~2.2ms). */
+#define ADBMS_ADCV_CONV_TIME_MS 3U
+
+/**
+ * Sentinel value returned by the ADBMS6830 in a cell/GPIO ADC register when
+ * no valid measurement is available (e.g. overrange, open input). Treated
+ * as int16 this is the most-negative value (-32768) and would yield a
+ * meaningless ~-3.42 V through the standard 150 uV/LSB scaling.
+ */
+#define ADBMS_ADC_INVALID_RAW   ((uint16_t)0x8000U)
 
 /*============================================================================*/
 /* Driver Initialization                                                      */
@@ -161,18 +170,26 @@ bool adbms6830_poll_adc(void);
  *                 Each value is a 16-bit ADC count.
  * @return 0 on success, negative error code on failure (e.g., PEC error).
  */
-int adbms6830_read_cell_voltages_raw(uint16_t raw_adc[ADBMS_NUM_SLAVES][ADBMS_CELLS_PER_SLAVE]);
+int adbms6830_read_cell_voltages_raw(uint8_t num_slaves, uint8_t cells_per_slave, uint16_t raw_adc[num_slaves][cells_per_slave]);
 
 /**
  * @brief Convert raw ADC count to voltage in volts.
  *
- * @param raw_adc  Raw 16-bit ADC count from cell voltage register.
+ * The ADBMS6830 reports cell and GPIO ADC values as signed 16-bit two's
+ * complement with a 150 uV LSB and a 1.5 V offset (i.e. 0x0000 -> 1.5 V).
+ * The raw value must therefore be reinterpreted as int16_t before scaling,
+ * otherwise readings below 1.5 V wrap to ~+9.83 V and corrupt the result.
+ *
+ * @param raw_adc  Raw 16-bit ADC count from a cell or GPIO/AUX register.
+ *                 Treated as signed two's complement internally.
  * @return Voltage in volts (V).
  */
 static inline float adbms6830_adc_to_volts(uint16_t raw_adc)
 {
-    return (float)raw_adc * ADBMS_CELL_ADC_LSB_V + 1.5f;
+    return (float)(int16_t)raw_adc * ADBMS_CELL_ADC_LSB_V + 1.5f;
 }
+
+int adbms6830_read_all_cell_voltages(uint8_t num_slaves, uint8_t cells_per_slave, float cell_voltages[num_slaves][cells_per_slave]);  
 
 /*============================================================================*/
 /* GPIO (Auxiliary) Measurement                                               */
@@ -209,7 +226,7 @@ bool adbms6830_poll_gpio_adc(void);
  *                 Each value is a 16-bit ADC count.
  * @return 0 on success, negative error code on failure (e.g., PEC error).
  */
-int adbms6830_read_gpio_voltages_raw(uint16_t raw_adc[ADBMS_NUM_SLAVES][ADBMS_THERMS_PER_SLAVE],uint8_t mux_state);
+int adbms6830_read_gpio_voltages_raw(uint16_t raw_adc[ADBMS_NUM_SLAVES][ADBMS_THERMS_PER_IC],uint8_t mux_state);
 
 /**
  * @brief Convert raw GPIO ADC count to voltage in volts.
@@ -221,5 +238,19 @@ static inline float adbms6830_gpio_adc_to_volts(uint16_t raw_adc)
 {
     return (float)raw_adc * ADBMS_GPIO_ADC_LSB_V;
 }
+
+/**
+ * @brief Read GPIO1/GPIO2 (mux 1 / mux 2 outputs) on every slave and
+ *        convert to temperatures.
+ *
+ * For each slave the mux 1 reading is written to cell_temps[slave][2*mux_state]
+ * and the mux 2 reading to cell_temps[slave][2*mux_state + 1]. Channels that
+ * come back as ADBMS_ADC_INVALID_RAW are written as NaN so the caller can
+ * detect bad samples.
+ *
+ * @return 0 on success, negative error code on SPI/PEC failure. On error the
+ *         affected slots in cell_temps are left untouched.
+ */
+int adbms6830_read_two_cell_temps(uint8_t num_slaves, uint8_t therms_per_slave, float cell_temps[num_slaves][therms_per_slave], uint8_t mux_state);
 
 #endif /* DRIVERS_ADBMS6830_H_ */
