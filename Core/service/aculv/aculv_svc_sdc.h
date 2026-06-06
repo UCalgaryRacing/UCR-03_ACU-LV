@@ -17,5 +17,7 @@ void aculv_svc_update_sdc_latches();
 // data voltage update
 status_t aculv_svc_update_sdc_voltages();
 
+bool aculv_svc_sdc_is_sdc_faulted();
+
 
 #endif /*SERVICE_ACULV_SVC_SDC_H_*/

@@ -22,7 +22,7 @@
 /*scaling factors determined by using a known voltage and averaging the raw values*/
 
 #define BATT_VOLTAGE_SCALING_FACTOR         0.00000126344f
-#define BATT_VOLTAGE_MIN_V                  325.0f                      // Valid Expected pack voltage range (V)
+#define BATT_VOLTAGE_MIN_V                  10.0f                      // Valid Expected pack voltage range (V)
 #define BATT_VOLTAGE_MAX_V                  546.0f
 
 

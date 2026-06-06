@@ -7,6 +7,6 @@
 status_t acuhv_svc_air_init(void);
 
 void acuhv_svc_air_close_air_neg(bool close);
-void acuhv_svc_air_close_air_pos(bool close);
+status_t acuhv_svc_air_close_air_pos(bool close);
 
 #endif /*SERVICE_ACUHV_SVC_AIR_H_*/

@@ -1,6 +1,7 @@
 #include "aculv_svc_sdc.h"
 #include "aculv_drv_sdc.h"
 #include "mcu_svc_analog.h"
+#include "aculv_config.h"
 
 #include "sdc_data.h"
 #include "rco_data.h"
@@ -98,6 +99,23 @@ void aculv_svc_update_sdc_latches()
     {
         aculv_svc_set_imd_latch_en(false);
         aculv_svc_set_bms_latch_en(false);
+    }
+}
+
+/*============================================================================*/
+/* SDC Fault Check                                                            */
+/*============================================================================*/
+
+bool aculv_svc_sdc_is_sdc_faulted()
+{
+    if (sdc_data_get_sdc_reserve_voltage() <= SDC_DISCHARGED_V)
+    {
+        return 1;
+    }
+
+    else 
+    {
+        return 0;
     }
 }
 

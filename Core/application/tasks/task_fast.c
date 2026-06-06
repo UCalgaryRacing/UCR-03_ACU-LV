@@ -35,6 +35,7 @@ void task_fast_init(void)
     mcu_svc_dfsdm_start(TS_VOLTAGE);
     mcu_svc_dfsdm_start(BATT_VOLTAGE);
     mcu_svc_dfsdm_start(BATT_CURRENT);
+    HAL_Delay(10);
     acu_svc_init_acu_energy_state(); 
 
     //---------------- MCU ADC ----------------//
