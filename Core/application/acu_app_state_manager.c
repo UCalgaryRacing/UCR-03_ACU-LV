@@ -6,6 +6,7 @@
 
 #include "acuhv_svc_air.h"
 #include "aculv_svc_sdc.h"
+#include "acuhv_svc_precharge.h"
 
 #include "aculv_config.h"
 
@@ -47,7 +48,7 @@ static acu_app_state_t handle_startup_state()
 
 static acu_app_state_t handle_idle_state()
 {
-    if (sdc_data_get_sdc_reserve_voltage() >= SDC_CHARGED_V)
+    if (((sdc_data_get_sdc_reserve_voltage() >= SDC_CHARGED_V)) && (acu_data_get_acu_ts_voltage() == 0)) // maybe should be a small range around zero? float is hardly ever exactly zero
     {
         return ACU_APP_STATE_PRECHARGE;
     }
@@ -62,17 +63,18 @@ static acu_app_state_t handle_idle_state()
 
 static acu_app_state_t handle_precharge_state()
 {
+    acuhv_svc_precharge_update_fault_timeout();
+
     // check if ts voltage is at least 90% of acu voltage
     if ((acu_data_get_acu_ts_voltage() > 200) && (acu_data_get_acu_ts_voltage() >= (0.9f * acu_data_get_acu_battery_voltage())))
     {
         return ACU_APP_STATE_ACTIVE;
     }
 
-
-   if (sdc_data_get_sdc_reserve_voltage() <= SDC_DISCHARGED_V)
-   {
-       return ACU_APP_STATE_FAULT;
-   }
+    if ((sdc_data_get_sdc_reserve_voltage() <= SDC_DISCHARGED_V) || (acu_data_get_precharge_timeout_fault_status()))
+    {
+        return ACU_APP_STATE_FAULT;
+    }
 
     return ACU_APP_STATE_PRECHARGE;
 }
@@ -89,7 +91,7 @@ static acu_app_state_t handle_active_state()
 
 static acu_app_state_t handle_fault_state()
 {
-    if (sdc_data_get_sdc_reserve_voltage() >= SDC_CHARGED_V)
+    if (rco_data_get_reset_pressed())
     {
         return ACU_APP_STATE_IDLE;
     }
@@ -123,6 +125,8 @@ static void on_state_entry(acu_app_state_t state)
         break;
 
     case ACU_APP_STATE_PRECHARGE:
+        acuhv_svc_precharge_start();
+
         acuhv_svc_air_close_air_neg(true);
         acuhv_svc_air_close_air_pos(false);
         break;
@@ -148,7 +152,7 @@ static void on_state_exit(acu_app_state_t state)
     switch (state)
     {
     case ACU_APP_STATE_PRECHARGE:
-        acu_data_set_precharge_timeout_fault_status(false);
+        acu_data_set_precharge_timeout_fault_status(false); // clear precharge timeout flag 
         break;
     default:
         break;

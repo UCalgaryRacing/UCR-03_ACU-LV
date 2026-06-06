@@ -50,6 +50,9 @@ void task_fast_init(void)
     //---------------- AIRs ----------------//
     acuhv_svc_air_init(); // open both airs
 
+    //---------------- CAN ----------------//
+    rco_svc_can_route_init();
+
 }
 
 void task_fast_loop(void){
