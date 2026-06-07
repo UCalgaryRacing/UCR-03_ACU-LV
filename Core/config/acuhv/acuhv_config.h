@@ -22,13 +22,15 @@
 /*scaling factors determined by using a known voltage and averaging the raw values*/
 
 #define BATT_VOLTAGE_SCALING_FACTOR         0.00000126344f
-#define BATT_VOLTAGE_MIN_V                  10.0f                      // Valid Expected pack voltage range (V)
+#define BATT_VOLTAGE_MIN_V                  325.0f                      // Valid Expected pack voltage range (V)
 #define BATT_VOLTAGE_MAX_V                  546.0f
 
 
 #define TS_SCALING_FACTOR                   0.00032845893948625697f
 #define TS_VOLTAGE_MIN_V                    0U                          // valid ts voltage range  (TODO: check numbers)
 #define TS_VOLTAGE_MAX_V                    546.0f
+
+#define TS_DISCHARGED_V                     60.0f
 
 /*============================================================================*/
 /* Shunt Configuration                                                        */

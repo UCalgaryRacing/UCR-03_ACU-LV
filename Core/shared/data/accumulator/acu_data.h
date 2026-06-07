@@ -6,7 +6,6 @@
 #include "com_typ_common.h"
 #include "acu_app_state_manager.h"
 
-
 /*============================================================================*/
 /* Accumulator Data Structure                                                  */
 /*============================================================================*/
@@ -21,6 +20,9 @@ typedef struct
 
     bool air_neg_closed;
     bool air_pos_closed;
+
+    acu_app_state_t acu_state;
+    
 } acu_measurements_t;
 
 typedef struct 

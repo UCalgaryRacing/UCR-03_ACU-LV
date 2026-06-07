@@ -8,8 +8,6 @@ static acu_measurements_t g_acu_measurements;
 static acu_fault_t g_acu_fault;
 static acu_energy_state_t g_acu_energy_state;
 
-static acu_app_state_t g_acu_state = ACU_APP_STATE_STARTUP;
-
 /*============================================================================*/
 /* Initialization                                                             */
 /*============================================================================*/
@@ -26,6 +24,8 @@ status_t acu_data_init(void)
     g_acu_measurements.air_neg_closed = false;
     g_acu_measurements.air_pos_closed = false;
 
+    g_acu_measurements.acu_state = ACU_APP_STATE_STARTUP;
+
     memset(&g_acu_fault, 0, sizeof(g_acu_fault));
     g_acu_fault.bms_fault = false;
     g_acu_fault.imd_fault = false;
@@ -35,7 +35,7 @@ status_t acu_data_init(void)
     g_acu_energy_state.battery_capacity_ah = 0.0f;
     g_acu_energy_state.battery_energy_wh = 0.0f;
     g_acu_energy_state.battery_soc = 0.0f;
-    g_acu_energy_state.battery_soe = 0.0f;   
+    g_acu_energy_state.battery_soe = 0.0f;
 
     g_initialized = true;
 
@@ -138,7 +138,19 @@ bool acu_data_get_air_pos_is_closed(bool state_closed)
     return g_acu_measurements.air_pos_closed;
 }
 
+/*============================================================================*/
+/* Accumulator State Getter and Setter                                        */
+/*============================================================================*/
 
+void acu_data_set_acu_state(acu_app_state_t acu_state)
+{
+    g_acu_measurements.acu_state = acu_state;
+}
+
+acu_app_state_t acu_data_get_acu_state(void)
+{
+    return g_acu_measurements.acu_state;
+}
 
 /*============================================================================*/
 /* Accumulator Fault Status Setters                                           */
@@ -223,17 +235,4 @@ float acu_data_get_acu_charge_Ah(void)
 float acu_data_get_acu_energy_Wh(void)
 {
     return g_acu_energy_state.battery_energy_wh;
-}
-/*============================================================================*/
-/* Accumulator State Getter and Setter                                        */
-/*============================================================================*/
-
-void acu_data_set_acu_state(acu_app_state_t acu_state)
-{
-    g_acu_state = acu_state;
-}
-
-acu_app_state_t acu_data_get_acu_state(void)
-{
-    return g_acu_state;
 }

@@ -24,6 +24,8 @@ void acu_svc_can_tx_acu_measurements()
     
     accumulator_measurements_can_msg.air_neg_closed =       acu_measurements.air_neg_closed;
     accumulator_measurements_can_msg.air_pos_closed =       acu_measurements.air_pos_closed;
+
+    accumulator_measurements_can_msg.accu_state =           acu_measurements.acu_state;
     
     ucr_03_accumulator_measurements_pack(msg.data, &accumulator_measurements_can_msg, msg.dlc);
 

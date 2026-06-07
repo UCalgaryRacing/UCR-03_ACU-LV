@@ -52,7 +52,8 @@ static acu_app_state_t handle_startup_state()
 
 static acu_app_state_t handle_idle_state()
 {
-    if (((sdc_data_get_sdc_reserve_voltage() >= SDC_CHARGED_V)) && (acu_data_get_acu_ts_voltage() < 5)) // maybe should be a small range around zero? float is hardly ever exactly zero
+
+    if (((sdc_data_get_sdc_reserve_voltage() >= SDC_CHARGED_V)) && (acu_data_get_acu_ts_voltage() < TS_DISCHARGED_V)) // maybe should be a small range around zero? float is hardly ever exactly zero
     {
         return ACU_APP_STATE_PRECHARGE;
     }
@@ -133,6 +134,7 @@ static void on_state_entry(acu_app_state_t state)
 
         acuhv_svc_air_close_air_neg(true);
         acuhv_svc_air_close_air_pos(false);
+    	osDelay(3000);
         break;
 
     case ACU_APP_STATE_ACTIVE:
@@ -144,6 +146,7 @@ static void on_state_entry(acu_app_state_t state)
     case ACU_APP_STATE_FAULT:
         acuhv_svc_air_close_air_neg(false);
         acuhv_svc_air_close_air_pos(false);        
+
         break;
 
     default:

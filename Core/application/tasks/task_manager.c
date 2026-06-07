@@ -21,7 +21,9 @@ void task_manager_loop()
 
     acu_app_state_machine_step();
 
-    // update state
+    // update states + transmit
     acu_app_state_machine_update_state();
     acu_svc_can_tx_ts_state_update();
+
+    acu_svc_can_tx_acu_measurements();
 }
