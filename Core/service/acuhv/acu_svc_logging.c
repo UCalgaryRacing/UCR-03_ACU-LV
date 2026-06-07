@@ -53,10 +53,3 @@ void acu_svc_can_tx_acu_energy_state()
     com_svc_can_transmit(&msg);
 }
 
-void acu_svc_can_tx_ts_state_update()
-{
-    if (acu_data_get_acu_state() == ACU_APP_STATE_ACTIVE)
-    {
-        acu_data_set_acu_ts_active(true);
-    }
-}
