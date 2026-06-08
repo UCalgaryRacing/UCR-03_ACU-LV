@@ -132,7 +132,8 @@ static void on_state_entry(acu_app_state_t state)
 
     case ACU_APP_STATE_IDLE:
         acuhv_svc_air_close_air_neg(false);
-        acuhv_svc_air_close_air_pos(false);      
+        acuhv_svc_air_close_air_pos(false);
+        osDelay(2000); //wait for SDC to charge so doesnt go immidiately to fault      
         break;
 
     case ACU_APP_STATE_PRECHARGE:
