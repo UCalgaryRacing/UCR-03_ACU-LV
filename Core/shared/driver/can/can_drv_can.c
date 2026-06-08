@@ -229,6 +229,7 @@ static uint8_t fdcan_dlc_to_bytes(uint32_t dlc)
         case FDCAN_DLC_BYTES_5: return 5;
         case FDCAN_DLC_BYTES_6: return 6;
         case FDCAN_DLC_BYTES_7: return 7;
+        case FDCAN_DLC_BYTES_8: return 8;
         case FDCAN_DLC_BYTES_12: return 12;
         case FDCAN_DLC_BYTES_16: return 16;
         case FDCAN_DLC_BYTES_20: return 20;

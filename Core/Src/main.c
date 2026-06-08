@@ -33,6 +33,7 @@
 
 #include "can_typ_common.h"
 
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -221,6 +222,8 @@ int main(void)
   MX_TIM3_Init();
   /* USER CODE BEGIN 2 */
 
+  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_9, GPIO_PIN_SET);
+
 //  HAL_FDCAN_Start(&hfdcan2);
 //  HAL_FDCAN_ActivateNotification(&hfdcan2, FDCAN_IT_RX_FIFO0_NEW_MESSAGE, 0);
 //
@@ -244,6 +247,19 @@ int main(void)
 //  {
 //	  HAL_FDCAN_AddMessageToTxFifoQ(&hfdcan2, &tx_header, (uint8_t *)test);
 //	  HAL_Delay(100);
+//  }
+
+//  aculv_svc_set_bms_ok(true);
+//  while (1)
+//  {
+//	  acuhv_svc_air_close_air_neg(false);
+//	  acuhv_svc_air_close_air_pos(false);
+//
+//	  HAL_Delay(5000);
+//
+//	  acuhv_svc_air_close_air_neg(true);
+//	  acuhv_svc_air_close_air_pos(true);
+//	  HAL_Delay(5000);
 //  }
 
 

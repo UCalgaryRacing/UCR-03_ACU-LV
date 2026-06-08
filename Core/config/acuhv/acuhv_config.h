@@ -30,6 +30,8 @@
 #define TS_VOLTAGE_MIN_V                    0U                          // valid ts voltage range  (TODO: check numbers)
 #define TS_VOLTAGE_MAX_V                    546.0f
 
+#define TS_DISCHARGED_V                     60.0f
+
 /*============================================================================*/
 /* Shunt Configuration                                                        */
 /*============================================================================*/

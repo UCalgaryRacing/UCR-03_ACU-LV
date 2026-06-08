@@ -1,17 +1,22 @@
 /*============================================================================*/
 /* Includes                                                                   */
 /*============================================================================*/
+// TODO: add a data point that takes the moving average filtered difference between TS and ACCU voltage (tell if it's welded, or not active, etc. check in every state)
 #include "acu_app_state_manager.h"
 #include "cmsis_os2.h"
 
 #include "acuhv_svc_air.h"
 #include "aculv_svc_sdc.h"
+#include "acuhv_svc_precharge.h"
 
 #include "aculv_config.h"
+#include "acuhv_config.h"
 
 #include "acu_data.h"
 #include "sdc_data.h"
 #include "rco_data.h"
+
+#include "com_typ_common.h"
 
 /*============================================================================*/
 /* Private Variables                                                          */
@@ -47,12 +52,13 @@ static acu_app_state_t handle_startup_state()
 
 static acu_app_state_t handle_idle_state()
 {
-    if (sdc_data_get_sdc_reserve_voltage() >= SDC_CHARGED_V)
+
+    if (((sdc_data_get_sdc_reserve_voltage() >= SDC_CHARGED_V)) && (acu_data_get_acu_ts_voltage() < TS_DISCHARGED_V)) // maybe should be a small range around zero? float is hardly ever exactly zero
     {
         return ACU_APP_STATE_PRECHARGE;
     }
 
-    if (sdc_data_get_sdc_reserve_voltage() <= SDC_DISCHARGED_V)    
+    if (aculv_svc_sdc_is_sdc_faulted())    
     {
         return ACU_APP_STATE_FAULT;
     }
@@ -62,24 +68,31 @@ static acu_app_state_t handle_idle_state()
 
 static acu_app_state_t handle_precharge_state()
 {
-    // check if ts voltage is at least 90% of acu voltage
-    if ((acu_data_get_acu_ts_voltage() > 200) && (acu_data_get_acu_ts_voltage() >= (0.9f * acu_data_get_acu_battery_voltage())))
+    acuhv_svc_precharge_update_fault_timeout();
+
+    const float ts_voltage_v = acu_data_get_acu_ts_voltage();
+    const float battery_voltage_v = acu_data_get_acu_battery_voltage();
+    const float battery_voltage_90pct_v = 0.9f * battery_voltage_v;
+
+    // check if ts and battery voltages are valid and ts is at least 90% of battery voltage
+    if ((ts_voltage_v > BATT_VOLTAGE_MIN_V) &&
+        (battery_voltage_v > BATT_VOLTAGE_MIN_V) &&
+        (ts_voltage_v >= battery_voltage_90pct_v))
     {
         return ACU_APP_STATE_ACTIVE;
     }
 
-
-   if (sdc_data_get_sdc_reserve_voltage() <= SDC_DISCHARGED_V)
-   {
-       return ACU_APP_STATE_FAULT;
-   }
+    if (aculv_svc_sdc_is_sdc_faulted() || (acu_data_get_precharge_timeout_fault_status()))
+    {
+        return ACU_APP_STATE_FAULT;
+    }
 
     return ACU_APP_STATE_PRECHARGE;
 }
 
 static acu_app_state_t handle_active_state()
 {
-    if (sdc_data_get_sdc_reserve_voltage() <= SDC_DISCHARGED_V)    
+    if (aculv_svc_sdc_is_sdc_faulted())    
     {
         return ACU_APP_STATE_FAULT;
     }
@@ -89,7 +102,7 @@ static acu_app_state_t handle_active_state()
 
 static acu_app_state_t handle_fault_state()
 {
-    if (sdc_data_get_sdc_reserve_voltage() >= SDC_CHARGED_V)
+    if (rco_data_get_reset_pressed())
     {
         return ACU_APP_STATE_IDLE;
     }
@@ -119,22 +132,28 @@ static void on_state_entry(acu_app_state_t state)
 
     case ACU_APP_STATE_IDLE:
         acuhv_svc_air_close_air_neg(false);
-        acuhv_svc_air_close_air_pos(false);      
+        acuhv_svc_air_close_air_pos(false);
+        osDelay(2000); //wait for SDC to charge so doesnt go immidiately to fault      
         break;
 
     case ACU_APP_STATE_PRECHARGE:
+        acuhv_svc_precharge_start();
+
         acuhv_svc_air_close_air_neg(true);
         acuhv_svc_air_close_air_pos(false);
+    	osDelay(3000);
         break;
 
     case ACU_APP_STATE_ACTIVE:
         // close air if precharge --> active state
-        acuhv_svc_air_close_air_neg(true);    
-        acuhv_svc_air_close_air_pos(true);
+        acuhv_svc_air_close_air_neg(true);
+        acuhv_svc_air_close_air_pos(true); // if AIR POS was not able to be closed, state machine will read as STATE_ACTIVE but shouldnt be able to drive
+        break;
     
     case ACU_APP_STATE_FAULT:
         acuhv_svc_air_close_air_neg(false);
         acuhv_svc_air_close_air_pos(false);        
+
         break;
 
     default:
@@ -147,7 +166,7 @@ static void on_state_exit(acu_app_state_t state)
     switch (state)
     {
     case ACU_APP_STATE_PRECHARGE:
-        acu_data_set_precharge_timeout_fault_status(false);
+        acu_data_set_precharge_timeout_fault_status(false); // clear precharge timeout flag 
         break;
     default:
         break;

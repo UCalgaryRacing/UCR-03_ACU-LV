@@ -89,6 +89,7 @@
 									<listOptionValue builtIn="false" value="../Core/shared/data/rco"/>
 									<listOptionValue builtIn="false" value="../Core/shared/data/sdc"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/Core/service/bms}&quot;"/>
+									<listOptionValue builtIn="false" value="../Core/shared/service/rco"/>
 								</option>
 								<inputType id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.input.c.1950292894" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.input.c"/>
 							</tool>

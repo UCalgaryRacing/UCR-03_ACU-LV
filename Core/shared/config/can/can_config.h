@@ -39,10 +39,11 @@ typedef struct
 } can_config_t;
 
 //Accumulator
-#define ACCUMULATOR_DATA_CAN_ID                 199
-#define ACCUMULATOR_FAULT_CAN_ID                300
+#define ACCUMULATOR_MEASUREMENTS_CAN_ID         101
+#define ACCUMULATOR_FAULT_CAN_ID                102
+#define ACCUMULATOR_ENERGY_STATE_CAN_ID         100
 
-
+#define SDC_VOLTAGES_CAN_ID                     99
 
 //Front Controller 
 #define FRONT_CONTROLLER_STATE_CAN_ID           200

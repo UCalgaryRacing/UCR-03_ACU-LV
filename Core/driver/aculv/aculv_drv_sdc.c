@@ -11,11 +11,6 @@ void aculv_drv_set_imd_latch_en(bool enable)
     HAL_GPIO_WritePin(IMD_LATCH_EN_PORT, IMD_LATCH_EN_PIN, enable ? GPIO_PIN_SET : GPIO_PIN_RESET);
 }
 
-void aculv_drv_set_imd_ok(bool enable)
-{
-    HAL_GPIO_WritePin(IMD_OK_PORT, IMD_OK_PIN, enable ? GPIO_PIN_SET : GPIO_PIN_RESET);
-}
-
 
 /*============================================================================*/
 /* BMS                                                                        */
