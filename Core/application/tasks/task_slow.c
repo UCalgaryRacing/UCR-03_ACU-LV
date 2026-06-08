@@ -16,15 +16,15 @@ void task_slow_init(void)
 void task_slow_loop(void)
 {
 	nextWakeTime += period;
-	acu_app_state_t state = acu_data_get_acu_state();
-	if (state == ACU_APP_STATE_FAULT)
-	{
-		osDelay(5000);
-		rco_data_set_reset_pressed(true);
+	// acu_app_state_t state = acu_data_get_acu_state();
+	// if (state == ACU_APP_STATE_FAULT)
+	// {
+	// 	osDelay(5000);
+	// 	rco_data_set_reset_pressed(true);
 
-		osDelay(50);
-		rco_data_set_reset_pressed(false);
-	}
+	// 	osDelay(50);
+	// 	rco_data_set_reset_pressed(false);
+	// }
 
 	osDelayUntil(nextWakeTime);	
 }

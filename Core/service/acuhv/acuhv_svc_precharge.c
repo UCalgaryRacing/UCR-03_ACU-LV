@@ -3,7 +3,6 @@
 #include "stm32h7xx_hal.h"
 #include <stdint.h>
 #include "aculv_svc_sdc.h"
-// NOT USED ANYMORE (NO PRECHARGE TIMEOUT FAULT)
 
 
 static uint32_t g_precharge_time_start;

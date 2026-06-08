@@ -35,7 +35,7 @@ void task_fast_init(void)
     mcu_svc_dfsdm_start(TS_VOLTAGE);
     mcu_svc_dfsdm_start(BATT_VOLTAGE);
     mcu_svc_dfsdm_start(BATT_CURRENT);
-    osDelay(10);
+    osDelay(100); // delay for soc measurements 
     acu_svc_init_acu_energy_state(); 
 
     //---------------- MCU ADC ----------------//
@@ -65,7 +65,6 @@ void task_fast_loop(void){
     acuhv_svc_update_batt_current();
     acuhv_svc_update_ts_voltage();
     acuhv_svc_update_batt_power();
-    // ts active is updated by app state manager --> task manager
 
     acu_svc_update_acu_energy_state();
 

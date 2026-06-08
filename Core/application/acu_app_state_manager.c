@@ -70,8 +70,14 @@ static acu_app_state_t handle_precharge_state()
 {
     acuhv_svc_precharge_update_fault_timeout();
 
-    // check if ts voltage is at least 90% of acu voltage
-    if ((acu_data_get_acu_ts_voltage() > BATT_VOLTAGE_MIN_V) && (acu_data_get_acu_ts_voltage() >= (0.9f * acu_data_get_acu_battery_voltage())))
+    const float ts_voltage_v = acu_data_get_acu_ts_voltage();
+    const float battery_voltage_v = acu_data_get_acu_battery_voltage();
+    const float battery_voltage_90pct_v = 0.9f * battery_voltage_v;
+
+    // check if ts and battery voltages are valid and ts is at least 90% of battery voltage
+    if ((ts_voltage_v > BATT_VOLTAGE_MIN_V) &&
+        (battery_voltage_v > BATT_VOLTAGE_MIN_V) &&
+        (ts_voltage_v >= battery_voltage_90pct_v))
     {
         return ACU_APP_STATE_ACTIVE;
     }
