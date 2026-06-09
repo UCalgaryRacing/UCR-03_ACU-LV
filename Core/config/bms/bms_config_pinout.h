@@ -11,8 +11,8 @@ extern SPI_HandleTypeDef hspi5;
 
 #define ADBMS_1_SPI_HANDLE (&hspi5)
 
-#define ADBMS_1_CSN_PORT GPIOE
-#define ADBMS_1_CSN_PIN GPIO_PIN_3
+#define ADBMS_1_CSN_PORT GPIOD
+#define ADBMS_1_CSN_PIN GPIO_PIN_9
 
 #define ADBMS_1_WAKE_PORT GPIOD
 #define ADBMS_1_WAKE_PIN GPIO_PIN_14

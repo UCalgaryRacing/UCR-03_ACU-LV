@@ -19,6 +19,10 @@
 #include "rco_svc_can_route.h"
 #include "aculv_svc_sdc_logging.h"
 
+#include "bms_config.h"
+#include "bms_svc_thermistor.h"
+#include "bms_svc_cell_voltage.h"
+
 static const uint32_t period = 10;
 static uint32_t nextWakeTime;
 

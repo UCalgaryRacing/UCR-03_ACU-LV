@@ -253,4 +253,14 @@ static inline float adbms6830_gpio_adc_to_volts(uint16_t raw_adc)
  */
 int adbms6830_read_two_cell_temps(uint8_t num_slaves, uint8_t therms_per_slave, float cell_temps[num_slaves][therms_per_slave], uint8_t mux_state);
 
+/**
+ * @brief Read all thermistor temperatures from every slave in the stack.
+ *
+ * Steps through each mux channel, waits for settling, then reads GPIO1/GPIO2
+ * on all slaves and converts to degrees Celsius in @p cell_temps.
+ *
+ * @return 0 on success, negative error code on SPI/PEC failure.
+ */
+int adbms6830_read_all_cell_temps(uint8_t num_slaves, uint8_t therms_per_slave, float cell_temps[num_slaves][therms_per_slave]);
+
 #endif /* DRIVERS_ADBMS6830_H_ */

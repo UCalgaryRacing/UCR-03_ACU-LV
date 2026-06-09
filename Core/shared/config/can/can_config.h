@@ -45,6 +45,14 @@ typedef struct
 
 #define SDC_VOLTAGES_CAN_ID                     99
 
+#define SLAVE_VOLTAGE1_CAN_ID                   701
+#define SLAVE_VOLTAGE10_CAN_ID                  710
+#define SLAVE_TEMP_CAN_ID                       711
+#define SLAVE_TEMPERATURE1_CAN_ID               712
+#define SLAVE_TEMPERATURE10_CAN_ID              721
+#define SLAVE_TEMPERATURE_EXT1_CAN_ID           722
+#define SLAVE_TEMPERATURE_EXT10_CAN_ID          731
+
 //Front Controller 
 #define FRONT_CONTROLLER_STATE_CAN_ID           200
 #define APPS_CAN_ID                             201

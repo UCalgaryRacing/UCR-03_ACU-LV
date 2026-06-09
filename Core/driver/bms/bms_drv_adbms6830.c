@@ -732,6 +732,56 @@ static float calculate_thermistor_temperature(float adc_voltage)
 
 
 
+/*
+ * Mux wiring (per slave, two muxes share the same select lines):
+ *   GPIO3 -> S0   GPIO4 -> S1   GPIO5 -> S2   GPIO6 -> S3
+ *
+ * In CFGA register A (CFGAR3) the GPO bits are laid out as:
+ *   bit 7..0  =  GPO[8] GPO[7] GPO[6] GPO[5] GPO[4] GPO[3] GPO[2] GPO[1]
+ *                                S3     S2     S1     S0
+ * so the 4 mux select lines occupy bits [5:2] of cfga[3] in MSB-first order.
+ */
+#define BMS_MUX_SELECT_MASK     ((uint8_t)0x3CU)   /* bits [5:2] of cfga[3] */
+#define BMS_MUX_SELECT_SHIFT    (2U)
+#define BMS_CFGA0_REFON_MASK    ((uint8_t)0x80U)   /* bit 7 of cfga[0] */
+
+/* Two thermistor samples per mux state (G1V + G2V). */
+#define BMS_MUX_NUM_STATES      ((ADBMS_THERMS_PER_IC + 1U) / 2U)
+#define BMS_MUX_SETTLE_MS       (1U)
+
+static void adbms6830_set_mux(uint8_t channel)
+{
+    adbms6830_shadow_t bms_shadow;
+
+    adbms6830_read_cfga(&bms_shadow);
+
+    bms_shadow.cfga[0] |= BMS_CFGA0_REFON_MASK;
+
+    bms_shadow.cfga[3] = (uint8_t)((bms_shadow.cfga[3] & (uint8_t)~BMS_MUX_SELECT_MASK)
+                                   | (uint8_t)((channel & 0x0FU) << BMS_MUX_SELECT_SHIFT));
+
+    adbms6830_write_cfga(&bms_shadow);
+    adbms6830_read_cfga(&bms_shadow);
+}
+
+int adbms6830_read_all_cell_temps(uint8_t num_slaves, uint8_t therms_per_slave, float cell_temps[num_slaves][therms_per_slave])
+{
+    for (uint8_t mux_state = 0U; mux_state < BMS_MUX_NUM_STATES; mux_state++)
+    {
+        adbms6830_set_mux(mux_state);
+
+        osDelay(BMS_MUX_SETTLE_MS);
+
+        int result = adbms6830_read_two_cell_temps(num_slaves, therms_per_slave, cell_temps, mux_state);
+        if (result != 0)
+        {
+            return result;
+        }
+    }
+
+    return 0;
+}
+
 int adbms6830_read_two_cell_temps(uint8_t num_slaves, uint8_t therms_per_slave, float cell_temps[num_slaves][therms_per_slave], uint8_t mux_state)
 {
 	int result = adbms6830_start_gpio_adc();
@@ -750,7 +800,7 @@ int adbms6830_read_two_cell_temps(uint8_t num_slaves, uint8_t therms_per_slave, 
 		return result;
 	}
 
-	for (int slave = 0; slave < ADBMS_NUM_SLAVES; slave++)
+	for (uint8_t slave = 0U; slave < num_slaves; slave++)
 	{
 		uint16_t mux1_raw = (uint16_t)raw_cell_temps[slave][0]
 		                 | ((uint16_t)raw_cell_temps[slave][1] << 8);

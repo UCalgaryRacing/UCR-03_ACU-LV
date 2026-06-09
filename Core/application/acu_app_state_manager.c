@@ -7,6 +7,8 @@
 
 #include "acuhv_svc_air.h"
 #include "aculv_svc_sdc.h"
+
+#include "stm32h7xx_hal.h"
 #include "acuhv_svc_precharge.h"
 
 #include "aculv_config.h"
@@ -24,6 +26,12 @@
 
 static acu_app_state_t g_current_state = ACU_APP_STATE_STARTUP;
 static acu_app_state_t g_previous_state = ACU_APP_STATE_STARTUP;
+
+static uint32_t g_idle_entry_ms = 0U;
+static uint32_t g_startup_entry_ms = 0U;
+
+#define IDLE_SDC_CHARGE_GRACE_MS    3000U
+#define STARTUP_IMD_GRACE_MS        3000U
 
 /*============================================================================*/
 /* Private Function Prototypes                                                */
@@ -44,10 +52,12 @@ static void on_state_exit(acu_app_state_t state);
 /*============================================================================*/
 static acu_app_state_t handle_startup_state()
 {
-    osDelay(2500); // delay before checking IMD, otherwise auto fault (datasheet says 2s)
-    // if init in fast task fails, fault? 
+    if ((HAL_GetTick() - g_startup_entry_ms) >= STARTUP_IMD_GRACE_MS)
+    {
+        return ACU_APP_STATE_IDLE;
+    }
 
-    return ACU_APP_STATE_IDLE;
+    return ACU_APP_STATE_STARTUP;
 }
 
 static acu_app_state_t handle_idle_state()
@@ -58,9 +68,14 @@ static acu_app_state_t handle_idle_state()
         return ACU_APP_STATE_PRECHARGE;
     }
 
-    if (aculv_svc_sdc_is_sdc_faulted())    
+    if (aculv_svc_sdc_is_sdc_faulted())
     {
-        return ACU_APP_STATE_FAULT;
+        
+
+        if ((HAL_GetTick() - g_idle_entry_ms) >= IDLE_SDC_CHARGE_GRACE_MS)
+        {
+            return ACU_APP_STATE_FAULT;
+        }
     }
 
     return ACU_APP_STATE_IDLE;
@@ -127,13 +142,14 @@ static void on_state_entry(acu_app_state_t state)
     {
     case ACU_APP_STATE_STARTUP:
         acuhv_svc_air_close_air_neg(false);
-        acuhv_svc_air_close_air_pos(false);      
+        acuhv_svc_air_close_air_pos(false);
+        g_startup_entry_ms = HAL_GetTick();
         break;
 
     case ACU_APP_STATE_IDLE:
         acuhv_svc_air_close_air_neg(false);
         acuhv_svc_air_close_air_pos(false);
-        osDelay(2000); //wait for SDC to charge so doesnt go immidiately to fault      
+        g_idle_entry_ms = HAL_GetTick();
         break;
 
     case ACU_APP_STATE_PRECHARGE:
@@ -180,6 +196,7 @@ void acu_app_state_machine_init()
 {
     g_current_state = ACU_APP_STATE_STARTUP;
     g_previous_state = ACU_APP_STATE_STARTUP;
+    g_startup_entry_ms = HAL_GetTick();
 }
 
 void acu_app_state_machine_step()
