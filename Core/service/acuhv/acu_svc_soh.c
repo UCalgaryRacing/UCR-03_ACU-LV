@@ -25,7 +25,7 @@ static bool internal_resistance_calculated = false;
 
 /*********************** SOC CALCULATION MACROS **************************/
 // this one I made manually.
-#define VOLTAGE_TO_SOC_HOMEMADE(v) \
+#define VOLTAGE_TO_SOC_OPEN_VOLTAGE(v) \
     (100*((v) >= 4.2f ? 100.0f : \
     (v) >= 4.1 ? (v)*0.9 -2.765 : \
     (v) >= 4.0 ? (v)*0.75 - 2.1575 : \
@@ -33,15 +33,6 @@ static bool internal_resistance_calculated = false;
     (v) >= 3.0f ? (v)*0.5 - 1.41666667 : \
     (v) >= 2.50f ?  (v)*0.166666 - 0.416666 : 0.0f))
 
-
-/* function that splits the curve into multiple straight line segments using nested if statements*/
-#define VOLTAGE_TO_SOC_1C(v) \
-    ((v) >= 4.15f ? 100.0f : \
-     (v) >= 3.95f ? 80.0f + ((v) - 3.95f) * (20.0f / (4.15f - 3.95f)) : \
-     (v) >= 3.70f ? 55.0f + ((v) - 3.70f) * (25.0f / (3.95f - 3.70f)) : \
-     (v) >= 3.50f ? 30.0f + ((v) - 3.50f) * (25.0f / (3.70f - 3.50f)) : \
-     (v) >= 3.25f ? 10.0f + ((v) - 3.25f) * (20.0f / (3.50f - 3.25f)) : \
-     (v) >= 2.50f ?  0.0f + ((v) - 2.50f) * (10.0f / (3.25f - 2.50f)) : 0.0f)
 
 
 
@@ -54,22 +45,9 @@ void acu_svc_init_acu_energy_state(void){
     acuhv_svc_update_batt_voltage();
     acu_bus_voltage = acu_data_get_acu_battery_voltage();
     initial_unsagged_accu_voltage = acu_bus_voltage; 
+    float soc_average = VOLTAGE_TO_SOC_OPEN_VOLTAGE((acu_bus_voltage/ACU_PACK_SERIES_CELL_COUNT));
 
 
-    float soc_1c = VOLTAGE_TO_SOC_1C((acu_bus_voltage/ACU_PACK_SERIES_CELL_COUNT)); // convert bus voltage to cell voltage for SOC calculation
-    float soc_homemade = VOLTAGE_TO_SOC_HOMEMADE((acu_bus_voltage/ACU_PACK_SERIES_CELL_COUNT));
-    float soc_average = (soc_1c + soc_homemade) / 2.0f;
-    
-    if (soc_average > 100.0f)
-    {
-        soc_average = 100.0f;
-    }
-    else if (soc_average < 0.0f)
-    {
-        soc_average = 0.0f;
-    }
-    
-    
 
     float Capacity_Ah = ACU_PACK_CAPACITY_AH * (soc_average / 100.0f);
     float Energy_Wh = Capacity_Ah * acu_bus_voltage; 
@@ -102,7 +80,7 @@ void acu_svc_update_acu_energy_state(void){
 
     float current_A = acu_data_get_acu_battery_current();
 
-    if (!internal_resistance_calculated && (current_A) > 10.0) // only calculate internal resistance once we have a significant current to improve accuracy, and only do it once to save processing power.
+    if (!internal_resistance_calculated && (current_A) > 10.0) // only calculate internal resistance once we have a significant current to improve accuracy, and only do it once.
     {
         float voltage_at_shunt_V = acu_data_get_acu_battery_voltage();
         internal_resistance_accu_to_shunt = (initial_unsagged_accu_voltage - voltage_at_shunt_V) / current_A; // calculate internal resistance using Ohm's law.
@@ -131,39 +109,23 @@ void acu_svc_update_acu_energy_state(void){
     /*--------------------------------CALCULATE SOC FROM VOLTAGE--------------------------------*/
     float acu_bus_voltage = acu_data_get_acu_battery_voltage();
     float unsagged_acu_voltage = acu_bus_voltage + (current_A * internal_resistance_accu_to_shunt); // compensate for voltage drop across internal resistance for more accurate energy calculations.
-    float soc_voltage_calculated_1 = VOLTAGE_TO_SOC_HOMEMADE((unsagged_acu_voltage/ACU_PACK_SERIES_CELL_COUNT));
-    float soc_voltage_calculated_2 = VOLTAGE_TO_SOC_1C((unsagged_acu_voltage/ACU_PACK_SERIES_CELL_COUNT));
-    float soc_voltage_calculated = (soc_voltage_calculated_1 + soc_voltage_calculated_2) / 2.0f;
-      /*--------------------------------CALCULATE SOC AVERAGE--------------------------------*/
+    float soc_voltage_calculated = VOLTAGE_TO_SOC_OPEN_VOLTAGE((unsagged_acu_voltage/ACU_PACK_SERIES_CELL_COUNT)); // calculate SOC from voltage using the open circuit voltage curve.
+      
+    
+    /*--------------------------------CALCULATE SOC AVERAGE--------------------------------*/
     
        float soc_average = (soc_current_calculated + soc_voltage_calculated) / 2.0f;
-    if (soc_average > 100.0f)
-    {
-        soc_average = 100.0f;
-    }
-    else if (soc_average < 0.0f)
-    {
-        soc_average = 0.0f;
-    }
 
     
-  /*--------------------------------CALCULATE SOE FROM CURRENT AND SOC--------------------------------*/
+  /*--------------------------------CALCULATE SOE FROM CURRENT AND SOC BASED ON VOLTAGE--------------------------------*/
     float energy_discharged_Wh;
     energy_discharged_Wh = capacity_discharged_Ah * unsagged_acu_voltage; // calculating energy discharge in order to update soe, uses current accumelator battery voltage. 
-
     float previous_acu_energy_Wh = acu_data_get_acu_energy_Wh();
     float current_acu_energy_Wh = previous_acu_energy_Wh - energy_discharged_Wh;
     float soe_current_calculated = (current_acu_energy_Wh / ACU_PACK_ENERGY_WH) * 100.0f;
+
     float soe_soc_calculated = (soc_average/100.0f) *ACU_PACK_CAPACITY_AH * unsagged_acu_voltage;
     float soe_average = (soe_current_calculated + soe_soc_calculated) / 2.0f;
-    if (soe_average > 100.0f)
-    {
-        soe_average = 100.0f;
-    }
-    else if (soe_average < 0.0f)
-    {
-        soe_average = 0.0f;
-    }
 
 
     acu_data_set_acu_energy_states(soc_average, soe_average, current_acu_energy_Wh, current_acu_capacity_Ah);
