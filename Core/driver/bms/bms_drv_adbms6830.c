@@ -62,6 +62,12 @@ static inline void spi_unlock(void)
 /** Maximum read transaction size: 4-byte command + data from all slaves. */
 #define ADBMS_MAX_READ_SIZE     (4U + (ADBMS_NUM_SLAVES * (ADBMS_REG_GROUP_SIZE + 2U)))
 
+/** Maximum write transaction size: 4-byte command + data for all slaves. */
+#define ADBMS_MAX_WRITE_SIZE    ADBMS_MAX_READ_SIZE
+
+/** Payload bytes per slave in a register-group SPI frame (data + PEC). */
+#define ADBMS_BYTES_PER_SLAVE   (ADBMS_REG_GROUP_SIZE + 2U)
+
 /**
  * @brief Send a command-only frame (no data payload).
  *
@@ -130,14 +136,14 @@ static HAL_StatusTypeDef adbms_spi_read(const uint8_t cmd_frame[4], uint8_t *rx_
 static HAL_StatusTypeDef adbms_spi_write(const uint8_t cmd_frame[4], const uint8_t *data, uint16_t data_len)
 {
     /* Combine command and data into single buffer */
-    uint8_t tx_buf[ADBMS_MAX_FRAME_SIZE];
+    uint8_t tx_buf[ADBMS_MAX_WRITE_SIZE];
     memcpy(tx_buf, cmd_frame, 4U);
     memcpy(&tx_buf[4], data, data_len);
 
     adbms6830_wakeup();
 
     HAL_GPIO_WritePin(ADBMS_1_CSN_PORT, ADBMS_1_CSN_PIN, GPIO_PIN_RESET);
-    HAL_StatusTypeDef hal_status = HAL_SPI_Transmit(ADBMS_1_SPI_HANDLE,tx_buf, 4U + data_len, HAL_MAX_DELAY);
+    HAL_StatusTypeDef hal_status = HAL_SPI_Transmit(ADBMS_1_SPI_HANDLE, tx_buf, 4U + data_len, HAL_MAX_DELAY);
     HAL_GPIO_WritePin(ADBMS_1_CSN_PORT, ADBMS_1_CSN_PIN, GPIO_PIN_SET);
     return hal_status;
 }
@@ -507,6 +513,43 @@ static int adbms6830_read_register_group(uint16_t cmd, uint8_t rx_data[ADBMS_NUM
     return 0;
 }
 
+/**
+ * @brief Write a register group to all slaves in the daisy chain.
+ *
+ * Data is sent bottom-to-top: slave 0 first, then slave 1, etc.
+ *
+ * @param cmd       16-bit write command code.
+ * @param tx_data   Input buffer [ADBMS_NUM_SLAVES][ADBMS_REG_GROUP_SIZE].
+ * @return 0 on success, -1 on SPI error.
+ */
+static int adbms6830_write_register_group(uint16_t cmd,
+                                          const uint8_t tx_data[ADBMS_NUM_SLAVES][ADBMS_REG_GROUP_SIZE])
+{
+    uint8_t cmd_buf[4];
+    cmd_buf[0] = (uint8_t)(cmd >> 8);
+    cmd_buf[1] = (uint8_t)cmd;
+
+    uint16_t cmd_pec = adbms6830_pec15_calc(cmd_buf, 2U);
+    cmd_buf[2] = (uint8_t)(cmd_pec >> 8);
+    cmd_buf[3] = (uint8_t)cmd_pec;
+
+    uint8_t data_buf[ADBMS_NUM_SLAVES * ADBMS_BYTES_PER_SLAVE];
+
+    for (uint8_t slave_idx = 0U; slave_idx < ADBMS_NUM_SLAVES; slave_idx++)
+    {
+        uint8_t *slot = &data_buf[slave_idx * ADBMS_BYTES_PER_SLAVE];
+
+        memcpy(slot, tx_data[slave_idx], ADBMS_REG_GROUP_SIZE);
+
+        uint16_t data_pec = adbms6830_pec10_calc(slot, ADBMS_REG_GROUP_SIZE, 0U);
+        slot[6] = (uint8_t)((data_pec >> 8) & 0x03U);
+        slot[7] = (uint8_t)data_pec;
+    }
+
+    HAL_StatusTypeDef hal_status = adbms_spi_write(cmd_buf, data_buf, sizeof(data_buf));
+    return (hal_status == HAL_OK) ? 0 : -1;
+}
+
 int adbms6830_start_cell_adc(bool discharge_permitted)
 {
     uint16_t cmd = CMD_ADCV_BASE;
@@ -751,17 +794,21 @@ static float calculate_thermistor_temperature(float adc_voltage)
 
 static void adbms6830_set_mux(uint8_t channel)
 {
-    adbms6830_shadow_t bms_shadow;
+    uint8_t cfga_all[ADBMS_NUM_SLAVES][ADBMS_REG_GROUP_SIZE];
+    int result = adbms6830_read_register_group(CMD_RDCFGA, cfga_all);
+    if (result != 0)
+    {
+        return;
+    }
 
-    adbms6830_read_cfga(&bms_shadow);
+    for (uint8_t slave_idx = 0U; slave_idx < ADBMS_NUM_SLAVES; slave_idx++)
+    {
+        cfga_all[slave_idx][0] |= BMS_CFGA0_REFON_MASK;
+        cfga_all[slave_idx][3] = (uint8_t)((cfga_all[slave_idx][3] & (uint8_t)~BMS_MUX_SELECT_MASK)
+                                           | (uint8_t)((channel & 0x0FU) << BMS_MUX_SELECT_SHIFT));
+    }
 
-    bms_shadow.cfga[0] |= BMS_CFGA0_REFON_MASK;
-
-    bms_shadow.cfga[3] = (uint8_t)((bms_shadow.cfga[3] & (uint8_t)~BMS_MUX_SELECT_MASK)
-                                   | (uint8_t)((channel & 0x0FU) << BMS_MUX_SELECT_SHIFT));
-
-    adbms6830_write_cfga(&bms_shadow);
-    adbms6830_read_cfga(&bms_shadow);
+    (void)adbms6830_write_register_group(CMD_WRCFGA, cfga_all);
 }
 
 int adbms6830_read_all_cell_temps(uint8_t num_slaves, uint8_t therms_per_slave, float cell_temps[num_slaves][therms_per_slave])

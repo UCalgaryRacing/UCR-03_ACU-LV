@@ -5,12 +5,27 @@
 
 #include "rco_data.h"
 
+extern FDCAN_HandleTypeDef hfdcan2;
+
 static bool g_initialized = false;
 
 status_t rco_svc_can_route_init(void)
 {
     //TODO start CAN here
     com_svc_can_register(REAR_CONTROL_CAN_ID, rco_svc_can_rx_reset_data);
+
+    FDCAN_FilterTypeDef sFilterConfig;
+
+    sFilterConfig.IdType = FDCAN_STANDARD_ID;
+    sFilterConfig.FilterIndex = 0;
+    sFilterConfig.FilterType = FDCAN_FILTER_MASK;
+    sFilterConfig.FilterConfig = FDCAN_FILTER_TO_RXFIFO0;
+    sFilterConfig.FilterID1 = 405;
+    sFilterConfig.FilterID2 = 0x7FF;
+    sFilterConfig.RxBufferIndex = 0;
+    HAL_FDCAN_ConfigFilter(&hfdcan2, &sFilterConfig);
+
+    HAL_FDCAN_ConfigGlobalFilter(&hfdcan2, FDCAN_REJECT, FDCAN_REJECT, FDCAN_REJECT_REMOTE, FDCAN_REJECT_REMOTE);
 
     g_initialized = true;
     return OK;

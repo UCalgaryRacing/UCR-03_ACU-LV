@@ -19,10 +19,10 @@ void task_manager_loop()
     nextWakeTime += period;
     osDelayUntil(nextWakeTime);
 
-    acu_app_state_machine_step();
-
-    // update states + transmit
-    acu_app_state_machine_update_state();
-
-    acu_svc_can_tx_acu_measurements();
+//    acu_app_state_machine_step();
+//
+//    // update states + transmit
+//    acu_app_state_machine_update_state();
+//
+//    acu_svc_can_tx_acu_measurements();
 }

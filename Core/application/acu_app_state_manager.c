@@ -18,6 +18,8 @@
 #include "sdc_data.h"
 #include "rco_data.h"
 
+#include "acu_svc_logging.h"
+
 #include "com_typ_common.h"
 
 /*============================================================================*/
@@ -138,6 +140,8 @@ static acu_app_state_t handle_fault_state()
 /*============================= ENTRY / EXIT =================================*/
 static void on_state_entry(acu_app_state_t state)
 {
+    acu_app_state_machine_update_state();
+    acu_svc_can_tx_acu_measurements();
     switch (state)
     {
     case ACU_APP_STATE_STARTUP:
@@ -154,7 +158,6 @@ static void on_state_entry(acu_app_state_t state)
 
     case ACU_APP_STATE_PRECHARGE:
         acuhv_svc_precharge_start();
-
         acuhv_svc_air_close_air_neg(true);
         acuhv_svc_air_close_air_pos(false);
     	osDelay(3000);
@@ -162,6 +165,7 @@ static void on_state_entry(acu_app_state_t state)
 
     case ACU_APP_STATE_ACTIVE:
         // close air if precharge --> active state
+        acu_data_set_acu_ts_active(true);
         acuhv_svc_air_close_air_neg(true);
         acuhv_svc_air_close_air_pos(true); // if AIR POS was not able to be closed, state machine will read as STATE_ACTIVE but shouldnt be able to drive
         break;
@@ -179,10 +183,15 @@ static void on_state_entry(acu_app_state_t state)
 
 static void on_state_exit(acu_app_state_t state)
 {
+    acu_app_state_machine_update_state();
+    acu_svc_can_tx_acu_measurements();
     switch (state)
     {
     case ACU_APP_STATE_PRECHARGE:
         acu_data_set_precharge_timeout_fault_status(false); // clear precharge timeout flag 
+        break;
+    case ACU_APP_STATE_ACTIVE:
+        acu_data_set_acu_ts_active(false);
         break;
     default:
         break;

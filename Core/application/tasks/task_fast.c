@@ -75,11 +75,13 @@ void task_fast_loop(void){
     //---------------- SDC ----------------//
     aculv_svc_update_sdc_voltages();
     aculv_svc_update_sdc_latches();
+    aculv_svc_update_sdc_bms_ok();
 
     //---------------- CAN ----------------//
     acu_svc_can_tx_acu_measurements();
     acu_svc_can_tx_acu_energy_state();
     aculv_svc_can_tx_sdc_voltages();
+    acu_svc_can_tx_acu_fault();
 
     osDelayUntil(nextWakeTime);
 

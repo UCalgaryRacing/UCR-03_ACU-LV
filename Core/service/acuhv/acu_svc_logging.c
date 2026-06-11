@@ -53,3 +53,24 @@ void acu_svc_can_tx_acu_energy_state()
     com_svc_can_transmit(&msg);
 }
 
+
+void acu_svc_can_tx_acu_fault()
+{
+    can_msg_t msg;
+    msg.channel = CAN1;
+    msg.id = ACCUMULATOR_FAULT_CAN_ID;
+    msg.dlc = 1;
+
+    acu_fault_t acu_faults;
+    acu_data_get_fault_status(&acu_faults);
+
+    struct ucr_03_accumulator_fault_t accumulator_fault_can_msg;
+
+    accumulator_fault_can_msg.bms_fault = acu_faults.bms_fault;
+    accumulator_fault_can_msg.imd_fault = acu_faults.imd_fault;
+
+
+    ucr_03_accumulator_fault_pack(msg.data, &accumulator_fault_can_msg, msg.dlc);
+
+    com_svc_can_transmit(&msg);
+}

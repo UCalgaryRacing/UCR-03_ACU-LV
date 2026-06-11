@@ -5,6 +5,7 @@
 #include "bms_svc_thermistor.h"
 #include "bms_svc_cell_voltage.h"
 #include "bms_svc_logging.h"
+#include "acu_data.h"
 
 static const uint32_t period = 1;
 static uint32_t nextWakeTime;
@@ -29,7 +30,7 @@ void task_medium_loop(void)
 
 
     bms_svc_acquire_all_cell_temperatures(cell_temps);
-//	bms_fault |=  bms_svc_check_all_cell_temperature_limits(cell_temps);
+	//bms_fault |=  bms_svc_check_all_cell_temperature_limits(cell_temps);
 
     bms_svc_can_tx_all_cell_voltages(cell_voltages);
     bms_svc_can_tx_all_cell_temperatures(cell_temps);

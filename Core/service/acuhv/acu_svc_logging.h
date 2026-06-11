@@ -3,6 +3,6 @@
 
 void acu_svc_can_tx_acu_measurements();
 void acu_svc_can_tx_acu_energy_state();
-void acu_svc_can_tx_ts_state_update();
+void acu_svc_can_tx_acu_fault();
 
 #endif /*SERVICE_ACUHV_SVC_LOGGING_H_*/
