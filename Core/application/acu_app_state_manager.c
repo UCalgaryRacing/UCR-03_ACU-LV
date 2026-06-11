@@ -109,7 +109,7 @@ static acu_app_state_t handle_precharge_state()
 
 static acu_app_state_t handle_active_state()
 {
-    if (aculv_svc_sdc_is_sdc_faulted())    
+    if (aculv_svc_sdc_is_sdc_faulted())
     {
         return ACU_APP_STATE_FAULT;
     }

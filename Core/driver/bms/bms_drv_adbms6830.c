@@ -105,6 +105,8 @@ static HAL_StatusTypeDef adbms_spi_read(const uint8_t cmd_frame[4], uint8_t *rx_
     uint8_t rx_buf[ADBMS_MAX_READ_SIZE];
     uint16_t total_len = 4U + rx_len;
 
+    adbms6830_wakeup();
+
     /* Build TX buffer: command + zeros for receive clocking */
     memcpy(tx_buf, cmd_frame, 4U);
     memset(&tx_buf[4], 0x00, rx_len);
@@ -286,27 +288,29 @@ int adbms6830_init(void)
 
 void adbms6830_wakeup_pulse(void)
 {
-    /* Toggle CS low then high - minimum tDWELL (240ns) is satisfied
-     * by GPIO switching time on most MCUs */
+    /* isoSPI wake pulse: brief CSB low toggle (tDWELL >= 240 ns).
+     * Do not hold CS low without SCK — that looks like a broken frame. */
     HAL_GPIO_WritePin(ADBMS_1_CSN_PORT, ADBMS_1_CSN_PIN, GPIO_PIN_RESET);
-    /* Brief delay - GPIO switching + instruction time exceeds 240ns */
-    osDelay(1U);
-    // __NOP(); __NOP(); __NOP(); __NOP(); // need to measure wakeup pulse. probably different for H7
+    for (volatile uint8_t i = 0U; i < 10U; i++)
+    {
+        __NOP();
+    }
     HAL_GPIO_WritePin(ADBMS_1_CSN_PORT, ADBMS_1_CSN_PIN, GPIO_PIN_SET);
 }
 
 int adbms6830_wakeup(void)
 {
-
     /* Send one wake-up pulse per device in the daisy chain.
      * Each pulse wakes a device and allows it to propagate the next pulse.
-     * Wait 1ms between pulses (> tREADY/tWAKE, < tIDLE). */
-    for (uint8_t device_idx = 0U; device_idx < (ADBMS_NUM_SLAVES); device_idx++)
+     * Wait between pulses (> tREADY/tWAKE, < tIDLE). */
+    for (uint8_t device_idx = 0U; device_idx < ADBMS_NUM_SLAVES; device_idx++)
     {
         adbms6830_wakeup_pulse();
 
-        /* Wait between pulses - use osDelay for millisecond delay */
-        osDelay(1U);
+        if (device_idx < (ADBMS_NUM_SLAVES - 1U))
+        {
+            osDelay(ADBMS_WAKEUP_PULSE_MS);
+        }
     }
 
     return 0;
@@ -516,7 +520,9 @@ static int adbms6830_read_register_group(uint16_t cmd, uint8_t rx_data[ADBMS_NUM
 /**
  * @brief Write a register group to all slaves in the daisy chain.
  *
- * Data is sent bottom-to-top: slave 0 first, then slave 1, etc.
+ * Daisy-chain writes are sent top-to-bottom: the farthest IC (highest
+ * slave index) is transmitted first, and the bottom IC (slave 0) last.
+ * This is the inverse of read order, per the ADBMS6830 daisy-chain protocol.
  *
  * @param cmd       16-bit write command code.
  * @param tx_data   Input buffer [ADBMS_NUM_SLAVES][ADBMS_REG_GROUP_SIZE].
@@ -535,9 +541,10 @@ static int adbms6830_write_register_group(uint16_t cmd,
 
     uint8_t data_buf[ADBMS_NUM_SLAVES * ADBMS_BYTES_PER_SLAVE];
 
-    for (uint8_t slave_idx = 0U; slave_idx < ADBMS_NUM_SLAVES; slave_idx++)
+    for (uint8_t slot_idx = 0U; slot_idx < ADBMS_NUM_SLAVES; slot_idx++)
     {
-        uint8_t *slot = &data_buf[slave_idx * ADBMS_BYTES_PER_SLAVE];
+        uint8_t slave_idx = (ADBMS_NUM_SLAVES - 1U) - slot_idx;
+        uint8_t *slot = &data_buf[slot_idx * ADBMS_BYTES_PER_SLAVE];
 
         memcpy(slot, tx_data[slave_idx], ADBMS_REG_GROUP_SIZE);
 
@@ -794,18 +801,19 @@ static float calculate_thermistor_temperature(float adc_voltage)
 
 static void adbms6830_set_mux(uint8_t channel)
 {
+    adbms6830_shadow_t shadow;
     uint8_t cfga_all[ADBMS_NUM_SLAVES][ADBMS_REG_GROUP_SIZE];
-    int result = adbms6830_read_register_group(CMD_RDCFGA, cfga_all);
-    if (result != 0)
-    {
-        return;
-    }
+
+    /* Use known-good defaults instead of read-modify-write from a chain that
+     * may be asleep/idle (RDCFGA without a prior wake returns garbage). */
+    adbms6830_shadow_init(&shadow);
+    adbms_cfga_set_refon(shadow.cfga, true);
+    shadow.cfga[3] = (uint8_t)((shadow.cfga[3] & (uint8_t)~BMS_MUX_SELECT_MASK)
+                               | (uint8_t)((channel & 0x0FU) << BMS_MUX_SELECT_SHIFT));
 
     for (uint8_t slave_idx = 0U; slave_idx < ADBMS_NUM_SLAVES; slave_idx++)
     {
-        cfga_all[slave_idx][0] |= BMS_CFGA0_REFON_MASK;
-        cfga_all[slave_idx][3] = (uint8_t)((cfga_all[slave_idx][3] & (uint8_t)~BMS_MUX_SELECT_MASK)
-                                           | (uint8_t)((channel & 0x0FU) << BMS_MUX_SELECT_SHIFT));
+        memcpy(cfga_all[slave_idx], shadow.cfga, ADBMS_REG_GROUP_SIZE);
     }
 
     (void)adbms6830_write_register_group(CMD_WRCFGA, cfga_all);
