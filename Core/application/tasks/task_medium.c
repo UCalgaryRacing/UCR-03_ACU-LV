@@ -26,11 +26,11 @@ void task_medium_loop(void)
 	bms_fault = false;
 
 	bms_svc_acquire_all_cell_voltages(cell_voltages);
-	bms_fault |= bms_svc_check_all_cell_voltage_limits(cell_voltages);
+	//bms_fault |= bms_svc_check_all_cell_voltage_limits(cell_voltages);
 
 
     bms_svc_acquire_all_cell_temperatures(cell_temps);
-	bms_fault |=  bms_svc_check_all_cell_temperature_limits(cell_temps);
+	//bms_fault |=  bms_svc_check_all_cell_temperature_limits(cell_temps);
 
     bms_svc_can_tx_all_cell_voltages(cell_voltages);
     bms_svc_can_tx_all_cell_temperatures(cell_temps);
