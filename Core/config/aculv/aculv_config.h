@@ -14,7 +14,7 @@
 #define SDC_END                         MCU_ADC3_4
 #define SDC_RESERVE                     MCU_ADC2_3
 
-#define SDC_DISCHARGED_V                    7.0f
+#define SDC_DISCHARGED_V                    3.0f
 #define SDC_CHARGED_V                       9.0f
 
 /*============================================================================*/

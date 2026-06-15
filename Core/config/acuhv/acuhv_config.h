@@ -7,6 +7,7 @@
 
 #include "mcu_config_dfsdm.h"
 #include "mcu_dfsdm_filters.h"
+#include "acuhv_config_pinout.h"
 
 /*============================================================================*/
 /* DFSDM ACUHV Mapping                                                         */

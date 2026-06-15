@@ -98,6 +98,23 @@
 #define CELL_MAX_TEMPERATURE 60.0f
 
 /*============================================================================*/
+/* Thermistor Exclusions                                                      */
+/*============================================================================*/
+
+/**
+ * Unused or damaged pack thermistors to exclude from readings.
+ * Entries use cell_temps[slave][therm] indices (therm 0-17 per slave).
+ */
+typedef struct
+{
+    uint8_t slave;
+    uint8_t therm;
+} bms_therm_exclusion_t;
+
+extern const bms_therm_exclusion_t bms_therm_exclusions[];
+extern const uint8_t bms_therm_exclusion_count;
+
+/*============================================================================*/
 /* Default Register Configuration                                             */
 /*============================================================================*/
 

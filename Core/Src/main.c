@@ -32,6 +32,7 @@
 #include "task_can_tx.h"
 
 #include "can_typ_common.h"
+#include "can_config.h"
 
 
 /* USER CODE END Includes */
@@ -281,7 +282,7 @@ int main(void)
   /* USER CODE END RTOS_TIMERS */
 
   /* USER CODE BEGIN RTOS_QUEUES */
-  Can1TxQueueHandle = osMessageQueueNew (16, sizeof(can_msg_t), &Can1TxQueue_attributes);
+  Can1TxQueueHandle = osMessageQueueNew (CAN1_TX_QUEUE_DEPTH, sizeof(can_msg_t), &Can1TxQueue_attributes);
   Can1RxQueueHandle = osMessageQueueNew (16, sizeof(can_msg_t), &Can1RxQueue_attributes);
 
   Can2TxQueueHandle = osMessageQueueNew (16, sizeof(can_msg_t), &Can2TxQueue_attributes);

@@ -51,6 +51,17 @@ extern DFSDM_Filter_HandleTypeDef hdfsdm1_filter2;
 #define AIR_POS_EN_PORT GPIOB
 #define AIR_POS_EN_PIN GPIO_PIN_0
 
+/*============================================================================*/
+/* IMD                                                                        */
+/*============================================================================*/
+
+// IMD_OK cannot be written to (hardwired to IMD relay). Can read for data/logging purposes.
+#define IMD_OK_PORT GPIOJ
+#define IMD_OK_PIN GPIO_PIN_2
+
+#define IMD_M_PORT GPIOA
+#define IMD_M_PIN GPIO_PIN_3
+
 
 
 #endif /*CONFIG_ACUHV_CONFIG_PINOUT_H_*/

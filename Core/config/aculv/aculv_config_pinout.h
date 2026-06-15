@@ -59,12 +59,6 @@ extern ADC_HandleTypeDef hadc3;
 /*============================================================================*/
 /* IMD  (fault and latch for relays in SDC)                                   */
 /*============================================================================*/
-// IMD_OK cannot be written to (hardwired to IMD relay). Can read for data/logging purposes.
-#define IMD_OK_PORT GPIOJ
-#define IMD_OK_PIN GPIO_PIN_2
-
-#define IMD_M_PORT GPIOA
-#define IMD_M_PIN GPIO_PIN_3
 
 #define IMD_LATCH_EN_PORT GPIOH
 #define IMD_LATCH_EN_PIN GPIO_PIN_3

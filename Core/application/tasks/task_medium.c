@@ -7,7 +7,7 @@
 #include "bms_svc_logging.h"
 #include "acu_data.h"
 
-static const uint32_t period = 1;
+static const uint32_t period = 10;
 static uint32_t nextWakeTime;
 
 static float cell_voltages[ADBMS_NUM_SLAVES][ADBMS_CELLS_PER_IC];
@@ -26,11 +26,11 @@ void task_medium_loop(void)
 	bms_fault = false;
 
 	bms_svc_acquire_all_cell_voltages(cell_voltages);
-	//bms_fault |= bms_svc_check_all_cell_voltage_limits(cell_voltages);
+	bms_fault |= bms_svc_check_all_cell_voltage_limits(cell_voltages);
 
 
     bms_svc_acquire_all_cell_temperatures(cell_temps);
-	//bms_fault |=  bms_svc_check_all_cell_temperature_limits(cell_temps);
+	bms_fault |=  bms_svc_check_all_cell_temperature_limits(cell_temps);
 
     bms_svc_can_tx_all_cell_voltages(cell_voltages);
     bms_svc_can_tx_all_cell_temperatures(cell_temps);

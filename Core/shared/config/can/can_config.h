@@ -92,6 +92,18 @@ typedef struct
 #define CHARGER_TEMP_CAN_ID                     1555
 #define CHARGER_ERROR_CAN_ID                    1556
 
+/*============================================================================*/
+/* RTOS queue sizing                                                          */
+/*============================================================================*/
+
+/** BMS logging burst per task_medium cycle: 10 voltage + 20 temperature frames. */
+#define CAN_BMS_TX_FRAMES_PER_CYCLE             (30U)
+
+/** Headroom for ACU fast-task and other CAN1 TX between drain cycles. */
+#define CAN1_TX_QUEUE_HEADROOM                  (8U)
+
+#define CAN1_TX_QUEUE_DEPTH                     (CAN_BMS_TX_FRAMES_PER_CYCLE + CAN1_TX_QUEUE_HEADROOM)
+
 #endif /* CONFIG_CAN_CONFIG_H_ */
 
 

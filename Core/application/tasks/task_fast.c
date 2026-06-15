@@ -23,6 +23,8 @@
 #include "bms_svc_thermistor.h"
 #include "bms_svc_cell_voltage.h"
 
+#include "acuhv_svc_imd.h"
+
 static const uint32_t period = 10;
 static uint32_t nextWakeTime;
 
@@ -76,6 +78,7 @@ void task_fast_loop(void){
     aculv_svc_update_sdc_voltages();
     aculv_svc_update_sdc_latches();
     aculv_svc_update_sdc_bms_ok();
+    acuhv_svc_update_imd_ok();
 
     //---------------- CAN ----------------//
     acu_svc_can_tx_acu_measurements();

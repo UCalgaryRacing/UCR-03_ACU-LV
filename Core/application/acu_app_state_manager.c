@@ -54,6 +54,8 @@ static void on_state_exit(acu_app_state_t state);
 /*============================================================================*/
 static acu_app_state_t handle_startup_state()
 {
+    acu_data_set_imd_fault_status(false);
+    acu_svc_can_tx_acu_fault();
     if ((HAL_GetTick() - g_startup_entry_ms) >= STARTUP_IMD_GRACE_MS)
     {
         return ACU_APP_STATE_IDLE;
