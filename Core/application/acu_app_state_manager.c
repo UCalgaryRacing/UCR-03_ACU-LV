@@ -121,10 +121,15 @@ static acu_app_state_t handle_active_state()
 
 static acu_app_state_t handle_fault_state()
 {
-    if (rco_data_get_reset_pressed())
-    {
-        return ACU_APP_STATE_IDLE;
-    }
+//    if (rco_data_get_reset_pressed())
+//    {
+//        return ACU_APP_STATE_IDLE;
+//    }
+
+	if(sdc_data_get_sdc_reserve_voltage() >= SDC_CHARGED_V)
+		{
+		return ACU_APP_STATE_IDLE;
+		}
 
     return ACU_APP_STATE_FAULT;
 }
