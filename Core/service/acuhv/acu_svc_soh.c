@@ -18,12 +18,12 @@ static uint32_t time_delta_ms;
 
 /* function that splits the curve into multiple straight line segments using nested if statements*/
 #define VOLTAGE_TO_SOC_1C(v) \
-    ((v) >= 4.15f ? 100.0f : \
-     (v) >= 3.95f ? 80.0f + ((v) - 3.95f) * (20.0f / (4.15f - 3.95f)) : \
-     (v) >= 3.70f ? 55.0f + ((v) - 3.70f) * (25.0f / (3.95f - 3.70f)) : \
-     (v) >= 3.50f ? 30.0f + ((v) - 3.50f) * (25.0f / (3.70f - 3.50f)) : \
-     (v) >= 3.25f ? 10.0f + ((v) - 3.25f) * (20.0f / (3.50f - 3.25f)) : \
-     (v) >= 2.50f ?  0.0f + ((v) - 2.50f) * (10.0f / (3.25f - 2.50f)) : 0.0f)
+(100*((v) >= 4.2f ? 100.0f : \
+(v) >= 4.1 ? (v)*0.9 -2.765 : \
+(v) >= 4.0 ? (v)*0.75 - 2.1575 : \
+(v) >= 3.50f ? (v)*1.01 -3.205 : \
+(v) >= 3.0f ? (v)*0.5 - 1.41666667 : \
+(v) >= 2.50f ?  (v)*0.166666 - 0.416666 : 0.0f))
 
 
 
@@ -95,3 +95,28 @@ void acu_svc_update_acu_energy_state(void){
     acu_data_set_acu_energy_states(current_soc, current_soe, current_acu_energy_Wh, current_acu_capacity_Ah);
 
 }
+
+                                    /* ALTERNATIVE IMPLEMENTATION */
+// this one grabs the "open circuit" voltage by grabbing the voltage when the current going into the pack is below some values (say 10)
+// then it applies the same soc init function from open voltage and resets SOC.
+
+void acu_svc_update_acu_energy_state(void){
+
+    float current_A = acu_data_get_acu_battery_current();
+    if (current_A < 10.0f && current_A >= 0.0f) // If the current is very low in magnitude and flowing forward, we can assume the pack is at open circuit voltage and use that to update SOC
+    {
+        float acu_bus_voltage = acu_data_get_acu_battery_voltage();
+        float soc = VOLTAGE_TO_SOC_1C((acu_bus_voltage/ACU_PACK_SERIES_CELL_COUNT)); // convert bus voltage to cell voltage for SOC calculation
+
+        float Capacity_Ah = ACU_PACK_CAPACITY_AH * (soc / 100.0f);
+        float Energy_Wh = Capacity_Ah * acu_bus_voltage; 
+        float soe = (Energy_Wh / ACU_PACK_ENERGY_WH) * 100.0f;
+
+        acu_data_set_acu_energy_states(soc, soe, Energy_Wh, Capacity_Ah);
+    }
+
+    return; // If the current is not low enough, we do not update SOC and just return.
+
+
+}
+
