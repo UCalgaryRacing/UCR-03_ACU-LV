@@ -21,4 +21,4 @@ status_t can_drv_start(const can_hw_t *hw);
 status_t can_drv_transmit(can_msg_t *message);
 
 
-#endif
+#endif /* COM_DRV_CAN_H */

@@ -1,147 +1,45 @@
-#include "cmsis_os2.h"
-#include "acu_lv_drv_adbms6830.h"
-#include "acu_lv_svc_adbms6830.h"
-#include "acu_lv_drv_adbms6830_regs.h"
 #include "bms_svc_thermistor.h"
-#include "acu_data.h"
-#include "acu_lv_config.h"
-#include <stdlib.h>
-// void bms_svc_admbs_toggle_mux(uint16_t gpio);
+#include "bms_config.h"
+#include "bms_drv_adbms6830.h"
 
-/* Private Functions */
-static float get_highest_temp();
-static float get_lowest_temp();
+#include <math.h>
+#include <stdbool.h>
 
-/*============================================================================*/
-/* Temperature Sampling                                                       */
-/*============================================================================*/
-
-static uint16_t raw_temps[ADBMS_NUM_SLAVES][ADBMS_THERMS_PER_IC];
-static float processed_temps[ADBMS_NUM_SLAVES][ADBMS_THERMS_PER_IC];
-
-extern bms_temp_stats_t temp_stats;
-
-static float calculate_thermistor_temperature(float adc_voltage)
+static void bms_svc_apply_therm_exclusions(float cell_temps[ADBMS_NUM_SLAVES][ADBMS_THERMS_PER_IC])
 {
-  //stole this shit from arduino forum!!!
-  float steinhart;
-  float resistance = 10000 * adc_voltage / (3 - adc_voltage);
-  steinhart = resistance / 10000;     // (R/Ro)
-  steinhart = log(steinhart);                  // ln(R/Ro)
-  steinhart /= 3950;                   // 1/B * ln(R/Ro)
-  steinhart += 1.0 / (25 + 273.15); // + (1/To)
-  steinhart = 1.0 / steinhart;                 // Invert
-  steinhart -= 273.15;
-
-  return steinhart;
-
-  
-}
-
-//TODO add this to adbms drivers
-void bms_svc_admbs_toggle_mux(adbms_gpo_pin_t pin)
-{
-    adbms6830_shadow_t *shadow = bms_manager_get_shadow();
-
-    //mux control connected to gpio1 which is bit 0 of byte 3
-    shadow->cfga[3] ^= ADBMS_GPO1_MASK;
-
-    adbms6830_write_cfga(shadow);
-
-    adbms6830_read_cfga(shadow);
-}
-
-
-
-void bms_svc_acquire_thermistor_temps(uint8_t mux_state)
-{   
-    uint8_t mux_index = mux_state * 9;
-    uint16_t count = 0;
-    int result = adbms6830_start_gpio_adc();
-    float therm_sum = 0.0f;
-    // Wait for ADC conversion to complete (~4ms)
-    osDelay(5);
-
-    result = adbms6830_read_gpio_voltages_raw(raw_temps,mux_state);
-
-    for (int slave = 0; slave < ADBMS_NUM_SLAVES; slave++)
+    for (uint8_t exclusion_idx = 0U; exclusion_idx < bms_therm_exclusion_count; exclusion_idx++)
     {
-        for (int thermistor = mux_index; thermistor < mux_index + 9; thermistor++)
-        {   
-            float thermistor_voltage = adbms6830_adc_to_volts(raw_temps[slave][thermistor]);
-            processed_temps[slave][thermistor] = calculate_thermistor_temperature(thermistor_voltage);
-
-            if(processed_temps[slave][thermistor] > temp_stats.temp_max_c)
-            {
-                temp_stats.temp_max_c = processed_temps[slave][thermistor];
-                temp_stats.temp_max_idx = thermistor;
-                temp_stats.temp_max_slave = slave;
-            }
-            else if (processed_temps[slave][thermistor] < -50.0f)
-            {
-               processed_temps[slave][thermistor] = temp_stats.temp_avg_c;
-            }
-            else if (processed_temps[slave][thermistor] > 1000.0f)
-            {
-                processed_temps[slave][thermistor] = temp_stats.temp_avg_c;
-            }
-            else if(processed_temps[slave][thermistor] < temp_stats.temp_min_c)
-            {
-                temp_stats.temp_min_c = processed_temps[slave][thermistor];
-                temp_stats.temp_min_idx = thermistor;
-                temp_stats.temp_max_slave = slave;
-            }else
-            {
-                therm_sum += processed_temps[slave][thermistor];
-                count++;
-            }
-            
-        }
-
+        const uint8_t slave = bms_therm_exclusions[exclusion_idx].slave;
+        const uint8_t therm = bms_therm_exclusions[exclusion_idx].therm;
+		cell_temps[slave][therm] = NAN;
     }
-    temp_stats.temp_avg_c = therm_sum / (float)count;
 }
 
-void vw_temps()
+void bms_svc_acquire_all_cell_temperatures(float cell_temps[ADBMS_NUM_SLAVES][ADBMS_THERMS_PER_IC])
 {
-    float vw_temp = 23.0f;
+    adbms6830_read_all_cell_temps(ADBMS_NUM_SLAVES, ADBMS_THERMS_PER_IC, cell_temps);
+    bms_svc_apply_therm_exclusions(cell_temps);
+}
 
-    temp_stats.temp_min_c = vw_temp;
-    temp_stats.temp_max_c = vw_temp;
-
-    for(uint8_t slave_idx = 0U; slave_idx < ADBMS_NUM_SLAVES; slave_idx++)
+bool bms_svc_check_all_cell_temperature_limits(float cell_temps[ADBMS_NUM_SLAVES][ADBMS_THERMS_PER_IC])
+{
+    //TODO grab cell_voltages from data layer not as an input
+    for (uint8_t slave_idx = 0U; slave_idx < ADBMS_NUM_SLAVES; slave_idx++)
     {
         for (uint8_t therm_idx = 0U; therm_idx < ADBMS_THERMS_PER_IC; therm_idx++)
         {
-            processed_temps[slave_idx][therm_idx] = vw_temp + ((float)rand()/(float)(RAND_MAX)) * 0.25f - 0.125f; // Add random noise of +/- 0.5C
-            if (processed_temps[slave_idx][therm_idx] < temp_stats.temp_min_c)
+            if (isnan(cell_temps[slave_idx][therm_idx]))
             {
-                temp_stats.temp_min_c = processed_temps[slave_idx][therm_idx];
+                continue;
             }
-            if (processed_temps[slave_idx][therm_idx] > temp_stats.temp_max_c)
+
+            if (cell_temps[slave_idx][therm_idx] > CELL_MAX_TEMPERATURE
+                || cell_temps[slave_idx][therm_idx] < CELL_MIN_TEMPERATURE)
             {
-                temp_stats.temp_max_c = processed_temps[slave_idx][therm_idx];
+                return true;
             }
         }
     }
 
-}
-
-bool bms_svc_check_temps()
-{
-    if((get_lowest_temp() < ACULV_CELL_MIN_TEMPERATURE) || (get_highest_temp() > ACULV_CELL_MAX_TEMPERATURE))
-    {
-        return false;
-    }
-    return true;
-}
-
-static float get_highest_temp()
-{   
-    return temp_stats.temp_max_c;
-}
-
-static float get_lowest_temp()
-{
-    return temp_stats.temp_min_c;
+    return false;
 }

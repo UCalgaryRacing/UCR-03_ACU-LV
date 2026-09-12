@@ -22,13 +22,19 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "fast_task.h"
-#include "medium_task.h"
-#include "slow_task.h"
+
+#include "task_fast.h"
+#include "task_medium.h"
+#include "task_slow.h"
 #include "task_manager.h"
-#include "task_can_tx.h"
+
 #include "task_can_rx.h"
+#include "task_can_tx.h"
+
 #include "can_typ_common.h"
+#include "can_config.h"
+
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -115,9 +121,6 @@ const osThreadAttr_t CanRx_attributes = {
   .priority = (osPriority_t) osPriorityBelowNormal1,
 };
 /* USER CODE BEGIN PV */
-
-extern uint8_t precharge_time;
-
 
 osMessageQueueId_t Can1TxQueueHandle;
 const osMessageQueueAttr_t Can1TxQueue_attributes = {
@@ -220,6 +223,8 @@ int main(void)
   MX_TIM3_Init();
   /* USER CODE BEGIN 2 */
 
+  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_9, GPIO_PIN_SET);
+
 //  HAL_FDCAN_Start(&hfdcan2);
 //  HAL_FDCAN_ActivateNotification(&hfdcan2, FDCAN_IT_RX_FIFO0_NEW_MESSAGE, 0);
 //
@@ -245,6 +250,19 @@ int main(void)
 //	  HAL_Delay(100);
 //  }
 
+//  aculv_svc_set_bms_ok(true);
+//  while (1)
+//  {
+//	  acuhv_svc_air_close_air_neg(false);
+//	  acuhv_svc_air_close_air_pos(false);
+//
+//	  HAL_Delay(5000);
+//
+//	  acuhv_svc_air_close_air_neg(true);
+//	  acuhv_svc_air_close_air_pos(true);
+//	  HAL_Delay(5000);
+//  }
+
 
   /* USER CODE END 2 */
 
@@ -264,7 +282,7 @@ int main(void)
   /* USER CODE END RTOS_TIMERS */
 
   /* USER CODE BEGIN RTOS_QUEUES */
-  Can1TxQueueHandle = osMessageQueueNew (16, sizeof(can_msg_t), &Can1TxQueue_attributes);
+  Can1TxQueueHandle = osMessageQueueNew (CAN1_TX_QUEUE_DEPTH, sizeof(can_msg_t), &Can1TxQueue_attributes);
   Can1RxQueueHandle = osMessageQueueNew (16, sizeof(can_msg_t), &Can1RxQueue_attributes);
 
   Can2TxQueueHandle = osMessageQueueNew (16, sizeof(can_msg_t), &Can2TxQueue_attributes);
@@ -702,7 +720,7 @@ static void MX_FDCAN2_Init(void)
   hfdcan2.Init.DataTimeSeg1 = 2;
   hfdcan2.Init.DataTimeSeg2 = 1;
   hfdcan2.Init.MessageRAMOffset = 0;
-  hfdcan2.Init.StdFiltersNbr = 0;
+  hfdcan2.Init.StdFiltersNbr = 1;
   hfdcan2.Init.ExtFiltersNbr = 0;
   hfdcan2.Init.RxFifo0ElmtsNbr = 16;
   hfdcan2.Init.RxFifo0ElmtSize = FDCAN_DATA_BYTES_64;
@@ -1029,7 +1047,7 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOG_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOI, GPIO_PIN_0, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOI, GPIO_PIN_0, GPIO_PIN_SET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3, GPIO_PIN_RESET);
@@ -1175,11 +1193,11 @@ void startTaskManager(void *argument)
 void StartFastTask(void *argument)
 {
   /* USER CODE BEGIN StartFastTask */
-  fast_task_init();
+  task_fast_init();
   /* Infinite loop */
   for(;;)
   {
-    fast_task_loop();
+    task_fast_loop();
   }
   /* USER CODE END StartFastTask */
 }
@@ -1194,11 +1212,11 @@ void StartFastTask(void *argument)
 void StartMediumTask(void *argument)
 {
   /* USER CODE BEGIN StartMediumTask */
-  medium_task_init();
+  task_medium_init();
   /* Infinite loop */
   for(;;)
   {
-    medium_task_loop();
+    task_medium_loop();
   }
   /* USER CODE END StartMediumTask */
 }
@@ -1213,11 +1231,11 @@ void StartMediumTask(void *argument)
 void StartSlowTask(void *argument)
 {
   /* USER CODE BEGIN StartSlowTask */
-  slow_task_init();
+  task_slow_init();
   /* Infinite loop */
   for(;;)
   {
-    slow_task_loop();
+    task_slow_loop();
   }
   /* USER CODE END StartSlowTask */
 }
@@ -1309,7 +1327,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
   /* USER CODE BEGIN Callback 1 */
   if (htim->Instance == TIM3)
     {
-      precharge_time = 1;
+	  // precharge_time = 1; // TODO: check if we need this? not using timer
     }
   /* USER CODE END Callback 1 */
 }

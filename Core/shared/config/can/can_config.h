@@ -39,10 +39,19 @@ typedef struct
 } can_config_t;
 
 //Accumulator
-#define ACCUMULATOR_DATA_CAN_ID                 199
-#define ACCUMULATOR_FAULT_CAN_ID                300
+#define ACCUMULATOR_MEASUREMENTS_CAN_ID         101
+#define ACCUMULATOR_FAULT_CAN_ID                102
+#define ACCUMULATOR_ENERGY_STATE_CAN_ID         100
 
+#define SDC_VOLTAGES_CAN_ID                     99
 
+#define SLAVE_VOLTAGE1_CAN_ID                   701
+#define SLAVE_VOLTAGE10_CAN_ID                  710
+#define SLAVE_TEMP_CAN_ID                       711
+#define SLAVE_TEMPERATURE1_CAN_ID               712
+#define SLAVE_TEMPERATURE10_CAN_ID              721
+#define SLAVE_TEMPERATURE_EXT1_CAN_ID           722
+#define SLAVE_TEMPERATURE_EXT10_CAN_ID          731
 
 //Front Controller 
 #define FRONT_CONTROLLER_STATE_CAN_ID           200
@@ -82,6 +91,18 @@ typedef struct
 #define CHARGER_ACTUAL_2_CAN_ID                 1554
 #define CHARGER_TEMP_CAN_ID                     1555
 #define CHARGER_ERROR_CAN_ID                    1556
+
+/*============================================================================*/
+/* RTOS queue sizing                                                          */
+/*============================================================================*/
+
+/** BMS logging burst per task_medium cycle: 10 voltage + 20 temperature frames. */
+#define CAN_BMS_TX_FRAMES_PER_CYCLE             (30U)
+
+/** Headroom for ACU fast-task and other CAN1 TX between drain cycles. */
+#define CAN1_TX_QUEUE_HEADROOM                  (8U)
+
+#define CAN1_TX_QUEUE_DEPTH                     (CAN_BMS_TX_FRAMES_PER_CYCLE + CAN1_TX_QUEUE_HEADROOM)
 
 #endif /* CONFIG_CAN_CONFIG_H_ */
 
