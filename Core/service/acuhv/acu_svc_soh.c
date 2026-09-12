@@ -57,7 +57,7 @@ void acu_svc_init_acu_energy_state(void){
 /*                                                  UPDATE SOC                                                                   */
 /* function reads the values for the accumelated charge and energy spent form the INA229 and subtracts it from the initial values*/
 /* function then updates the data layer                                                                                          */
-void acu_svc_update_acu_energy_state(void){
+void acu_svc_update_acu_energy_state_alternative(void){
     if (completion_time_of_last_update == 0.0f)
     {
         // This is the first update, so we just set the completion time and return without updating SOC
