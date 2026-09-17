@@ -59,3 +59,29 @@ void bms_svc_can_tx_all_cell_temperatures(float cell_temps[ADBMS_NUM_SLAVES][ADB
         bms_svc_can_tx_slave_temperatures(slave_idx, cell_temps[slave_idx]);
     }
 }
+
+static void bms_svc_can_tx_all_max_slave_temperatures(const float cell_temps[ADBMS_THERMS_PER_IC])
+{
+    can_msg_t msg;
+    struct ucr_03_slave_temperature1_t primary_payload;
+
+    msg.channel = CAN1;
+    msg.dlc = BMS_CAN_DLC;
+
+    msg.id = 711;
+    memcpy(&primary_payload, cell_temps, BMS_THERMS_PRIMARY_PER_MSG * sizeof(float));
+    ucr_03_slave_temperature1_pack(msg.data, &primary_payload, msg.dlc);
+    com_svc_can_transmit(&msg);
+
+}
+
+void bms_svc_can_tx_max_slave_temperatures(float max_slave_temp[ADBMS_NUM_SLAVES][ADBMS_THERMS_PER_IC])
+{
+
+	bms_svc_can_tx_all_max_slave_temperatures(max_slave_temp[0]);
+
+}
+
+
+
+

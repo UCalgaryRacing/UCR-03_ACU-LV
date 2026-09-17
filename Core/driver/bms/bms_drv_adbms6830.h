@@ -263,4 +263,7 @@ int adbms6830_read_two_cell_temps(uint8_t num_slaves, uint8_t therms_per_slave, 
  */
 int adbms6830_read_all_cell_temps(uint8_t num_slaves, uint8_t therms_per_slave, float cell_temps[num_slaves][therms_per_slave]);
 
+
+int adbms6830_write_register_group(uint16_t cmd,
+                                          const uint8_t tx_data[ADBMS_NUM_SLAVES][ADBMS_REG_GROUP_SIZE]);
 #endif /* DRIVERS_ADBMS6830_H_ */

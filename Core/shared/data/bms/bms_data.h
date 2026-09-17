@@ -33,4 +33,5 @@ typedef struct
     uint8_t temp_max_idx;       /**< Thermistor index within slave for max */
 } bms_temp_stats_t;
 
+
 #endif /*DATA_BMS_DATA_H_*/

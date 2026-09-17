@@ -92,7 +92,7 @@
 
 // TODO: change to what the actual max and min values are instead of placeholders
 #define CELL_MAX_VOLTAGE 4.2f
-#define CELL_MIN_VOLTAGE 2.5f
+#define CELL_MIN_VOLTAGE 2.6f
 
 #define CELL_MIN_TEMPERATURE 0.0f
 #define CELL_MAX_TEMPERATURE 60.0f

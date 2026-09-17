@@ -32,7 +32,6 @@ void rco_data_set_brake_light(bool brake_light_on);
 void rco_data_set_tssi_faulted(bool tssi_faulted);
 status_t rco_data_set_data(rco_data_t *rco_data);
 
-
 /*============================================================================*/
 /* Getters                                                                    */
 /*============================================================================*/

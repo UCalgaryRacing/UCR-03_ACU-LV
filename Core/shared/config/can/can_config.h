@@ -92,6 +92,9 @@ typedef struct
 #define CHARGER_TEMP_CAN_ID                     1555
 #define CHARGER_ERROR_CAN_ID                    1556
 
+//Charge Controller
+#define BALANCE_CAN_ID                    		732
+
 /*============================================================================*/
 /* RTOS queue sizing                                                          */
 /*============================================================================*/

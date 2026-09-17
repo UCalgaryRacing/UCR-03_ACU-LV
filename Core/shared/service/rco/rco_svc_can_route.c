@@ -5,6 +5,8 @@
 
 #include "rco_data.h"
 
+#include "bms_data.h"
+
 extern FDCAN_HandleTypeDef hfdcan2;
 
 static bool g_initialized = false;
@@ -47,3 +49,5 @@ void rco_svc_can_rx_reset_data(can_msg_t *msg)
     
     rco_data_set_data(&rco_data);
 }
+
+

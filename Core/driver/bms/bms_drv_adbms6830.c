@@ -528,7 +528,7 @@ static int adbms6830_read_register_group(uint16_t cmd, uint8_t rx_data[ADBMS_NUM
  * @param tx_data   Input buffer [ADBMS_NUM_SLAVES][ADBMS_REG_GROUP_SIZE].
  * @return 0 on success, -1 on SPI error.
  */
-static int adbms6830_write_register_group(uint16_t cmd,
+int adbms6830_write_register_group(uint16_t cmd,
                                           const uint8_t tx_data[ADBMS_NUM_SLAVES][ADBMS_REG_GROUP_SIZE])
 {
     uint8_t cmd_buf[4];
